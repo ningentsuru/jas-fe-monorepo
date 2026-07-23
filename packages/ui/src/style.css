@@ -1,0 +1,54 @@
+@import "@packages/config-tailwind/base.css";
+
+@source "./**/*.vue";
+@source "./**/*.ts";
+
+/* 1. Define the default (light) theme variables */
+@theme {
+  /* Semantic names allow easy swapping */
+  --color-background: #ffffff;
+  --color-foreground: #171717;
+  --color-primary: #3b82f6;
+
+  /* Custom style example: specific font or spacing */
+  --font-display: "Inter", sans-serif;
+  --radius-lg: 0.5rem;
+}
+
+/* 2. Define Dark Mode Overrides */
+/* Use @layer theme to ensure correct CSS cascade specificity */
+@layer theme {
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-background: #0f172a;
+      /* Slate 900 */
+      --color-foreground: #f8fafc;
+      /* Slate 50 */
+      --color-primary: #60a5fa;
+      /* Blue 400 */
+    }
+  }
+
+  /* 3. Define Custom Themes (e.g., "forest", "midnight") */
+  /* Switch these by adding data-theme="forest" to your <html> tag */
+  [data-theme="forest"] {
+    --color-background: #1a2f1a;
+    --color-foreground: #e0f0e0;
+    --color-primary: #4ade80;
+  }
+
+  [data-theme="midnight"] {
+    --color-background: #0f0f1a;
+    --color-foreground: #e0e0ff;
+    --color-primary: #818cf8;
+  }
+}
+
+/* Apply variables to base elements */
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-display);
+  }
+}

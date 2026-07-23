@@ -1,0 +1,49 @@
+import { describe, it, expect } from 'vitest'
+import { mount } from '@vue/test-utils'
+import {{pascalCase name}} from './{{pascalCase name}}.vue'
+import { Default } from './{{pascalCase name}}.stories'
+
+{{#if props.length}}
+interface defaultProps {
+  {{#each props}}
+  {{this.propName}}: {{#if (eq this.propType 'function')}}() => void{{else}}{{this.propType}}{{/if}}{{#unless @last}}, {{/unless}}
+  {{/each}}
+}
+{{/if}}
+
+describe('{{pascalCase name}}', () => {
+  it('renders properly using Storybook args', () => {
+    const wrapper = mount({{pascalCase name}}, {
+      {{#if props.length}}
+      props: Default.args as defaultProps,
+      {{else}}
+      props: Default.args,
+      {{/if}}
+    })
+
+    expect(wrapper.text()).toContain('{{kebabCase name}}')
+  })
+  {{#if props.length}}
+
+  it('receives correct props from Storybook args', () => {
+    const wrapper = mount({{pascalCase name}}, {
+      props: Default.args as defaultProps,
+    })
+
+    {{#each props}}
+    {{#if (eq this.propType 'function')}}
+    const {{this.propName}}Fn = wrapper.props('{{this.propName}}') as () => void
+    {{/if}}
+    {{/each}}
+
+    {{#each props}}
+    // Verify {{this.propName}} ({{this.propType}})
+    {{#if (eq this.propType 'function')}}
+    expect({{this.propName}}Fn).toBeTypeOf('function')
+    {{else}}
+    expect(wrapper.props('{{this.propName}}')).toEqual({{#if (eq this.propType 'string')}}''{{else if (eq this.propType 'number')}}0{{else if (eq this.propType 'boolean')}}false{{else if (eq this.propType 'object')}}{}{{else if (eq this.propType 'string[]')}}['']{{else if (eq this.propType 'number[]')}}[0]{{else if (eq this.propType 'boolean[]')}}[false]{{else if (eq this.propType 'object[]')}}[{}]{{/if}})
+    {{/if}}
+    {{/each}}
+  })
+  {{/if}}
+})

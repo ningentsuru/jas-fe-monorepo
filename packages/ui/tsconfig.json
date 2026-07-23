@@ -1,9 +1,11 @@
 {
-  "extends": "@repo/typescript-config/react-library.json",
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "compilerOptions": {
+    "composite": true,
     "outDir": "dist",
-    "strictNullChecks": true
+    "declaration": true,
+    "types": ["node"]
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

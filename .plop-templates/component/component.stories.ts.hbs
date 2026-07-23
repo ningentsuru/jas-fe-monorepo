@@ -1,0 +1,22 @@
+import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import {{pascalCase name}} from './{{pascalCase name}}.vue'
+
+const meta: Meta<typeof {{pascalCase name}}> = {
+  component: {{pascalCase name}},
+  title: 'Components/{{pascalCase name}}',
+}
+
+export default meta
+type Story = StoryObj<typeof {{pascalCase name}}>
+
+export const Default: Story = {
+  {{#if props.length}}
+  args: {
+    {{#each props}}
+    {{this.propName}}: {{#if (eq this.propType 'string')}}''{{else if (eq this.propType 'number')}}0{{else if (eq this.propType 'boolean')}}false{{else if (eq this.propType 'object')}}{}{{else if (eq this.propType 'string[]')}}['']{{else if (eq this.propType 'number[]')}}[0]{{else if (eq this.propType 'boolean[]')}}[false]{{else if (eq this.propType 'object[]')}}[{}]{{else if (eq this.propType 'function')}}() => undefined{{/if}},
+    {{/each}}
+  },
+  {{else}}
+  args: {},
+  {{/if}}
+}
