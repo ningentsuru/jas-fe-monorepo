@@ -1,4 +1,4 @@
-@import "@packages/config-tailwind/base.css";
+@import "tailwindcss";
 
 @source "./**/*.vue";
 @source "./**/*.ts";

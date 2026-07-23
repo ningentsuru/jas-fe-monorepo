@@ -10,7 +10,6 @@
     "paths": {
       "@/*": ["./src/*"],
       "@packages/ui": ["../../packages/ui/src/index.ts"],
-      "@packages/config-tailwind": ["../../packages/config-tailwind/index.ts"],
     },
 
     // `vue-tsc --build` produces a .tsbuildinfo file for incremental type-checking.

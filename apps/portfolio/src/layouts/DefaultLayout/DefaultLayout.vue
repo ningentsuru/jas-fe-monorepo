@@ -4,6 +4,7 @@ import { TemplateDefaultPortfolio } from '@packages/ui'
 
 <template>
   <TemplateDefaultPortfolio class="default-layout" data-testid="default-layout">
+    Aray
     <span class="sr-only">default-layout</span>
   </TemplateDefaultPortfolio>
 </template>

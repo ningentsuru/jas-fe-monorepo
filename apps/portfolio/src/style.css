@@ -1,4 +1,4 @@
-@import "@packages/config-tailwind/base.css";
+@import "tailwindcss";
 
 /* Import UI styles (optional if you want UI's base theme) */
 @import "@packages/ui/style.css";
