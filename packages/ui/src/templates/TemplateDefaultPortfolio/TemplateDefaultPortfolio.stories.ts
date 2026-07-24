@@ -7,14 +7,28 @@ const meta: Meta<typeof TemplateDefaultPortfolio> = {
 }
 
 export default meta
-type Story = StoryObj<typeof TemplateDefaultPortfolio>
-
-export const Default: Story = {
-  args: {},
+type Story = StoryObj<typeof TemplateDefaultPortfolio> & {
+  args: { slotContent?: string }
 }
 
-export const SlotContent: Story = {
+const template = (args: any) => ({
+  setup() {
+    const { slotContent, ...props } = args
+
+    return { args: props, slotContent }
+  },
+  template: `
+    <div>
+      <header>Header</header>
+      <main v-html="args.default" />
+      <footer>Footer</footer>
+    </div>
+  `,
+})
+
+export const Default: Story = {
+  render: template,
   args: {
-    default: 'Hello!',
+    default: '<p>Body</p>',
   },
 }

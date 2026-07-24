@@ -5,10 +5,7 @@
     "composite": true,
     "outDir": "dist",
     "declaration": true,
-    "types": ["node"],
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "types": ["node"]
   },
   "references": [{ "path": "./tsconfig.node.json" }]
 }
