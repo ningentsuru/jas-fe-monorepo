@@ -1,7 +1,2 @@
 @import "tailwindcss";
-
-/* Import UI styles (optional if you want UI's base theme) */
 @import "@packages/ui/style.css";
-
-/* CRITICAL: Tell Tailwind to scan the UI source files for classes */
-@source "../../../packages/ui/src/**/*.vue";

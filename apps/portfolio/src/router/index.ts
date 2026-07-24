@@ -17,6 +17,14 @@ const routes: Array<RouteRecordRaw> = [
       layout: 'DefaultLayout',
     },
   },
+  {
+    path: ROUTES.HIS_CV_VIEW.path,
+    name: ROUTES.HIS_CV_VIEW.name,
+    component: () => import('@/views/HisCvView'),
+    meta: {
+      layout: 'DefaultLayout',
+    },
+  },
   // plop:inject-routes-component-do-not-removed
 ]
 

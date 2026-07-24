@@ -2,7 +2,7 @@
 import './style.css'
 
 // Atoms
-export { default as AtomThemeToggle } from './atoms/AtomThemeToggle'
+export { default as AtomToggle } from './atoms/AtomToggle'
 // plop:inject-atoms-component-do-not-removed
 
 // Molecules
