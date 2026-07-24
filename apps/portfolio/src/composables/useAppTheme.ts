@@ -1,18 +1,31 @@
 import { computed } from 'vue'
 import { useColorMode } from '@vueuse/core'
+import type { Themes } from '@/types'
 
 export function useAppTheme() {
   const mode = useColorMode({
-    attribute: 'class',
+    attribute: 'data-theme',
+    modes: {
+      forest: 'forest',
+      midnight: 'midnight',
+      ocean: 'ocean',
+      sunset: 'sunset',
+      'high-contrast': 'high-contrast',
+    },
   })
 
-  const toggleTheme = () => {
+  function toggleTheme() {
     mode.value = mode.value === 'dark' ? 'light' : 'dark'
+  }
+
+  function setTheme(theme: Themes) {
+    mode.value = theme
   }
 
   return {
     theme: mode,
     toggleTheme,
     isDark: computed(() => mode.value === 'dark'),
+    setTheme,
   }
 }

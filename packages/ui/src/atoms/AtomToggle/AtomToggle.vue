@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { Component } from 'vue'
+import { useLongPressToggle } from '../../composables/useLongPressToggle'
 
 interface Props {
   icon: Component
@@ -13,7 +14,15 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'sm',
 })
 
-const emit = defineEmits(['toggle'])
+const emit = defineEmits(['toggle', 'longToggle'])
+
+const buttonRef = ref<HTMLElement | null>(null)
+
+useLongPressToggle(buttonRef, {
+  delay: 500,
+  onToggle: () => emit('toggle'),
+  onLongToggle: () => emit('longToggle'),
+})
 
 const iconClass = computed(() => {
   if (typeof props.size === 'number') {
@@ -44,9 +53,10 @@ const iconStyle = computed(() => {
 
 <template>
   <button
+    ref="buttonRef"
+    type="button"
     class="atom-toggle cursor-pointer"
     data-testid="atom-toggle"
-    @click="emit('toggle')"
   >
     <component :is="icon" :class="iconClass" :style="iconStyle" />
 

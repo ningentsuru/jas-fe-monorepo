@@ -3,9 +3,13 @@ import './style.css'
 
 // Atoms
 export { default as AtomToggle } from './atoms/AtomToggle'
+export { default as AtomButton } from './atoms/AtomButton'
+export { default as AtomSelect } from './atoms/AtomSelect'
 // plop:inject-atoms-component-do-not-removed
 
 // Molecules
+export { default as MoleculeModal } from './molecules/MoleculeModal'
+export { default as MoleculeThemeToggle } from './molecules/MoleculeThemeToggle'
 // plop:inject-molecules-component-do-not-removed
 
 // Organisms

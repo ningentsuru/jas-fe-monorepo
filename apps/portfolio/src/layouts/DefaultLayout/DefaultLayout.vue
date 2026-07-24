@@ -1,10 +1,22 @@
 <script setup lang="ts">
-import { TemplateDefaultPortfolio, OrganismHeader, OrganismFooter, AtomToggle } from '@packages/ui'
+import { computed } from 'vue'
+import {
+  TemplateDefaultPortfolio,
+  OrganismHeader,
+  OrganismFooter,
+  MoleculeThemeToggle,
+} from '@packages/ui'
 import { Sun, Moon } from '@lucide/vue'
-
 import { useAppTheme } from '@/composables/useAppTheme'
+import type { Themes } from '@/types'
 
-const { isDark, toggleTheme } = useAppTheme()
+const { isDark, theme, toggleTheme, setTheme } = useAppTheme()
+
+const getTheme = computed(() => {
+  const t = theme.value as string
+  if (t === 'auto') return (isDark.value ? 'dark' : 'light') as Themes
+  return t as Themes
+})
 </script>
 
 <template>
@@ -12,11 +24,12 @@ const { isDark, toggleTheme } = useAppTheme()
     <template #header>
       <OrganismHeader title="Your Nuxt Frontend Developer">
         <template #theme-toggle>
-          <AtomToggle
-            :icon="isDark ? Sun : Moon"
+          <MoleculeThemeToggle
+            :icon="isDark ? Moon : Sun"
             :is-toggled="isDark"
-            size="md"
+            :current-theme="getTheme"
             @toggle="toggleTheme"
+            @set-theme="setTheme($event)"
           />
         </template>
       </OrganismHeader>
@@ -28,7 +41,7 @@ const { isDark, toggleTheme } = useAppTheme()
       </main>
     </template>
     <template #footer>
-      <OrganismFooter title="The end is near!">
+      <OrganismFooter title="More information">
         <div>Add component here</div>
       </OrganismFooter>
     </template>
