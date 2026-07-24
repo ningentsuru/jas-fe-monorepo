@@ -1,3 +1,4 @@
+// @ts-ignore: CSS module side-effect import
 import './style.css'
 
 // Atoms
@@ -9,7 +10,7 @@ export { default as AtomLogo } from './atoms/AtomLogo.vue'
 export { default as MoleculeSearchBar } from './molecules/MoleculeSearchBar.vue'
 
 // Organisms
-export { default as OrganismHeader } from './organisms/OrganismHeader.vue'
+export { default as OrganismHeader } from './organisms/OrganismHeader'
 
 // Organisms
 export { default as TemplateDefaultPortfolio } from './templates/TemplateDefaultPortfolio'
