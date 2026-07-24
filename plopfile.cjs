@@ -234,6 +234,19 @@ module.exports = function (plop) {
         },
       ]
 
+      const componentsFolder = ['atoms', 'molecules', 'organisms', 'templates']
+
+      componentsFolder.forEach((component) => {
+        if (data.path.includes(`/${component}/`)) {
+          baseActions.push({
+            type: 'modify',
+            path: '{{folder}}/{{packages}}/src/index.ts',
+            pattern: new RegExp(`// plop:inject-${component}-component-do-not-remove`, 'g'),
+            template: `export { default as {{pascalCase name}} } from './${component}/{{pascalCase name}}'\n// plop:inject-${component}-component-do-not-remove`,
+          })
+        }
+      })
+
       if (data.path.includes('/views/')) {
         baseActions.push(
           {

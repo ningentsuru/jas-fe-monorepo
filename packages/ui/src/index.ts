@@ -1,15 +1,18 @@
+// @ts-ignore
 import './style.css'
 
 // Atoms
-export { default as AtomButton } from './atoms/AtomButton.vue'
-export { default as AtomInput } from './atoms/AtomInput.vue'
-export { default as AtomLogo } from './atoms/AtomLogo.vue'
+export { default as AtomThemeToggle } from './atoms/AtomThemeToggle'
+// plop:inject-atoms-component-do-not-removed
 
 // Molecules
-export { default as MoleculeSearchBar } from './molecules/MoleculeSearchBar.vue'
+// plop:inject-molecules-component-do-not-removed
 
 // Organisms
-export { default as OrganismHeader } from './organisms/OrganismHeader.vue'
+export { default as OrganismHeader } from './organisms/OrganismHeader'
+export { default as OrganismFooter } from './organisms/OrganismFooter'
+// plop:inject-organisms-component-do-not-removed
 
-// Organisms
+// Templates
 export { default as TemplateDefaultPortfolio } from './templates/TemplateDefaultPortfolio'
+// plop:inject-templates-component-do-not-removed

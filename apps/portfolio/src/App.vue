@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import { shallowRef } from 'vue'
-
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import DefaultLayout from '@/layouts/DefaultLayout'
 
 const layoutMap = {
   web: DefaultLayout,
 } as const
 
-const getLayoutKey = (): keyof typeof layoutMap => {
-  return 'web'
-}
+const route = useRoute()
 
-const currentLayout = shallowRef(layoutMap[getLayoutKey()] || DefaultLayout)
+const currentLayout = computed(() => {
+  const layoutKey = (route.meta.layout as keyof typeof layoutMap) || 'web'
+  return layoutMap[layoutKey] || DefaultLayout
+})
 </script>
 
 <template>
