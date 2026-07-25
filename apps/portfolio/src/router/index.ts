@@ -25,6 +25,14 @@ const routes: Array<RouteRecordRaw> = [
       layout: 'DefaultLayout',
     },
   },
+  {
+    path: ROUTES.ABOUTE_ME_VIEW.path,
+    name: ROUTES.ABOUTE_ME_VIEW.name,
+    component: () => import('@/views/AbouteMeView'),
+    meta: {
+      layout: 'DefaultLayout',
+    },
+  },
   // plop:inject-routes-component-do-not-removed
 ]
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { OrganismHero } from '@repo/ui'
+import { OrganismHero, MoleculeTooltip, AtomButton } from '@repo/ui'
 </script>
 
 <template>
@@ -16,6 +16,20 @@ import { OrganismHero } from '@repo/ui'
       background-image="/hero-bg.jpg"
       align="center"
     />
+    <div class="flex w-full justify-center">
+      <MoleculeTooltip title="Actions" position="top" :delay="100">
+        <!-- Trigger (Default Slot) -->
+        <AtomButton variant="ghost">Click/Hover Me</AtomButton>
+
+        <!-- Interactive Content (Named Slot) -->
+        <template #content>
+          <div class="mt-2 flex gap-2">
+            <AtomButton size="sm" variant="primary" @click="">Save</AtomButton>
+            <AtomButton size="sm" variant="ghost" @click="">Canceleeeeeee</AtomButton>
+          </div>
+        </template>
+      </MoleculeTooltip>
+    </div>
     <p>
       Coming soon: Module Federation - sharing this design system live across independently deployed
       Vue and React apps.

@@ -16,6 +16,7 @@ const { isDark, theme, toggleTheme, setTheme } = useAppTheme()
 
 const navItems = computed(() => [
   // { label: 'Download', children: [{ label: 'Resume', href: '/resume.pdf' }] },
+  { label: 'About Me', href: '/about-me' },
   { label: 'His CV', href: '/his-cv' },
 ])
 
@@ -32,21 +33,17 @@ const getTheme = computed(() => {
       <OrganismHeader :nav-items="navItems">
         <template #branding>
           <AtomButton class="shrink-0 p-0!" to="/">
-            <h1 class="text-foreground hidden text-lg font-semibold sm:block">
-              Your N<AtomWordSwap
-                class="-mr-1 -ml-0.75"
+            <h1 class="text-foreground flex items-center justify-center text-lg font-semibold">
+              <span class="hidden sm:inline">Your N</span>
+              <span class="sm:hidden">N</span>
+              <AtomWordSwap
                 :words="['u', 'e']"
                 :interval="2000"
                 transition="slide-down"
-              />xt Frontend Developer
-            </h1>
-            <h1 class="text-foreground block text-lg font-semibold sm:hidden">
-              N<AtomWordSwap
                 class="-mx-1"
-                :words="['u', 'e']"
-                :interval="2000"
-                transition="scale-out"
-              />xt Developer
+              />
+              <span class="hidden sm:inline">xt Frontend Developer</span>
+              <span class="sm:hidden">xt Developer</span>
             </h1>
           </AtomButton>
         </template>
@@ -62,7 +59,7 @@ const getTheme = computed(() => {
       </OrganismHeader>
     </template>
     <template #default>
-      <main class="container px-4 pt-15 sm:px-6 lg:mx-auto">
+      <main class="container px-4 sm:px-6 lg:mx-auto lg:px-8">
         <slot />
         <span class="sr-only">default-layout</span>
       </main>

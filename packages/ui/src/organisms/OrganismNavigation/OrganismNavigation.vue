@@ -50,7 +50,7 @@ function isOpen(label: string) {
   <nav class="relative z-40 w-full" data-testid="organism-navigation" @click="closeDropdown">
     <!-- DESKTOP VIEW -->
     <div class="hidden w-full items-center justify-between md:flex">
-      <div class="flex space-x-8">
+      <div class="flex space-x">
         <MoleculeNavDropdown
           v-for="(item, index) in items"
           :key="item.label"

@@ -15,6 +15,7 @@ export { default as MoleculeModal } from './molecules/MoleculeModal'
 export { default as MoleculeThemeToggle } from './molecules/MoleculeThemeToggle'
 export { default as MoleculeNavDropdown } from './molecules/MoleculeNavDropdown'
 export { default as MoleculeNavAccordion } from './molecules/MoleculeNavAccordion'
+export { default as MoleculeTooltip } from './molecules/MoleculeTooltip'
 // plop:inject-molecules-component-do-not-removed
 
 // Organisms

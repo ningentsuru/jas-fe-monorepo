@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AtomButton, OrganismNavigation } from '../../'
+import { OrganismNavigation } from '../../'
 
 interface NavItem {
   label: string
