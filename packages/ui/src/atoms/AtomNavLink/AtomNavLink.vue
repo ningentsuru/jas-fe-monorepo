@@ -14,9 +14,13 @@ const props = withDefaults(defineProps<Props>(), {
   variant: 'ghost',
   size: 'md',
   active: false,
+  href: undefined,
+  to: undefined,
 })
 
-const emit = defineEmits(['click'])
+const emit = defineEmits<{
+  (e: 'click', event: MouseEvent): void
+}>()
 </script>
 
 <template>
@@ -25,13 +29,17 @@ const emit = defineEmits(['click'])
     :size="size"
     :href="href"
     :to="to"
-    @click="emit('click')"
-    class="w-full justify-start"
+    @click="emit('click', $event)"
+    class="w-full items-center justify-between"
     :class="[
       active ? 'text-primary' : 'text-foreground',
       variant === 'link' ? 'px-3 py-2 font-normal' : 'px-3 py-2 font-medium',
     ]"
   >
-    <span class="block w-full text-left">{{ label }}</span>
+    <!-- Left-aligned text label -->
+    <span class="flex-1 text-left">{{ label }}</span>
+
+    <!-- Slotted component content (such as chevrons) stays right-aligned -->
+    <slot name="trailing" />
   </AtomButton>
 </template>

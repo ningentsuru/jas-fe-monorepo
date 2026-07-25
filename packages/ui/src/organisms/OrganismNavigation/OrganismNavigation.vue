@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch, onBeforeUnmount } from 'vue'
 import { Menu, X } from '@lucide/vue'
-import { AtomButton, AtomIcon, MoleculeNavDropdown, MoleculeNavAccordion } from '../../'
+import { AtomButton, MoleculeNavDropdown, MoleculeNavAccordion } from '../../'
 
 interface NavItem {
   label: string
@@ -29,7 +29,8 @@ function closeMobile() {
   isMobileOpen.value = false
 }
 
-function toggleDropdown(index: number) {
+function toggleDropdown(index: number, event?: Event) {
+  if (event) event.stopPropagation() // Prevent immediate document backdrop auto-dismiss triggers
   openDropdownIndex.value = openDropdownIndex.value === index ? null : index
 }
 
@@ -44,20 +45,53 @@ function toggleAccordion(label: string) {
 function isOpen(label: string) {
   return !!openAccordionItems.value[label]
 }
+
+// Global click-outside handling registration for desktop menu trees
+const handleDocumentClick = () => {
+  closeDropdown()
+}
+
+// Trap system keyboard Esc key cancellations to close mobile drawers gracefully
+const handleKeyDown = (event: KeyboardEvent) => {
+  if (event.key === 'Escape') {
+    closeMobile()
+    closeDropdown()
+  }
+}
+
+if (typeof window !== 'undefined') {
+  document.addEventListener('click', handleDocumentClick)
+  document.addEventListener('keydown', handleKeyDown)
+}
+
+// Lock layout canvas views when mobile modal viewport targets open configurations
+watch(isMobileOpen, (newVal) => {
+  if (typeof window === 'undefined') return
+  document.body.style.overflow = newVal ? 'hidden' : ''
+})
+
+// Proper garbage memory safe variable layer cleanups on unmounting stages
+onBeforeUnmount(() => {
+  if (typeof window === 'undefined') return
+  document.removeEventListener('click', handleDocumentClick)
+  document.removeEventListener('keydown', handleKeyDown)
+  document.body.style.overflow = ''
+})
 </script>
 
 <template>
-  <nav class="relative z-40 w-full" data-testid="organism-navigation" @click="closeDropdown">
+  <nav class="relative z-40 w-full" data-testid="organism-navigation">
     <!-- DESKTOP VIEW -->
     <div class="hidden w-full items-center justify-between md:flex">
-      <div class="flex space-x">
+      <!-- Added stop propagation modifier to cleanly isolate navigation clicks -->
+      <div class="flex space-x-1" @click.stop>
         <MoleculeNavDropdown
           v-for="(item, index) in items"
           :key="item.label"
           :item="item"
           :index="index"
           :is-open="openDropdownIndex === index"
-          @toggle="toggleDropdown"
+          @toggle="toggleDropdown(index, $event)"
           @navigate="closeDropdown"
         />
       </div>
@@ -66,16 +100,16 @@ function isOpen(label: string) {
     <!-- MOBILE TOGGLE -->
     <div class="flex justify-end md:hidden">
       <AtomButton variant="ghost" size="sm" @click="toggleMobile" aria-label="Toggle menu">
-        <AtomIcon :icon="Menu" size="md" class="text-foreground" />
+        <Menu class="text-foreground h-5 w-5" />
       </AtomButton>
     </div>
 
     <!-- MOBILE DRAWER -->
     <transition
-      enter-active-class="transition ease-out duration-300"
+      enter-active-class="transition ease-out duration-200"
       enter-from-class="translate-x-full opacity-0"
       enter-to-class="translate-x-0 opacity-100"
-      leave-active-class="transition ease-in duration-200"
+      leave-active-class="transition ease-in duration-150"
       leave-from-class="translate-x-0 opacity-100"
       leave-to-class="translate-x-full opacity-0"
     >
@@ -85,16 +119,21 @@ function isOpen(label: string) {
         role="dialog"
         aria-modal="true"
       >
-        <div class="bg-background/50 fixed inset-0 backdrop-blur-sm" @click="closeMobile"></div>
+        <!-- Overlay Layer pulling tokens dynamically based on your custom stylesheet variables -->
         <div
-          class="border-border bg-card relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto border-l shadow-xl"
+          class="fixed inset-0 bg-black/40 backdrop-blur-sm data-[theme=high-contrast]:bg-black/75 data-[theme=high-contrast]:backdrop-blur-none"
+          @click="closeMobile"
+        />
+
+        <div
+          class="hc:border-2 border-border bg-card text-card-foreground relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto border-l shadow-xl transition-all duration-300 data-[theme=high-contrast]:border-2"
         >
           <div class="px-4 pt-5 pb-4">
             <!-- Header -->
             <div class="mb-6 flex items-center justify-between">
               <slot name="branding" />
               <AtomButton variant="ghost" size="sm" @click="closeMobile" aria-label="Close menu">
-                <AtomIcon :icon="X" size="md" class="text-foreground" />
+                <X class="text-foreground h-5 w-5" />
               </AtomButton>
             </div>
 

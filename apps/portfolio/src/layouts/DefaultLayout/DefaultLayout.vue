@@ -8,15 +8,19 @@ import {
   AtomWordSwap,
   AtomButton,
 } from '@repo/ui'
-import { Sun, Moon } from '@lucide/vue'
 import { useAppTheme } from '@/composables/useAppTheme'
 import type { Themes } from '@/types'
 
 const { isDark, theme, toggleTheme, setTheme } = useAppTheme()
 
 const navItems = computed(() => [
-  // { label: 'Download', children: [{ label: 'Resume', href: '/resume.pdf' }] },
-  { label: 'About Me', href: '/about-me' },
+  {
+    label: 'About',
+    children: [
+      { label: 'Me', href: '/about-me' },
+      { label: 'This Monorepo', href: '/about-this-monorepo' },
+    ],
+  },
   { label: 'His CV', href: '/his-cv' },
 ])
 
@@ -49,7 +53,6 @@ const getTheme = computed(() => {
         </template>
         <template #theme-toggle>
           <MoleculeThemeToggle
-            :icon="isDark ? Moon : Sun"
             :is-toggled="isDark"
             :current-theme="getTheme"
             @toggle="toggleTheme"

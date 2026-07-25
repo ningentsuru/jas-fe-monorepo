@@ -33,6 +33,14 @@ const routes: Array<RouteRecordRaw> = [
       layout: 'DefaultLayout',
     },
   },
+  {
+    path: ROUTES.ABOUT_THIS_MONOREPO_VIEW.path,
+    name: ROUTES.ABOUT_THIS_MONOREPO_VIEW.name,
+    component: () => import('@/views/AboutThisMonorepoView'),
+    meta: {
+      layout: 'DefaultLayout',
+    },
+  },
   // plop:inject-routes-component-do-not-removed
 ]
 

@@ -26,7 +26,7 @@ const isHovered = ref(false)
 </script>
 
 <template>
-  <div class="group relative">
+  <div class="molecule-nav-dropdown group relative" data-testid="molecule-nav-dropdown">
     <!-- Trigger -->
     <AtomButton
       variant="ghost"
@@ -44,7 +44,9 @@ const isHovered = ref(false)
         v-if="item.children"
         :icon="ChevronDown"
         size="sm"
-        :class="['transition-transform', isOpen ? 'rotate-180' : 'group-hover:rotate-180'].join(' ')"
+        :class="
+          ['transition-transform', isOpen ? 'rotate-180' : 'group-hover:rotate-180'].join(' ')
+        "
       />
     </AtomButton>
 
@@ -61,7 +63,7 @@ const isHovered = ref(false)
       <div
         class="ring-opacity-5 border-border bg-card overflow-hidden rounded-md border shadow-lg ring-1 ring-black"
       >
-        <div class="py-1">
+        <div class="p-1 flex flex-col gap-2">
           <AtomNavLink
             v-for="child in item.children"
             :key="child.label"
