@@ -84,7 +84,9 @@ const alignClasses = {
           size="lg"
           class="cursor-pointer"
         >
-          {{ ctaLabel }}
+          <span>
+            {{ ctaLabel }}
+          </span>
         </AtomButton>
 
         <AtomButton
@@ -96,7 +98,9 @@ const alignClasses = {
           size="lg"
           class="cursor-pointer"
         >
-          {{ secondaryLabel }}
+          <span>
+            {{ secondaryLabel }}
+          </span>
         </AtomButton>
       </div>
     </div>

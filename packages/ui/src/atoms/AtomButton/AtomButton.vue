@@ -4,7 +4,7 @@ import { computed } from 'vue'
 interface Props {
   size?: 'sm' | 'md' | 'lg'
   disabled?: boolean
-  variant?: 'primary' | 'secondary' | 'ghost' | 'link' | 'destructive'
+  variant?: 'default' | 'primary' | 'secondary' | 'ghost' | 'link' | 'destructive'
   to?: string
   href?: string
   target?: '_blank' | '_self' | '_parent' | '_top'
@@ -14,13 +14,12 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   size: 'md',
   disabled: false,
-  variant: 'primary',
+  variant: 'default',
   type: 'button',
 })
 
 const emit = defineEmits(['click'])
 
-// Determine the type of element to render
 const isRouterLink = computed(() => !!props.to && !props.href)
 const isNativeLink = computed(() => !!props.href)
 
@@ -31,17 +30,26 @@ function handleClick(event: MouseEvent) {
     return
   }
 
-  // Only emit click if it's a button (not a link)
   if (!isNativeLink.value && !isRouterLink.value) {
     emit('click', event)
   }
 }
 
-// Shared classes for all variants
+function handleRouterNavigate(navigate: (e?: MouseEvent) => void, event: MouseEvent) {
+  if (props.disabled) {
+    event.preventDefault()
+    event.stopPropagation()
+    return
+  }
+  emit('click', event)
+  navigate(event)
+}
+
 const baseClasses =
   'atom-button inline-flex cursor-pointer items-center justify-center rounded-md font-medium transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50'
 
 const variantClasses = {
+  default: 'bg-transparent text-primary hover:opacity-80 focus:ring-primary',
   primary: 'bg-primary text-primary-foreground hover:opacity-90 focus:ring-primary',
   secondary: 'border-border bg-card text-card-foreground hover:bg-muted focus:ring-primary border',
   ghost: 'bg-transparent text-foreground hover:bg-muted focus:ring-primary',
@@ -57,20 +65,18 @@ const sizeClasses = {
 </script>
 
 <template>
-  <!-- Case 1: Vue Router Link -->
   <router-link v-if="isRouterLink" :to="to" :target="target" custom v-slot="{ navigate, href }">
     <a
       :href="href"
       :target="target"
       :class="[baseClasses, sizeClasses[size], variantClasses[variant]]"
-      @click="navigate"
+      @click="handleRouterNavigate(navigate, $event)"
       data-testid="atom-button"
     >
       <slot />
     </a>
   </router-link>
 
-  <!-- Case 2: Native External Link -->
   <a
     v-else-if="isNativeLink"
     :href="href"
@@ -82,7 +88,6 @@ const sizeClasses = {
     <slot />
   </a>
 
-  <!-- Case 3: Button -->
   <button
     v-else
     :type="type"

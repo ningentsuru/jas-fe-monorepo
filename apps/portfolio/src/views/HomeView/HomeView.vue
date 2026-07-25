@@ -8,7 +8,7 @@ import { OrganismHero } from '@repo/ui'
       title="My Portfolio Monorepo"
       subtitle="Apps structured with Feature-Sliced Design. Components built on Atomic Design."
       cta-label="Get Started"
-      cta-to="/docs"
+      cta-to="/his-cv"
       cta-target="_self"
       secondary-label="View on GitHub"
       secondary-href="https://github.com/ningentsuru"
@@ -16,6 +16,10 @@ import { OrganismHero } from '@repo/ui'
       background-image="/hero-bg.jpg"
       align="center"
     />
+    <p>
+      Coming soon: Module Federation - sharing this design system live across independently deployed
+      Vue and React apps.
+    </p>
     <span class="sr-only">home-view</span>
   </div>
 </template>

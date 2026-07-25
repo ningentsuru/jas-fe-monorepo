@@ -9,10 +9,12 @@ const props = withDefaults(defineProps<Props>(), {
 
 <template>
   <footer
-    class="organism-footer border-foreground mx-auto w-full border-t"
+    class="organism-footer border-border mx-auto w-full border-t"
     data-testid="organism-footer"
   >
-    <div class="container mx-auto flex h-full flex-col items-start justify-between px-4 sm:px-6">
+    <div
+      class="container mx-auto flex h-full flex-col items-start justify-between px-4 sm:px-6 lg:px-8"
+    >
       <h1>{{ title }}</h1>
       <slot />
     </div>

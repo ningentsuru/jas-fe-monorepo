@@ -5,12 +5,19 @@ import {
   OrganismHeader,
   OrganismFooter,
   MoleculeThemeToggle,
+  AtomWordSwap,
+  AtomButton,
 } from '@repo/ui'
 import { Sun, Moon } from '@lucide/vue'
 import { useAppTheme } from '@/composables/useAppTheme'
 import type { Themes } from '@/types'
 
 const { isDark, theme, toggleTheme, setTheme } = useAppTheme()
+
+const navItems = computed(() => [
+  // { label: 'Download', children: [{ label: 'Resume', href: '/resume.pdf' }] },
+  { label: 'His CV', href: '/his-cv' },
+])
 
 const getTheme = computed(() => {
   const t = theme.value as string
@@ -22,7 +29,27 @@ const getTheme = computed(() => {
 <template>
   <TemplateDefaultPortfolio class="default-layout" data-testid="default-layout">
     <template #header>
-      <OrganismHeader title="Your Nuxt Frontend Developer">
+      <OrganismHeader :nav-items="navItems">
+        <template #branding>
+          <AtomButton class="shrink-0 p-0!" to="/">
+            <h1 class="text-foreground hidden text-lg font-semibold sm:block">
+              Your N<AtomWordSwap
+                class="-mr-1 -ml-0.75"
+                :words="['u', 'e']"
+                :interval="2000"
+                transition="slide-down"
+              />xt Frontend Developer
+            </h1>
+            <h1 class="text-foreground block text-lg font-semibold sm:hidden">
+              N<AtomWordSwap
+                class="-mx-1"
+                :words="['u', 'e']"
+                :interval="2000"
+                transition="scale-out"
+              />xt Developer
+            </h1>
+          </AtomButton>
+        </template>
         <template #theme-toggle>
           <MoleculeThemeToggle
             :icon="isDark ? Moon : Sun"
