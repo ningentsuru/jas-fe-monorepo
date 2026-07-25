@@ -1,49 +1,43 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { MoleculeModal, AtomToggle, AtomSelect, AtomButton } from '../../'
-import { Sun, Moon } from '@lucide/vue'
+import { Sun, Moon, Palette, LoaderPinwheel } from '@lucide/vue'
 
 interface Props {
   isToggled: boolean
-  currentTheme: 'light' | 'dark' | 'forest' | 'midnight'
+  currentTheme: 'light' | 'dark' | 'forest' | 'midnight' | 'ocean' | 'sunset' | 'high-contrast'
+  size?: 'sm' | 'md' | 'lg'
 }
 
 const props = withDefaults(defineProps<Props>(), {
   isToggled: false,
-  size: 'sm',
+  size: 'md',
   currentTheme: 'light',
 })
 
 const emit = defineEmits(['toggle', 'longToggle', 'setTheme'])
 const showModal = ref<boolean>(false)
+
 const optionTheme = [
-  {
-    label: 'Light',
-    value: 'light',
-  },
-  {
-    label: 'Dark',
-    value: 'dark',
-  },
-  {
-    label: 'Forest',
-    value: 'forest',
-  },
-  {
-    label: 'Ocean',
-    value: 'ocean',
-  },
-  {
-    label: 'Sunset',
-    value: 'sunset',
-  },
-  {
-    label: 'High-contrast',
-    value: 'high-contrast',
-  },
+  { label: 'Light', value: 'light' },
+  { label: 'Dark', value: 'dark' },
+  { label: 'Forest', value: 'forest' },
+  { label: 'Ocean', value: 'ocean' },
+  { label: 'Sunset', value: 'sunset' },
+  { label: 'High Contrast', value: 'high-contrast' },
 ]
 
-const selectedTheme = ref<string>('')
+const selectedTheme = ref<string>(props.currentTheme)
+
+const getIcon = computed(() =>
+  showModal.value
+    ? LoaderPinwheel
+    : !['light', 'dark'].includes(selectedTheme.value)
+      ? Palette
+      : props.isToggled
+        ? Moon
+        : Sun,
+)
 
 function modalToggle() {
   showModal.value = true
@@ -63,20 +57,19 @@ watch(
   (theme) => {
     selectedTheme.value = theme
   },
-  { immediate: true },
 )
 </script>
 
 <template>
   <div class="molecule-theme-toggle" data-testid="molecule-theme-toggle">
     <AtomToggle
-      :icon="isToggled ? Moon : Sun"
+      :class="[{ 'animate-spin [animation-duration:2s]': showModal === true }]"
+      :icon="getIcon"
       :is-toggled="isToggled"
-      size="md"
+      :size="size"
       @toggle="emit('toggle')"
       @long-toggle="modalToggle"
     />
-
     <span class="sr-only">molecule-theme-toggle</span>
   </div>
 
@@ -88,14 +81,21 @@ watch(
     >
       <div @click.stop>
         <MoleculeModal
-          title="Select more themes"
+          title="Chose more themes!"
           :show="showModal"
           @close="closeModal"
-          class="bg-background text-foreground border-foreground relative z-50 w-full max-w-md rounded-lg border p-6 shadow-xl"
+          class="border-border bg-card text-card-foreground relative z-50 w-full max-w-md rounded-lg border p-6 shadow-xl"
         >
-          <form class="flex justify-between" @submit.prevent="handleSubmit">
+          <form class="flex flex-col justify-between gap-4" @submit.prevent="handleSubmit">
             <AtomSelect v-model="selectedTheme" :options="optionTheme" class="cursor-pointer" />
-            <AtomButton size="sm" class="cursor-pointer" type="submit">Submit</AtomButton>
+            <div class="flex justify-between gap-2">
+              <AtomButton size="sm" variant="primary" type="submit">
+                <span>Apply</span>
+              </AtomButton>
+              <AtomButton size="sm" variant="destructive" type="button" @click="closeModal">
+                <span>Close</span>
+              </AtomButton>
+            </div>
           </form>
         </MoleculeModal>
       </div>
