@@ -15,6 +15,7 @@ export { default as MoleculeThemeToggle } from './molecules/MoleculeThemeToggle'
 // Organisms
 export { default as OrganismHeader } from './organisms/OrganismHeader'
 export { default as OrganismFooter } from './organisms/OrganismFooter'
+export { default as OrganismHero } from './organisms/OrganismHero'
 // plop:inject-organisms-component-do-not-removed
 
 // Templates

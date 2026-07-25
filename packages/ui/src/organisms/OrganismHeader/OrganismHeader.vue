@@ -19,7 +19,7 @@ function mobileMenuToggle() {
 
 <template>
   <header
-    class="organism-header border-foreground bg-background fixed mx-auto h-15 w-full border-b"
+    class="organism-header border-foreground bg-background fixed mx-auto h-15 w-full border-b z-50"
     data-testid="organism-header"
   >
     <nav class="container mx-auto flex h-full items-center justify-between px-4 sm:px-6">

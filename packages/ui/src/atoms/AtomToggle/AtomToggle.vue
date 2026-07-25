@@ -19,7 +19,7 @@ const emit = defineEmits(['toggle', 'longToggle'])
 const buttonRef = ref<HTMLElement | null>(null)
 
 useLongPressToggle(buttonRef, {
-  delay: 500,
+  delay: 200,
   onToggle: () => emit('toggle'),
   onLongToggle: () => emit('longToggle'),
 })
