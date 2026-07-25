@@ -24,7 +24,7 @@
     "vue-router": "^5.2.0"
   },
   "devDependencies": {
-    "@packages/ui": "workspace:*",
+    "@repo/ui": "workspace:*",
     "@playwright/test": "^1.61.1",
     "@storybook/vue3-vite": "^10.5.3",
     "@tailwindcss/vite": "^4.3.3",

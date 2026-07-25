@@ -5,7 +5,7 @@ import {
   OrganismHeader,
   OrganismFooter,
   MoleculeThemeToggle,
-} from '@packages/ui'
+} from '@repo/ui'
 import { Sun, Moon } from '@lucide/vue'
 import { useAppTheme } from '@/composables/useAppTheme'
 import type { Themes } from '@/types'

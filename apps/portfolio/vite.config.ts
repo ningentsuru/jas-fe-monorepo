@@ -12,7 +12,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
-      '@packages/ui': resolve(
+      '@repo/ui': resolve(
         fileURLToPath(new URL('./', import.meta.url)),
         '../../packages/ui/src/index.ts',
       ),
