@@ -41,6 +41,14 @@ const routes: Array<RouteRecordRaw> = [
       layout: 'DefaultLayout',
     },
   },
+  {
+    path: ROUTES.JOB_SEARCH_VIEW.path,
+    name: ROUTES.JOB_SEARCH_VIEW.name,
+    component: () => import('@/views/JobSearchView'),
+    meta: {
+      layout: 'DefaultLayout',
+    },
+  },
   // plop:inject-routes-component-do-not-removed
 ]
 

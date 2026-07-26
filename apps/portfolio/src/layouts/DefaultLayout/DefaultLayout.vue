@@ -21,6 +21,7 @@ const navItems = computed(() => [
       { label: 'This Monorepo', href: '/about-this-monorepo' },
     ],
   },
+  { label: 'Job Search', href: '/job-search' },
   { label: 'His CV', href: '/his-cv' },
 ])
 
@@ -62,14 +63,15 @@ const getTheme = computed(() => {
       </OrganismHeader>
     </template>
     <template #default>
-      <main class="container px-4 sm:px-6 lg:mx-auto lg:px-8">
+      <main class="container mx-auto px-4 sm:px-6 lg:px-8">
         <slot />
         <span class="sr-only">default-layout</span>
       </main>
     </template>
     <template #footer>
-      <OrganismFooter title="More information">
-        <div>Add component here</div>
+      <OrganismFooter title="This is footer">
+        <div>Note: By holding the theme toggle you can choose different themes.</div>
+        <div>Todo: Add contact me component here.</div>
       </OrganismFooter>
     </template>
   </TemplateDefaultPortfolio>

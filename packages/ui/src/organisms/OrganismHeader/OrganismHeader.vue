@@ -15,7 +15,7 @@ defineProps<Props>()
 </script>
 
 <template>
-  <header class="border-border bg-card h-16 w-full border-b">
+  <header class="border-border bg-card sticky top-0 z-50 h-16 w-full border-b">
     <div class="container mx-auto flex h-full items-center justify-between px-4 sm:px-6 lg:px-8">
       <slot name="branding" />
 

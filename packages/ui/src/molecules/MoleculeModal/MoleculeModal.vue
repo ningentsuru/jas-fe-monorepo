@@ -62,7 +62,7 @@ onBeforeUnmount(() => {
     ref="dialogRef"
     data-testid="molecule-modal"
     @cancel="handleCancel"
-    class="molecule-modal /* Open Animations (Replaces custom @keyframes scale) */ open:animate-in open:fade-in open:zoom-in-95 open:slide-in-from-bottom-3 /* System Backdrop handling & Blurring Configuration */ backdrop:animate-in backdrop:fade-in /* High Contrast Fallback Strategy (Overrides background/blur for WCAG compliance) */ hc:border-2 hc:backdrop:bg-black/75 hc:backdrop:backdrop-blur-none border-border bg-card text-card-foreground fixed inset-0 m-auto flex w-full max-w-lg flex-col gap-6 rounded-lg border p-6 shadow-xl outline-none backdrop:bg-black/40 backdrop:backdrop-blur-sm backdrop:duration-250 backdrop:ease-out open:duration-250 open:ease-out data-[theme=high-contrast]:border-2 data-[theme=high-contrast]:backdrop:bg-black/75 data-[theme=high-contrast]:backdrop:backdrop-blur-none"
+    class="molecule-modal open:animate-in open:fade-in open:zoom-in-95 open:slide-in-from-bottom-3 backdrop:animate-in backdrop:fade-in hc:border-2 hc:backdrop:bg-black/75 hc:backdrop:backdrop-blur-none border-border bg-card text-card-foreground fixed inset-0 m-auto flex w-full max-w-lg flex-col gap-6 rounded-lg border p-6 shadow-xl outline-none backdrop:bg-black/40 backdrop:backdrop-blur-sm backdrop:duration-250 backdrop:ease-out open:duration-250 open:ease-out data-[theme=high-contrast]:border-2 data-[theme=high-contrast]:backdrop:bg-black/75 data-[theme=high-contrast]:backdrop:backdrop-blur-none"
   >
     <!-- Modal Structural Header Area -->
     <header

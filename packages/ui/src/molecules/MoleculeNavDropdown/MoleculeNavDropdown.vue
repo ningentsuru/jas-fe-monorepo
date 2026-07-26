@@ -1,4 +1,3 @@
-<!-- components/molecules/MoleculeNavDropdown.vue -->
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ChevronDown } from '@lucide/vue'
@@ -63,7 +62,7 @@ const isHovered = ref(false)
       <div
         class="ring-opacity-5 border-border bg-card overflow-hidden rounded-md border shadow-lg ring-1 ring-black"
       >
-        <div class="p-1 flex flex-col gap-2">
+        <div class="flex flex-col gap-2 p-1">
           <AtomNavLink
             v-for="child in item.children"
             :key="child.label"

@@ -4,7 +4,7 @@ import { ref, onMounted, onUnmounted, computed } from 'vue'
 interface Props {
   words: string[]
   interval?: number
-  transition?: 'fade' | 'slide-up' | 'slide-down' | 'scale-in' | 'scale-out' | 'blur' | 'flip'
+  transition?: 'fade' | 'slide-up' | 'slide-down' | 'scale-up' | 'scale-down' | 'blur' | 'flip'
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -80,7 +80,7 @@ onUnmounted(() => {
   opacity: 0;
 }
 
-/* --- 2. Slide Up (Old goes up, New comes from bottom) --- */
+/* --- 2. Slide Up --- */
 .transition-slide-up-enter-active,
 .transition-slide-up-leave-active {
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -94,7 +94,7 @@ onUnmounted(() => {
   transform: translateY(-100%);
 }
 
-/* --- 3. Slide Down (Old goes down, New comes from top) --- */
+/* --- 3. Slide Down --- */
 .transition-slide-down-enter-active,
 .transition-slide-down-leave-active {
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -108,32 +108,32 @@ onUnmounted(() => {
   transform: translateY(100%);
 }
 
-/* --- 4. Scale (Pop) --- */
-.transition-scale-in-enter-active,
-.transition-scale-in-leave-active {
+/* --- 4. Scale Up --- */
+.transition-scale-up-enter-active,
+.transition-scale-up-leave-active {
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.transition-scale-in-enter-from {
-  opacity: 0;
-  transform: scale(3);
-}
-.transition-scale-in-leave-to {
+.transition-scale-up-enter-from {
   opacity: 0;
   transform: scale(1);
+}
+.transition-scale-up-leave-to {
+  opacity: 0;
+  transform: scale(3);
 }
 
-/* --- 4. Scale (Pop) --- */
-.transition-scale-out-enter-active,
-.transition-scale-out-leave-active {
+/* --- 4. Scale Down --- */
+.transition-scale-down-enter-active,
+.transition-scale-down-leave-active {
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.transition-scale-out-enter-from {
-  opacity: 0;
-  transform: scale(1);
-}
-.transition-scale-out-leave-to {
+.transition-scale-down-enter-from {
   opacity: 0;
   transform: scale(3);
+}
+.transition-scale-down-leave-to {
+  opacity: 0;
+  transform: scale(1);
 }
 
 /* --- 5. Blur --- */
@@ -147,7 +147,7 @@ onUnmounted(() => {
   filter: blur(8px);
 }
 
-/* --- 6. Flip (3D) --- */
+/* --- 6. Flip --- */
 .transition-flip-enter-active,
 .transition-flip-leave-active {
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);

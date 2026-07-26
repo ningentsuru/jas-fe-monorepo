@@ -63,7 +63,7 @@ const variantClasses = {
   primary: 'bg-primary text-primary-foreground hover:opacity-90 focus:ring-ring',
   secondary: 'border border-border bg-card text-card-foreground hover:bg-muted focus:ring-ring',
   ghost: 'bg-transparent text-foreground hover:bg-muted focus:ring-ring',
-  link: 'bg-transparent text-primary hover:underline hover:opacity-80 focus:ring-ring p-0 h-auto',
+  link: 'bg-transparent text-primary hover:underline hover:opacity-80 focus:ring-ring p-0! h-auto',
   destructive: 'bg-destructive text-destructive-foreground hover:opacity-90 focus:ring-destructive',
 }
 
