@@ -242,7 +242,7 @@ module.exports = function (plop) {
             type: 'modify',
             path: '{{folder}}/{{packages}}/src/index.ts',
             pattern: new RegExp(`// plop:inject-${component}-component-do-not-remove`, 'g'),
-            template: `export { default as {{pascalCase name}} } from './${component}/{{pascalCase name}}'\n// plop:inject-${component}-component-do-not-remove`,
+            template: `export { default as {{pascalCase name}} } from './${component}/{{pascalCase name}}/index'\n// plop:inject-${component}-component-do-not-remove`,
           })
         }
       })
