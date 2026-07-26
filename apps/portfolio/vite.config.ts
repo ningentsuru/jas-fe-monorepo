@@ -12,10 +12,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
-      '@repo/ui': resolve(
-        fileURLToPath(new URL('./', import.meta.url)),
-        '../../packages/ui/src/index.ts',
-      ),
+      '@repo/ui': resolve(fileURLToPath(new URL('./', import.meta.url)), '../../packages/ui/src'),
     },
+    extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json', '.vue'],
   },
 })
