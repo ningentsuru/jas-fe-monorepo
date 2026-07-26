@@ -38,6 +38,7 @@
     "node": "^22.18.0 || >=24.12.0"
   },
   "scripts": {
+    "build": "echo 'No build step required for UI package'",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test": "vitest"
