@@ -19,6 +19,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@vueuse/core": "^14.3.0",
     "dayjs": "^1.11.21",
     "pinia": "^4.0.2",
     "vue": "^3.5.40",
