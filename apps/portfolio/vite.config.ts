@@ -16,4 +16,7 @@ export default defineConfig({
     },
     extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json', '.vue'],
   },
+  server: {
+    host: '0.0.0.0',
+  },
 })
