@@ -15,7 +15,7 @@ export default defineConfig({
       name: 'portfolio_host',
       remotes: {
         repo_ui_remote: {
-          external: `Promise.resolve(window.ui_library || new Promise((resolve, reject) => {
+          external: `Promise.resolve(window.repo_ui || new Promise((resolve, reject) => {
             const script = document.createElement('script');
             script.src = 'https://vercel.app';
             script.type = 'text/javascript';
