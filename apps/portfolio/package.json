@@ -26,7 +26,6 @@
     "vue-router": "^5.2.0"
   },
   "devDependencies": {
-    "@originjs/vite-plugin-federation": "^1.4.1",
     "@playwright/test": "^1.62.0",
     "@repo/ui": "workspace:*",
     "@storybook/vue3-vite": "^10.5.4",

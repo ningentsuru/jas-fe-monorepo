@@ -5,7 +5,14 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [vue(), tailwindcss()],
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+    extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json', '.vue'],
+  },
   build: {
+    target: 'esnext',
     lib: {
       entry: fileURLToPath(new URL('./src/index.ts', import.meta.url)),
       name: 'UiLibrary',
@@ -15,12 +22,6 @@ export default defineConfig({
       external: ['vue'],
       output: {
         globals: { vue: 'Vue' },
-        assetFileNames: (assetInfo) => {
-          if (assetInfo.name === 'style.css') {
-            return 'style.css'
-          }
-          return assetInfo.name ?? ''
-        },
       },
     },
   },

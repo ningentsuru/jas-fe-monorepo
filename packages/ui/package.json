@@ -23,7 +23,6 @@
     "@lucide/vue": "^1.27.0"
   },
   "devDependencies": {
-    "@originjs/vite-plugin-federation": "^1.4.1",
     "@storybook/vue3-vite": "^10.5.4",
     "@tailwindcss/vite": "^4.3.3",
     "@tsconfig/node24": "^24.0.4",
