@@ -29,7 +29,6 @@ const config: StorybookConfig = {
     config.build = config.build || {}
     config.build.target = 'esnext'
     config.build.assetsDir = 'assets'
-    config.base = 'https://jas-storybook.vercel.app/'
 
     return config
   },

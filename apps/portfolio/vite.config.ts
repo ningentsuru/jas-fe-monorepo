@@ -15,9 +15,15 @@ export default defineConfig({
       name: 'portfolio_host',
       remotes: {
         repo_ui_remote: {
-          external: 'https://vercel.app',
-          externalType: 'url',
-          format: 'esm',
+          external: `Promise.resolve(window.ui_library || new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = 'https://vercel.app';
+            script.type = 'text/javascript';
+            script.onload = () => resolve(window.repo_ui);
+            script.onerror = (err) => reject(err);
+            document.head.appendChild(script);
+          }))`,
+          externalType: 'promise',
         },
       },
       shared: ['vue'],
