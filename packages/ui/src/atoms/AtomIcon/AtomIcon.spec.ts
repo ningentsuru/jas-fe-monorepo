@@ -1,31 +1,37 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import AtomIcon from './AtomIcon.vue'
-import { Default } from './AtomIcon.stories'
+import { Default, WithNumericSize, WithIconComponent } from './AtomIcon.stories'
 
-interface defaultProps {
-  name: string, 
-  size: string
-}
+type AtomIconProps = InstanceType<typeof AtomIcon>['$props']
 
 describe('AtomIcon', () => {
-  it('renders properly using Storybook args', () => {
+  it('renders text when no icon is provided', () => {
     const wrapper = mount(AtomIcon, {
-      props: Default.args as defaultProps,
+      props: Default.args as AtomIconProps,
     })
 
-    expect(wrapper.text()).toContain('atom-icon')
+    expect(wrapper.text()).toContain('Default Icon Text')
+    expect(wrapper.find('.atom-icon').attributes('style')).toBeUndefined()
   })
 
-  it('receives correct props from Storybook args', () => {
+  it('applies custom inline style for pixel values', () => {
     const wrapper = mount(AtomIcon, {
-      props: Default.args as defaultProps,
+      props: WithNumericSize.args as AtomIconProps,
     })
 
+    const targetElement = wrapper.find('[data-testid="atom-icon"]')
 
-    // Verify name (string)
-    expect(wrapper.props('name')).toEqual('')
-    // Verify size (string)
-    expect(wrapper.props('size')).toEqual('')
+    expect(targetElement.attributes('style')).toContain('--icon-size: 42px')
+  })
+
+  it('renders injected dynamic functional component structure', () => {
+    const wrapper = mount(AtomIcon, {
+      props: WithIconComponent.args as AtomIconProps,
+    })
+
+    expect(wrapper.find('svg').exists()).toBe(true)
+    expect(wrapper.find('svg').classes()).toContain('w-8')
+    expect(wrapper.find('svg').classes()).toContain('h-8')
   })
 })

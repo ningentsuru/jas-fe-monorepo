@@ -4,18 +4,14 @@ import {{pascalCase name}} from './{{pascalCase name}}.vue'
 import { Default } from './{{pascalCase name}}.stories'
 
 {{#if props.length}}
-interface defaultProps {
-  {{#each props}}
-  {{this.propName}}: {{#if (eq this.propType 'function')}}() => void{{else}}{{this.propType}}{{/if}}{{#unless @last}}, {{/unless}}
-  {{/each}}
-}
+type {{pascalCase name}}Props = InstanceType<typeof {{pascalCase name}}>['$props']
 {{/if}}
 
 describe('{{pascalCase name}}', () => {
   it('renders properly using Storybook args', () => {
     const wrapper = mount({{pascalCase name}}, {
       {{#if props.length}}
-      props: Default.args as defaultProps,
+      props: Default.args as {{pascalCase name}}Props,
       {{else}}
       props: Default.args,
       {{/if}}
@@ -27,7 +23,7 @@ describe('{{pascalCase name}}', () => {
 
   it('receives correct props from Storybook args', () => {
     const wrapper = mount({{pascalCase name}}, {
-      props: Default.args as defaultProps,
+      props: Default.args as {{pascalCase name}}Props,
     })
 
     {{#each props}}

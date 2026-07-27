@@ -3,20 +3,19 @@ import { mount } from '@vue/test-utils'
 import AtomButton from './AtomButton.vue'
 import { Default, Disabled, ExternalLink } from './AtomButton.stories'
 
+type AtomButtonProps = InstanceType<typeof AtomButton>['$props']
+
 describe('AtomButton', () => {
   it('renders default slot text and basic attributes properly', () => {
     const wrapper = mount(AtomButton, {
-      props: Default.args,
+      props: Default.args as AtomButtonProps,
       slots: {
         default: 'Hello Button',
       },
     })
 
-    // Assert text content
     expect(wrapper.text()).toBe('Hello Button')
-    // Assert target element node type
     expect(wrapper.element.tagName.toLowerCase()).toBe('button')
-    // Assert test id from component configuration
     expect(wrapper.attributes('data-testid')).toBe('atom-button')
   })
 
@@ -26,18 +25,46 @@ describe('AtomButton', () => {
         ...Default.args,
         size: 'lg',
         variant: 'primary',
-      },
+      } as AtomButtonProps,
     })
 
     expect(wrapper.props('size')).toBe('lg')
     expect(wrapper.props('variant')).toBe('primary')
-    expect(wrapper.classes()).toContain('px-6') // sizeClasses.lg check
-    expect(wrapper.classes()).toContain('bg-primary') // variantClasses.primary check
+    expect(wrapper.classes()).toContain('px-6')
+    expect(wrapper.classes()).toContain('bg-primary')
+  })
+
+  it('applies classes correctly for the new xl size value', () => {
+    const wrapper = mount(AtomButton, {
+      props: {
+        ...Default.args,
+        size: 'xl',
+      } as AtomButtonProps,
+    })
+
+    expect(wrapper.props('size')).toBe('xl')
+    expect(wrapper.classes()).toContain('h-16')
+    expect(wrapper.classes()).toContain('px-8')
+  })
+
+  it('applies custom inline styles and variable sizing when a number is passed', () => {
+    const wrapper = mount(AtomButton, {
+      props: {
+        ...Default.args,
+        size: 55,
+      } as AtomButtonProps,
+    })
+
+    const element = wrapper.element as HTMLElement
+
+    expect(wrapper.props('size')).toBe(55)
+    expect(wrapper.classes()).toContain('h-[var(--button-size)]')
+    expect(element.style.getPropertyValue('--button-size')).toBe('55px')
   })
 
   it('handles polymorphic tag transformations for anchors', () => {
     const wrapper = mount(AtomButton, {
-      props: ExternalLink.args,
+      props: ExternalLink.args as AtomButtonProps,
     })
 
     expect(wrapper.element.tagName.toLowerCase()).toBe('a')
@@ -47,7 +74,7 @@ describe('AtomButton', () => {
 
   it('emits click event when active', async () => {
     const wrapper = mount(AtomButton, {
-      props: Default.args,
+      props: Default.args as AtomButtonProps,
     })
 
     await wrapper.trigger('click')
@@ -57,7 +84,7 @@ describe('AtomButton', () => {
 
   it('prevents click events and applies accessibility properties when disabled', async () => {
     const wrapper = mount(AtomButton, {
-      props: Disabled.args,
+      props: Disabled.args as AtomButtonProps,
     })
 
     expect(wrapper.element.tagName.toLowerCase()).toBe('button')

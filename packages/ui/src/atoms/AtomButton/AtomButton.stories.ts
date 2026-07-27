@@ -5,7 +5,10 @@ const meta: Meta<typeof AtomButton> = {
   title: 'Components/AtomButton',
   component: AtomButton,
   argTypes: {
-    size: { control: 'select', options: ['sm', 'md', 'lg'] },
+    size: {
+      type: { name: 'other', value: 'string | number' },
+      description: 'Accepts preset names or a custom pixel number value',
+    },
     variant: {
       control: 'select',
       options: ['default', 'primary', 'secondary', 'ghost', 'link', 'destructive'],
@@ -19,7 +22,6 @@ const meta: Meta<typeof AtomButton> = {
     disabled: false,
     type: 'button',
   },
-  // Global render to handle the default slot content across stories
   render: (args) => ({
     components: { AtomButton },
     setup() {
@@ -34,6 +36,20 @@ type Story = StoryObj<typeof AtomButton>
 
 export const Default: Story = {}
 
+export const SizeXL: Story = {
+  args: {
+    size: 'xl',
+    variant: 'primary',
+  },
+}
+
+export const SizeCustomPixels: Story = {
+  args: {
+    size: 64,
+    variant: 'primary',
+  },
+}
+
 export const Primary: Story = {
   args: {
     variant: 'primary',
@@ -42,6 +58,7 @@ export const Primary: Story = {
 
 export const Disabled: Story = {
   args: {
+    ...Primary.args,
     disabled: true,
   },
 }

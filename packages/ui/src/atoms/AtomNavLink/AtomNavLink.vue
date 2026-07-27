@@ -4,9 +4,9 @@ import { AtomButton } from '../../'
 interface Props {
   label: string
   href?: string
-  to?: string
+  to?: string | Record<string, any>
   variant?: 'ghost' | 'link'
-  size?: 'sm' | 'md' | 'lg'
+  size?: 'sm' | 'md' | 'lg' | 'xl' | number
   active?: boolean
 }
 
@@ -36,10 +36,8 @@ const emit = defineEmits<{
       variant === 'link' ? 'px-3 py-2 font-normal' : 'px-3 py-2 font-medium',
     ]"
   >
-    <!-- Left-aligned text label -->
     <span class="flex-1 text-left">{{ label }}</span>
 
-    <!-- Slotted component content (such as chevrons) stays right-aligned -->
     <slot name="trailing" />
   </AtomButton>
 </template>
