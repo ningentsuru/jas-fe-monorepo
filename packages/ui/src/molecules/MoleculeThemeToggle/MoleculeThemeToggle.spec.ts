@@ -1,31 +1,86 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import MoleculeThemeToggle from './MoleculeThemeToggle.vue'
-import { Default } from './MoleculeThemeToggle.stories'
+import { globalLongPressHandlers } from '../../setup'
+import meta, { Default, DarkModeActive, CustomForestTheme } from './MoleculeThemeToggle.stories'
 
-interface defaultProps {
-  isToggled: boolean, 
-  size: string
+type MoleculeThemeToggleProps = InstanceType<typeof MoleculeThemeToggle>['$props']
+
+const getProps = (storyArgs: typeof Default.args): MoleculeThemeToggleProps => {
+  return {
+    ...meta.args,
+    ...storyArgs,
+  } as MoleculeThemeToggleProps
 }
 
 describe('MoleculeThemeToggle', () => {
-  it('renders properly using Storybook args', () => {
+  beforeEach(() => {
+    HTMLDialogElement.prototype.showModal = vi.fn()
+    HTMLDialogElement.prototype.close = vi.fn()
+    document.body.innerHTML = ''
+  })
+
+  it('renders core container toggle layout structures correctly', () => {
     const wrapper = mount(MoleculeThemeToggle, {
-      props: Default.args as defaultProps,
+      props: getProps(Default.args),
     })
 
+    expect(wrapper.find('[data-testid="molecule-theme-toggle"]').exists()).toBe(true)
     expect(wrapper.text()).toContain('molecule-theme-toggle')
   })
 
-  it('receives correct props from Storybook args', () => {
+  it('receives correct structural props passed down from Storybook arguments', () => {
     const wrapper = mount(MoleculeThemeToggle, {
-      props: Default.args as defaultProps,
+      props: getProps(DarkModeActive.args),
     })
 
+    expect(wrapper.props('isToggled')).toBe(true)
+    expect(wrapper.props('currentTheme')).toBe('dark')
+  })
 
-    // Verify isToggled (boolean)
-    expect(wrapper.props('isToggled')).toEqual(false)
-    // Verify size (string)
-    expect(wrapper.props('size')).toEqual('')
+  it('bubbles primary click toggle notifications upward when tap actions fire', async () => {
+    const wrapper = mount(MoleculeThemeToggle, {
+      props: getProps(Default.args),
+    })
+
+    if (globalLongPressHandlers.onToggle) {
+      globalLongPressHandlers.onToggle()
+    }
+
+    expect(wrapper.emitted('toggle')).toBeTruthy()
+  })
+
+  it('mounts and displays modal theme lists after triggering long-toggle hooks', async () => {
+    const wrapper = mount(MoleculeThemeToggle, {
+      props: getProps(Default.args),
+      global: {
+        stubs: {
+          Teleport: true,
+        },
+      },
+    })
+
+    if (globalLongPressHandlers.onLongToggle) {
+      globalLongPressHandlers.onLongToggle()
+    }
+
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.findComponent({ name: 'MoleculeModal' }).exists()).toBe(true)
+    expect(wrapper.emitted('longToggle')).toBeTruthy()
+  })
+
+  it('changes primary display icon layout choices dynamically depending on current active themes', async () => {
+    const lightWrapper = mount(MoleculeThemeToggle, {
+      props: getProps(Default.args),
+    })
+    const forestWrapper = mount(MoleculeThemeToggle, {
+      props: getProps(CustomForestTheme.args),
+    })
+
+    const lightToggle = lightWrapper.findComponent({ name: 'AtomToggle' })
+    const forestToggle = forestWrapper.findComponent({ name: 'AtomToggle' })
+
+    expect(lightToggle.props('icon')).not.toEqual(forestToggle.props('icon'))
   })
 })

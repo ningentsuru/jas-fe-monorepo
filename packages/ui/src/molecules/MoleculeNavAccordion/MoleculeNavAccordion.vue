@@ -20,17 +20,11 @@ const emit = defineEmits<{
   (e: 'navigate'): void
 }>()
 
-// Generate a deterministic unique layout id string for accessible tracking
 const menuId = computed(
   () => `accordion-menu-${props.item.label.toLowerCase().replace(/\s+/g, '-')}`,
 )
 
-/**
- * Handles clicks on the entire row container.
- * This guarantees the toggle fires regardless of how AtomNavLink is built.
- */
-function handleContainerClick(event: MouseEvent) {
-  // If a child has children, block navigation and toggle the accordion
+function handleLinkClick(event: MouseEvent) {
   if (props.item.children) {
     event.preventDefault()
     event.stopPropagation()
@@ -42,35 +36,27 @@ function handleContainerClick(event: MouseEvent) {
 </script>
 
 <template>
-  <div class="molecule-nav-accordion w-full" data-testid="molecule-nav-accordion">
-    <!-- Parent Row (Unified single focus and click target) -->
-    <div
-      class="group hover:bg-muted flex cursor-pointer items-center justify-between rounded-md transition-colors"
-      @click="handleContainerClick"
+  <div class="molecule-nav-accordion font-display w-full" data-testid="molecule-nav-accordion">
+    <AtomNavLink
+      :label="item.label"
+      :to="item.children ? undefined : item.href"
+      variant="ghost"
+      size="md"
+      class="hover:bg-muted/60 w-full items-center justify-between rounded-md text-left font-medium transition-colors"
+      :aria-expanded="item.children ? isOpen : undefined"
+      :aria-controls="item.children ? menuId : undefined"
+      @click="handleLinkClick"
     >
-      <!-- One single link element handles the entire row, focus state, and icons -->
-      <AtomNavLink
-        :label="item.label"
-        :to="item.children ? undefined : item.href"
-        variant="ghost"
-        size="md"
-        class="flex-1 justify-start text-left font-medium"
-        :aria-expanded="item.children ? isOpen : undefined"
-        :aria-controls="item.children ? menuId : undefined"
-      >
-        <!-- Pass the matching chevron indicator as a trailing slot asset if item has kids -->
-        <template v-if="item.children" #trailing>
-          <AtomIcon
-            :icon="ChevronRight"
-            size="sm"
-            class="text-muted-foreground group-hover:text-foreground transition-transform duration-200"
-            :class="isOpen ? 'rotate-90' : 'rotate-0'"
-          />
-        </template>
-      </AtomNavLink>
-    </div>
+      <template v-if="item.children" #trailing>
+        <AtomIcon
+          :icon="ChevronRight"
+          size="sm"
+          class="text-muted-foreground transition-transform duration-200"
+          :class="isOpen ? 'rotate-90' : 'rotate-0'"
+        />
+      </template>
+    </AtomNavLink>
 
-    <!-- Smooth Accordion Panel Expansion -->
     <div
       :id="menuId"
       class="grid overflow-hidden transition-all duration-200 ease-in-out"

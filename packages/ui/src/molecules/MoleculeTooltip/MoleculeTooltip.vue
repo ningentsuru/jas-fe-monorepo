@@ -23,7 +23,7 @@ const arrowCoords = ref({ top: '', left: '', bottom: '', right: '', transform: '
 
 let timer: ReturnType<typeof setTimeout> | null = null
 let resizeObserver: ResizeObserver | null = null
-let rafId: number | null = null // Tracks window requestAnimationFrame to prevent loops
+let rafId: number | null = null
 
 onUnmounted(() => {
   cleanup()
@@ -43,7 +43,6 @@ function show() {
 }
 
 function hide() {
-  // Tear down event listeners early during the hide delay window
   destroyListeners()
 
   if (timer) clearTimeout(timer)
@@ -53,7 +52,6 @@ function hide() {
 }
 
 function setupListeners() {
-  // Clear any existing active observers before building fresh ones
   destroyListeners()
 
   window.addEventListener('resize', recalculatePosition)
@@ -61,8 +59,6 @@ function setupListeners() {
 
   if (tooltipRef.value) {
     resizeObserver = new ResizeObserver(() => {
-      // Wrap observer in requestAnimationFrame to bypass the
-      // "ResizeObserver loop completed with undelivered notifications" browser error
       if (rafId) cancelAnimationFrame(rafId)
       rafId = requestAnimationFrame(() => {
         recalculatePosition()
@@ -96,7 +92,6 @@ function recalculatePosition() {
 
   const trigger = triggerRef.value.getBoundingClientRect()
 
-  // Measure the unconstrained dimensions
   const tooltipWidth = tooltipRef.value.offsetWidth
   const tooltipHeight = tooltipRef.value.offsetHeight
 
@@ -107,12 +102,10 @@ function recalculatePosition() {
 
   let actualPos = props.position
 
-  // 1. Horizontal Axis Protection: If left/right won't fit on screen, switch to vertical axis
   if (actualPos === 'left' || actualPos === 'right') {
     const fitsLeft = trigger.left - tooltipWidth - gap >= pad
     const fitsRight = trigger.right + tooltipWidth + gap <= vw - pad
 
-    // If it doesn't fit on its preferred side, check if it fits on the opposite horizontal side
     if (actualPos === 'left' && !fitsLeft) {
       actualPos = fitsRight ? 'right' : trigger.top - tooltipHeight - gap >= pad ? 'top' : 'bottom'
     } else if (actualPos === 'right' && !fitsRight) {
@@ -120,7 +113,6 @@ function recalculatePosition() {
     }
   }
 
-  // 2. Vertical Axis Protection: Standard flip fallback behavior
   if (actualPos === 'top' && trigger.top - tooltipHeight - gap < pad) {
     actualPos = 'bottom'
   } else if (actualPos === 'bottom' && trigger.bottom + tooltipHeight + gap > vh - pad) {
@@ -130,7 +122,6 @@ function recalculatePosition() {
   let idealLeft = 0
   let idealTop = 0
 
-  // 3. Center Alignment Math Logic
   if (actualPos === 'top' || actualPos === 'bottom') {
     idealLeft = trigger.left + (trigger.width - tooltipWidth) / 2
     idealTop = actualPos === 'top' ? trigger.top - tooltipHeight - gap : trigger.bottom + gap
@@ -139,7 +130,6 @@ function recalculatePosition() {
     idealTop = trigger.top + (trigger.height - tooltipHeight) / 2
   }
 
-  // 4. Hard clamp layout boundaries (Safe guard rail slider)
   if (idealLeft < pad) idealLeft = pad
   if (idealLeft + tooltipWidth > vw - pad) idealLeft = vw - tooltipWidth - pad
 
@@ -151,7 +141,6 @@ function recalculatePosition() {
     top: idealTop - trigger.top,
   }
 
-  // 5. Track Arrow Orientation Points
   const triggerCenterH = trigger.left + trigger.width / 2
   const triggerCenterV = trigger.top + trigger.height / 2
 
@@ -224,7 +213,6 @@ function recalculatePosition() {
           <slot name="content">{{ title }}</slot>
         </div>
 
-        <!-- Dynamic Arrow -->
         <div
           v-if="!isCalculating"
           :style="{

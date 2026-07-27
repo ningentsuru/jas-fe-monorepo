@@ -13,7 +13,8 @@ import { OrganismHero } from '@repo/ui'
       secondary-label="View on GitHub"
       secondary-href="https://github.com/ningentsuru"
       secondary-target="_blank"
-      background-image="/hero-bg.jpg"
+      background-image="/hero-image.webp"
+      background-video="/hero-video.mp4"
       align="center"
     />
     <p>Working In progress</p>

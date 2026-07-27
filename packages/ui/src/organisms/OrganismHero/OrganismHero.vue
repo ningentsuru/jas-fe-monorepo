@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { AtomButton } from '../../'
 
 type target = '_blank' | '_self' | '_parent' | '_top'
@@ -16,6 +17,7 @@ interface Props {
   secondaryTarget?: target
   align?: 'left' | 'center' | 'right'
   backgroundImage?: string
+  backgroundVideo?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -29,34 +31,48 @@ const props = withDefaults(defineProps<Props>(), {
   secondaryTarget: '_blank',
   align: 'center',
   backgroundImage: '',
+  backgroundVideo: '',
 })
 
 const alignClasses = {
-  left: 'text-left items-start',
-  center: 'text-center items-center',
-  right: 'text-right items-end',
+  left: 'text-left justify-start items-center',
+  center: 'text-center justify-center items-center',
+  right: 'text-right justify-end items-center',
 }
+
+// Checks if any asset is present to trigger the text overlay
+const hasBackground = computed(() => {
+  return !!props.backgroundImage || !!props.backgroundVideo
+})
 </script>
 
 <template>
   <section
-    class="organism-hero relative flex min-h-150 w-full items-center justify-center overflow-hidden"
+    class="organism-hero relative flex min-h-150 w-full overflow-hidden"
     :class="alignClasses[align]"
-    :style="
-      backgroundImage
-        ? `background-image: url('${backgroundImage}'); background-size: cover; background-position: center;`
-        : ''
-    "
     data-testid="organism-hero"
   >
-    <!-- Overlay for readability on images -->
+    <!-- Background Video with built-in Poster Fallback -->
+    <video
+      v-if="props.backgroundVideo"
+      :poster="props.backgroundImage"
+      autoplay
+      muted
+      loop
+      playsinline
+      class="absolute inset-0 -z-10 h-full w-full object-cover"
+    >
+      <source :src="props.backgroundVideo" type="video/mp4" />
+    </video>
+
+    <!-- Overlay for readability on media assets -->
     <div
-      v-if="backgroundImage"
+      v-if="hasBackground"
       class="bg-background/60 dark:bg-background/80 absolute inset-0 backdrop-blur-[2px]"
     />
 
     <!-- Content Container -->
-    <div class="relative z-10 mx-auto flex max-w-4xl flex-col gap-6 px-4 sm:px-6 lg:px-8">
+    <div class="relative z-10 mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 sm:px-6 lg:px-8">
       <h1 class="text-foreground text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
         {{ title }}
       </h1>

@@ -122,13 +122,14 @@
         "Pinia",
         "Vuex",
         "React 19",
-        "Next.js 16"
+        "Next.js 16",
+        "Laravel"
       ]
     },
     {
       "name": "Languages",
       "level": "Senior",
-      "keywords": ["JavaScript (ES2025)", "TypeScript"]
+      "keywords": ["JavaScript (ES2025)", "TypeScript", "PHP"]
     },
     {
       "name": "Build Tools & Styling",

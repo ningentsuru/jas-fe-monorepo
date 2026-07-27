@@ -19,14 +19,17 @@ const props = withDefaults(defineProps<Props>(), {
   isOpen: false,
 })
 
-const emit = defineEmits(['toggle', 'navigate'])
+const emit = defineEmits<{
+  (e: 'toggle', index: number): void
+  (e: 'navigate'): void
+}>()
 
 const isHovered = ref(false)
 </script>
 
 <template>
-  <div class="molecule-nav-dropdown group relative" data-testid="molecule-nav-dropdown">
-    <!-- Trigger -->
+  <div class="molecule-nav-dropdown group relative font-display focus-within:relative" data-testid="molecule-nav-dropdown">
+    <!-- Trigger Button -->
     <AtomButton
       variant="ghost"
       size="sm"
@@ -43,26 +46,25 @@ const isHovered = ref(false)
         v-if="item.children"
         :icon="ChevronDown"
         size="sm"
-        :class="
-          ['transition-transform', isOpen ? 'rotate-180' : 'group-hover:rotate-180'].join(' ')
-        "
+        class="transition-transform duration-200"
+        :class="isOpen ? 'rotate-180' : 'group-hover:rotate-180'"
       />
     </AtomButton>
 
-    <!-- Dropdown -->
+    <!-- Dropdown Content Card (Enhanced with focus-within utility) -->
     <div
       v-if="item.children"
+      class="absolute top-full left-0 mt-2 w-48 origin-top-left transition-all duration-200 ease-out z-50 focus-within:visible focus-within:scale-100 focus-within:opacity-100"
       :class="[
-        'absolute top-full left-0 mt-2 w-48 origin-top-left scale-95 transition-all duration-200 ease-out',
         isOpen || isHovered
           ? 'visible scale-100 opacity-100'
           : 'invisible scale-95 opacity-0 group-hover:visible group-hover:scale-100 group-hover:opacity-100',
       ]"
     >
       <div
-        class="ring-opacity-5 border-border bg-card overflow-hidden rounded-md border shadow-lg ring-1 ring-black"
+        class="border border-border bg-card overflow-hidden rounded-md shadow-lg ring-1 ring-black/5"
       >
-        <div class="flex flex-col gap-2 p-1">
+        <div class="flex flex-col gap-1 p-1">
           <AtomNavLink
             v-for="child in item.children"
             :key="child.label"

@@ -1,17 +1,88 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
+import { ref, watch } from 'vue'
 import MoleculeThemeToggle from './MoleculeThemeToggle.vue'
 
 const meta: Meta<typeof MoleculeThemeToggle> = {
-  component: MoleculeThemeToggle,
   title: 'Components/MoleculeThemeToggle',
+  component: MoleculeThemeToggle,
+  argTypes: {
+    size: {
+      type: { name: 'other', value: 'string | number' },
+      description: 'Accepts preset name strings or custom pixel layout numbers',
+    },
+    currentTheme: {
+      control: 'select',
+      options: ['light', 'dark', 'forest', 'ocean', 'sunset', 'high-contrast'],
+    },
+  },
+  args: {
+    isToggled: false,
+    currentTheme: 'light',
+    size: 'md',
+  },
+  render: (args) => ({
+    components: { MoleculeThemeToggle },
+    setup() {
+      const localTheme = ref(args.currentTheme)
+      const localToggled = ref(args.isToggled)
+
+      watch(
+        () => args.currentTheme,
+        (newTheme) => {
+          localTheme.value = newTheme
+        },
+      )
+      watch(
+        () => args.isToggled,
+        (newToggle) => {
+          localToggled.value = newToggle
+        },
+      )
+
+      function handleToggle() {
+        localToggled.value = !localToggled.value
+        localTheme.value = localToggled.value ? 'dark' : 'light'
+      }
+
+      function handleSetTheme(theme: any) {
+        localTheme.value = theme
+        localToggled.value = theme !== 'light'
+      }
+
+      return { args, localTheme, localToggled, handleToggle, handleSetTheme }
+    },
+    template: `
+      <div class="p-6">
+        <MoleculeThemeToggle
+          v-bind="args"
+          :current-theme="localTheme"
+          :is-toggled="localToggled"
+          @toggle="handleToggle"
+          @set-theme="handleSetTheme"
+        />
+        <div class="mt-4 text-sm text-muted-foreground">
+          Active Theme State: <span class="font-bold font-mono text-foreground">{{ localTheme }}</span>
+        </div>
+      </div>
+    `,
+  }),
 }
 
 export default meta
 type Story = StoryObj<typeof MoleculeThemeToggle>
 
-export const Default: Story = {
+export const Default: Story = {}
+
+export const DarkModeActive: Story = {
   args: {
-    isToggled: false,
-    size: '',
+    isToggled: true,
+    currentTheme: 'dark',
+  },
+}
+
+export const CustomForestTheme: Story = {
+  args: {
+    isToggled: true,
+    currentTheme: 'forest',
   },
 }
