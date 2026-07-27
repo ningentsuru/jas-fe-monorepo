@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { ChevronRight } from '@lucide/vue'
 import { AtomIcon } from '../../'
 
@@ -13,7 +13,7 @@ interface Props {
   options: Option[]
   placeholder?: string
   disabled?: boolean
-  size?: 'sm' | 'md' | 'lg'
+  size?: 'sm' | 'md' | 'lg' | 'xl' | number
   error?: boolean
   id?: string
   name?: string
@@ -33,12 +33,9 @@ const props = withDefaults(defineProps<Props>(), {
 
 const modelValue = defineModel<string | number>({ default: '' })
 
-// Tracks the open/close state of the dropdown picker
 const isOpen = ref<boolean>(false)
 
-// Shared, stable state closure execution handler
 function closeDropdown() {
-  // A small timeout bypasses browser native choice click event races
   setTimeout(() => {
     isOpen.value = false
   }, 100)
@@ -47,16 +44,11 @@ function closeDropdown() {
 function toggleDropdown(event: MouseEvent) {
   if (props.disabled) return
 
-  // Checking pointer coordinates safely separates clicking the container
-  // vs making an option selection from a native popover viewport.
   if (event.clientX > 0 && event.clientY > 0) {
     isOpen.value = !isOpen.value
   }
 }
 
-/**
- * Handle explicit keystroke indicators to sync state changes cleanly.
- */
 function handleKeyDown(event: KeyboardEvent) {
   if (props.disabled) return
 
@@ -66,10 +58,32 @@ function handleKeyDown(event: KeyboardEvent) {
     isOpen.value = false
   }
 }
+
+const selectClass = computed(() => {
+  if (typeof props.size === 'number') {
+    return 'pl-4 text-base h-[var(--select-size)]'
+  }
+
+  const sizeClasses: Record<string, string> = {
+    sm: 'h-9 py-1.5 pl-3 text-sm',
+    md: 'h-11 py-2 pl-4 text-base',
+    lg: 'h-14 py-3 pl-4 text-lg',
+    xl: 'h-16 py-4 pl-4 text-xl',
+  }
+
+  return sizeClasses[props.size] || sizeClasses.md
+})
+
+const selectStyle = computed(() => {
+  if (typeof props.size === 'number') {
+    return { '--select-size': `${props.size}px` }
+  }
+  return {}
+})
 </script>
 
 <template>
-  <div class="atom-select-container relative w-full">
+  <div class="atom-select-container font-display relative w-full">
     <select
       :id="props.id"
       :name="props.name"
@@ -82,26 +96,19 @@ function handleKeyDown(event: KeyboardEvent) {
       @blur="closeDropdown"
       @change="closeDropdown"
       @keydown="handleKeyDown"
-      class="atom-select hc:border-2 border-border bg-card text-card-foreground focus:ring-ring focus:ring-offset-background block w-full cursor-pointer appearance-none rounded-md pr-10 shadow-sm transition-all outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[theme=high-contrast]:border-2"
+      :style="selectStyle"
+      class="atom-select border-border bg-card text-card-foreground focus-visible:ring-ring focus-visible:ring-offset-background hc:border-2 block w-full cursor-pointer appearance-none rounded-md border pr-10 shadow-sm transition-all duration-300 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 data-[theme=high-contrast]:border-2"
       :class="[
-        // Error Styling Layer
+        selectClass,
         error
-          ? 'border-destructive focus:border-destructive focus:ring-destructive/50'
+          ? 'border-destructive focus-visible:border-destructive focus-visible:ring-destructive/50'
           : 'hover:bg-muted/40',
-        // Size Mapping Configurations
-        {
-          'h-9 py-1.5 pl-3 text-sm': size === 'sm',
-          'h-11 py-2 pl-4 text-base': size === 'md',
-          'h-14 py-3 pl-4 text-lg': size === 'lg',
-        },
       ]"
     >
-      <!-- Hidden Placeholder Node -->
       <option value="" disabled hidden class="bg-card text-card-foreground">
         {{ placeholder }}
       </option>
 
-      <!-- Option Iterables Map Loop -->
       <option
         v-for="option in options"
         :key="option.value"
@@ -113,12 +120,10 @@ function handleKeyDown(event: KeyboardEvent) {
       </option>
     </select>
 
-    <!-- Custom Select Caret Indicators (No Style Tag Needed) -->
     <div
       class="text-muted-foreground pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
       aria-hidden="true"
     >
-      <!-- Only one icon remains. It pivots smoothly using hardware-accelerated Tailwind transitions -->
       <AtomIcon
         :icon="ChevronRight"
         :size="size"

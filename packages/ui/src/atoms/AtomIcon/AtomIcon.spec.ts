@@ -1,14 +1,21 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import AtomIcon from './AtomIcon.vue'
-import { Default, WithNumericSize, WithIconComponent } from './AtomIcon.stories'
+import meta, { Default, WithNumericSize, WithIconComponent } from './AtomIcon.stories'
 
 type AtomIconProps = InstanceType<typeof AtomIcon>['$props']
+
+const getProps = (storyArgs: typeof Default.args): AtomIconProps => {
+  return {
+    ...meta.args,
+    ...storyArgs,
+  } as AtomIconProps
+}
 
 describe('AtomIcon', () => {
   it('renders text when no icon is provided', () => {
     const wrapper = mount(AtomIcon, {
-      props: Default.args as AtomIconProps,
+      props: getProps(Default.args),
     })
 
     expect(wrapper.text()).toContain('Default Icon Text')
@@ -17,7 +24,7 @@ describe('AtomIcon', () => {
 
   it('applies custom inline style for pixel values', () => {
     const wrapper = mount(AtomIcon, {
-      props: WithNumericSize.args as AtomIconProps,
+      props: getProps(WithNumericSize.args),
     })
 
     const targetElement = wrapper.find('[data-testid="atom-icon"]')
@@ -27,7 +34,7 @@ describe('AtomIcon', () => {
 
   it('renders injected dynamic functional component structure', () => {
     const wrapper = mount(AtomIcon, {
-      props: WithIconComponent.args as AtomIconProps,
+      props: getProps(WithIconComponent.args),
     })
 
     expect(wrapper.find('svg').exists()).toBe(true)

@@ -1,28 +1,79 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import AtomWordSwap from './AtomWordSwap.vue'
-import { Default } from './AtomWordSwap.stories'
+import meta, { Default, FastFlipTransition, SingleWordFallback } from './AtomWordSwap.stories'
 
-interface defaultProps {
-  word: string
+type AtomWordSwapProps = InstanceType<typeof AtomWordSwap>['$props']
+
+const getProps = (storyArgs: typeof Default.args): AtomWordSwapProps => {
+  return {
+    ...meta.args,
+    ...storyArgs,
+  } as AtomWordSwapProps
 }
 
 describe('AtomWordSwap', () => {
-  it('renders properly using Storybook args', () => {
-    const wrapper = mount(AtomWordSwap, {
-      props: Default.args as defaultProps,
-    })
-
-    expect(wrapper.text()).toContain('atom-word-swap')
+  beforeEach(() => {
+    vi.useFakeTimers()
   })
 
-  it('receives correct props from Storybook args', () => {
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('renders the initial word configuration parameter accurately on mount', () => {
     const wrapper = mount(AtomWordSwap, {
-      props: Default.args as defaultProps,
+      props: getProps(Default.args),
     })
 
+    expect(wrapper.text()).toContain('Innovative')
+  })
 
-    // Verify word (string)
-    expect(wrapper.props('word')).toEqual('')
+  it('receives correct structural configurations from Storybook properties', () => {
+    const wrapper = mount(AtomWordSwap, {
+      props: getProps(FastFlipTransition.args),
+    })
+
+    expect(wrapper.props('transition')).toBe('flip')
+    expect(wrapper.props('interval')).toBe(1000)
+    expect(wrapper.props('words')).toContain('Innovative')
+  })
+
+  it('advances indices and swaps displayed words dynamically when timer intervals elapse', async () => {
+    const wrapper = mount(AtomWordSwap, {
+      props: getProps(FastFlipTransition.args),
+    })
+
+    expect(wrapper.text()).toContain('Innovative')
+
+    await vi.advanceTimersByTimeAsync(1000)
+    expect(wrapper.text()).toContain('Performant')
+
+    await vi.advanceTimersByTimeAsync(1000)
+    expect(wrapper.text()).toContain('Accessible')
+
+    await vi.advanceTimersByTimeAsync(2000)
+    expect(wrapper.text()).toContain('Innovative')
+  })
+
+  it('prevents swapping executions completely if the array contains only one item', async () => {
+    const wrapper = mount(AtomWordSwap, {
+      props: getProps(SingleWordFallback.args),
+    })
+
+    expect(wrapper.text()).toContain('Static')
+
+    await vi.advanceTimersByTimeAsync(5000)
+    expect(wrapper.text()).toContain('Static')
+  })
+
+  it('calculates the dynamic maxWidth styling string correctly to fit the longest string', () => {
+    const wrapper = mount(AtomWordSwap, {
+      props: getProps(Default.args),
+    })
+
+    const element = wrapper.element as HTMLElement
+
+    expect(element.style.minWidth).toBe('10.5ch')
   })
 })

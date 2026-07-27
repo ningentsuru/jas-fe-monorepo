@@ -25,15 +25,12 @@
   --color-input: var(--color-border);
   --color-ring: var(--color-primary);
 
-  /* --- New Status Primitives --- */
+  /* --- Status Primitives --- */
   --color-destructive: #ef4444;
-  /* Red for errors/delete */
   --color-destructive-foreground: #ffffff;
   --color-success: #22c55e;
-  /* Green for success */
   --color-success-foreground: #ffffff;
   --color-warning: #eab308;
-  /* Yellow for warnings */
   --color-warning-foreground: #171717;
 
   /* Typography & Radius */
@@ -42,6 +39,25 @@
   --radius-md: 0.375rem;
   --radius-lg: 0.5rem;
   --radius-xl: 0.75rem;
+
+  /* --- Shorthand Theme Bindings (Fixes component reference lookups) --- */
+  --background: var(--color-background);
+  --foreground: var(--color-foreground);
+  --primary: var(--color-primary);
+  --primary-foreground: var(--color-primary-foreground);
+  --card: var(--color-card);
+  --card-foreground: var(--color-card-foreground);
+  --muted: var(--color-muted);
+  --muted-foreground: var(--color-muted-foreground);
+  --border: var(--color-border);
+  --input: var(--color-input);
+  --ring: var(--color-ring);
+  --destructive: var(--color-destructive);
+  --destructive-foreground: var(--color-destructive-foreground);
+  --success: var(--color-success);
+  --success-foreground: var(--color-success-foreground);
+  --warning: var(--color-warning);
+  --warning-foreground: var(--color-warning-foreground);
 }
 
 @layer theme {
@@ -61,15 +77,11 @@
     --color-border: #475569;
     --color-input: #475569;
 
-    /* Status Adjustments for Dark Mode */
     --color-destructive: #f87171;
-    /* Lighter red for dark bg */
     --color-destructive-foreground: #0f172a;
     --color-success: #4ade80;
-    /* Lighter green */
     --color-success-foreground: #0f172a;
     --color-warning: #facc15;
-    /* Lighter yellow */
     --color-warning-foreground: #0f172a;
   }
 
@@ -88,7 +100,6 @@
     --color-border: #2d5a2d;
     --color-input: #2d5a2d;
 
-    /* Status Adjustments for Forest */
     --color-destructive: #f87171;
     --color-destructive-foreground: #142b14;
     --color-success: #86efac;
@@ -112,7 +123,6 @@
     --color-border: #254d7a;
     --color-input: #254d7a;
 
-    /* Status Adjustments for Ocean */
     --color-destructive: #f87171;
     --color-destructive-foreground: #0c1929;
     --color-success: #4ade80;
@@ -136,7 +146,6 @@
     --color-border: #5c3a3a;
     --color-input: #5c3a3a;
 
-    /* Status Adjustments for Sunset */
     --color-destructive: #f87171;
     --color-destructive-foreground: #2a1b1b;
     --color-success: #86efac;
@@ -160,15 +169,11 @@
     --color-border: #ffffff;
     --color-input: #ffffff;
 
-    /* Status Adjustments for High Contrast */
     --color-destructive: #ff0000;
-    /* Pure Red */
     --color-destructive-foreground: #ffffff;
     --color-success: #00ff00;
-    /* Pure Green */
     --color-success-foreground: #000000;
     --color-warning: #ffff00;
-    /* Pure Yellow */
     --color-warning-foreground: #000000;
   }
 }
@@ -179,25 +184,5 @@
     color: var(--color-foreground);
     font-family: var(--font-display);
     transition: background-color 0.3s ease, color 0.3s ease;
-  }
-
-  :root {
-    --background: var(--color-background);
-    --foreground: var(--color-foreground);
-    --primary: var(--color-primary);
-    --primary-foreground: var(--color-primary-foreground);
-    --card: var(--color-card);
-    --card-foreground: var(--color-card-foreground);
-    --muted: var(--color-muted);
-    --muted-foreground: var(--color-muted-foreground);
-    --border: var(--color-border);
-    --input: var(--color-input);
-    --ring: var(--color-ring);
-    --destructive: var(--color-destructive);
-    --destructive-foreground: var(--color-destructive-foreground);
-    --success: var(--color-success);
-    --success-foreground: var(--color-success-foreground);
-    --warning: var(--color-warning);
-    --warning-foreground: var(--color-warning-foreground);
   }
 }

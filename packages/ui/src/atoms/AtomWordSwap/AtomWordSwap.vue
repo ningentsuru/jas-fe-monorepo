@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<Props>(), {
 const currentIndex = ref(0)
 const key = ref(0)
 let timer: ReturnType<typeof setTimeout> | null = null
-let isUnmounted = false // Flag to prevent state updates after unmount
+let isUnmounted = false
 
 const maxWidth = computed(() => {
   if (!props.words.length) return '0ch'
@@ -30,7 +30,6 @@ function swapWord() {
   key.value++
   currentIndex.value = (currentIndex.value + 1) % props.words.length
 
-  // Only schedule next tick if still mounted
   if (!isUnmounted) {
     timer = setTimeout(swapWord, props.interval)
   }
@@ -51,8 +50,9 @@ onUnmounted(() => {
 
 <template>
   <span
-    class="color-foreground relative inline-block text-center"
-    :style="{ minWidth: maxWidth, height: '0.6em' }"
+    class="atom-word-swap text-foreground font-display relative inline-block text-center font-medium transition-all duration-300 select-none"
+    :style="{ minWidth: maxWidth, height: '1.2em' }"
+    data-testid="atom-word-swap"
   >
     <Transition
       :enter-active-class="`transition-${transition}-enter-active`"
@@ -62,7 +62,7 @@ onUnmounted(() => {
       :leave-from-class="`transition-${transition}-leave-from`"
       :leave-to-class="`transition-${transition}-leave-to`"
     >
-      <span :key="key" class="absolute inset-0 flex items-center justify-center">
+      <span :key="key" class="absolute inset-0 flex items-center justify-center whitespace-nowrap">
         {{ words[currentIndex] }}
       </span>
     </Transition>
