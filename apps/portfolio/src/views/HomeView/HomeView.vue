@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue'
-
-// Safely pull your hero single-file component live across network bounds at runtime
 const FederatedHero = defineAsyncComponent(() => import('repo_ui_remote/OrganismHero'))
 </script>
 
