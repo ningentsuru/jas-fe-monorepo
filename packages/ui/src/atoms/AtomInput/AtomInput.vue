@@ -50,7 +50,6 @@ const inputStyle = computed(() => {
 
 <template>
   <div class="atom-input-container font-display relative flex w-full items-center">
-    <!-- Prefix Slot Layer -->
     <div
       v-if="$slots.prefix"
       class="text-muted-foreground pointer-events-none absolute left-3 flex items-center"
@@ -80,7 +79,6 @@ const inputStyle = computed(() => {
       ]"
     />
 
-    <!-- Suffix Slot Layer -->
     <div
       v-if="$slots.suffix"
       class="text-muted-foreground pointer-events-none absolute right-3 flex items-center"

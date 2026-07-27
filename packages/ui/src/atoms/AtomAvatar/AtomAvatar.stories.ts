@@ -5,7 +5,6 @@ const meta: Meta<typeof AtomAvatar> = {
   title: 'Components/AtomAvatar',
   component: AtomAvatar,
   argTypes: {
-    // Uses the custom flexible input layout box pattern
     size: {
       type: { name: 'other', value: 'string | number' },
       description: 'Accepts preset name strings (sm, md, lg) or a custom number value',

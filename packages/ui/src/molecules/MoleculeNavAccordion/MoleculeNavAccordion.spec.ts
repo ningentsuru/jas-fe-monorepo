@@ -42,7 +42,6 @@ describe('MoleculeNavAccordion', () => {
 
     const childrenLinks = wrapper.findAllComponents({ name: 'AtomNavLink' })
 
-    // Total count includes 1 root link item + 3 child links = 4 total link elements
     expect(childrenLinks.length).toBe(4)
     expect(wrapper.text()).toContain('Component Atoms')
     expect(wrapper.text()).toContain('Molecules Matrix')

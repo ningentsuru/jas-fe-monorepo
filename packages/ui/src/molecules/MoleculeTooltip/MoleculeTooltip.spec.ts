@@ -16,14 +16,12 @@ describe('MoleculeTooltip', () => {
   beforeEach(() => {
     vi.useFakeTimers()
 
-    // Mock ResizeObserver which is missing or blank in standard headless nodes
     global.ResizeObserver = vi.fn().mockImplementation(() => ({
       observe: vi.fn(),
       unobserve: vi.fn(),
       disconnect: vi.fn(),
     }))
 
-    // Spy on window bounding rects to supply concrete numerical widths/heights to mathematical layout engines
     vi.spyOn(Element.prototype, 'getBoundingClientRect').mockReturnValue({
       width: 100,
       height: 40,
@@ -36,7 +34,6 @@ describe('MoleculeTooltip', () => {
       toJSON: () => {},
     })
 
-    // Mock offsets for the tooltip reference layer
     Object.defineProperty(HTMLElement.prototype, 'offsetWidth', { configurable: true, value: 160 })
     Object.defineProperty(HTMLElement.prototype, 'offsetHeight', { configurable: true, value: 80 })
   })
@@ -69,7 +66,6 @@ describe('MoleculeTooltip', () => {
       props: getProps(Default.args),
     })
 
-    // Ref tooltips should not exist in template tree if visibility ref parameters equal false
     expect(wrapper.find('div.absolute').exists()).toBe(false)
   })
 
@@ -89,21 +85,18 @@ describe('MoleculeTooltip', () => {
 
   it('unmounts the tooltip layout completely after the hover delay window expires', async () => {
     const wrapper = mount(MoleculeTooltip, {
-      props: getProps(FastDelay.args), // 50ms delay override
+      props: getProps(FastDelay.args), 
     })
 
     const triggerContainer = wrapper.find('[data-testid="molecule-tooltip"]')
 
-    // Mount it first
     await triggerContainer.trigger('mouseenter')
     await wrapper.vm.$nextTick()
     expect(wrapper.find('div.absolute').exists()).toBe(true)
 
-    // Un-hover
     await triggerContainer.trigger('mouseleave')
-    expect(wrapper.find('div.absolute').exists()).toBe(true) // Still visible during active timeout padding
+    expect(wrapper.find('div.absolute').exists()).toBe(true) 
 
-    // Advance clock past the delay threshold boundary
     await vi.advanceTimersByTimeAsync(50)
     await wrapper.vm.$nextTick()
 
@@ -135,7 +128,6 @@ describe('MoleculeTooltip', () => {
     const popupCard = wrapper.find('div.absolute')
     const element = popupCard.element as HTMLElement
 
-    // Calculated based on mocked rect parameters: trigger.bottom + gap (540 + 8 = 548px)
     expect(element.style.top).toBe('548px')
   })
 })

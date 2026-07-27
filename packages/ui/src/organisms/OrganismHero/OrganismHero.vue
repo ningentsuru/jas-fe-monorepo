@@ -40,7 +40,6 @@ const alignClasses = {
   right: 'text-right justify-end items-center',
 }
 
-// Checks if any asset is present to trigger the text overlay
 const hasBackground = computed(() => {
   return !!props.backgroundImage || !!props.backgroundVideo
 })
@@ -52,7 +51,6 @@ const hasBackground = computed(() => {
     :class="alignClasses[align]"
     data-testid="organism-hero"
   >
-    <!-- Background Video with built-in Poster Fallback -->
     <video
       v-if="props.backgroundVideo"
       :poster="props.backgroundImage"
@@ -65,13 +63,11 @@ const hasBackground = computed(() => {
       <source :src="props.backgroundVideo" type="video/mp4" />
     </video>
 
-    <!-- Overlay for readability on media assets -->
     <div
       v-if="hasBackground"
       class="bg-background/60 dark:bg-background/80 absolute inset-0 backdrop-blur-[2px]"
     />
 
-    <!-- Content Container -->
     <div class="relative z-10 mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 sm:px-6 lg:px-8">
       <h1 class="text-foreground text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
         {{ title }}
@@ -85,7 +81,6 @@ const hasBackground = computed(() => {
         {{ subtitle }}
       </p>
 
-      <!-- Actions -->
       <div
         v-if="ctaLabel || secondaryLabel"
         class="flex flex-wrap justify-center gap-4"

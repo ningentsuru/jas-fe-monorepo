@@ -48,7 +48,7 @@ const getTheme = computed(() => {
             :is-toggled="isDark"
             :current-theme="getTheme"
             @toggle="toggleTheme"
-            @set-theme="setTheme($event)"
+            @set-theme="setTheme($event as Themes)"
           />
         </template>
       </OrganismHeader>
@@ -57,7 +57,6 @@ const getTheme = computed(() => {
     <template #default>
       <Suspense>
         <template #default>
-          <!-- CRITICAL: flex-1 + h-full + min-h-0 + flex flex-col -->
           <main class="container mx-auto flex h-full min-h-0 flex-1 flex-col px-4 sm:px-6 lg:px-8">
             <slot />
             <span class="sr-only">default-layout</span>

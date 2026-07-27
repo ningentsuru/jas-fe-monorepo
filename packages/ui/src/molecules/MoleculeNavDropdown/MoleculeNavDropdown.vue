@@ -28,8 +28,10 @@ const isHovered = ref(false)
 </script>
 
 <template>
-  <div class="molecule-nav-dropdown group relative font-display focus-within:relative" data-testid="molecule-nav-dropdown">
-    <!-- Trigger Button -->
+  <div
+    class="molecule-nav-dropdown group font-display relative focus-within:relative"
+    data-testid="molecule-nav-dropdown"
+  >
     <AtomButton
       variant="ghost"
       size="sm"
@@ -51,10 +53,9 @@ const isHovered = ref(false)
       />
     </AtomButton>
 
-    <!-- Dropdown Content Card (Enhanced with focus-within utility) -->
     <div
       v-if="item.children"
-      class="absolute top-full left-0 mt-2 w-48 origin-top-left transition-all duration-200 ease-out z-50 focus-within:visible focus-within:scale-100 focus-within:opacity-100"
+      class="absolute top-full left-0 z-50 mt-2 w-48 origin-top-left transition-all duration-200 ease-out focus-within:visible focus-within:scale-100 focus-within:opacity-100"
       :class="[
         isOpen || isHovered
           ? 'visible scale-100 opacity-100'
@@ -62,7 +63,7 @@ const isHovered = ref(false)
       ]"
     >
       <div
-        class="border border-border bg-card overflow-hidden rounded-md shadow-lg ring-1 ring-black/5"
+        class="border-border bg-card overflow-hidden rounded-md border shadow-lg ring-1 ring-black/5"
       >
         <div class="flex flex-col gap-1 p-1">
           <AtomNavLink

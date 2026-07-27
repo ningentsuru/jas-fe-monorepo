@@ -73,7 +73,6 @@ describe('MoleculeNavDropdown', () => {
     await button.trigger('click')
 
     expect(wrapper.emitted('toggle')).toBeTruthy()
-    // Index 2 argument verify check
     expect(wrapper.emitted('toggle')?.[0]).toEqual([2])
   })
 

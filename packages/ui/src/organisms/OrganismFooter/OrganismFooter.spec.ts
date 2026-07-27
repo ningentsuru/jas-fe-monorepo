@@ -1,28 +1,50 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import OrganismFooter from './OrganismFooter.vue'
-import { Default } from './OrganismFooter.stories'
+import meta, { Default, AlternativeTitle } from './OrganismFooter.stories'
 
-interface defaultProps {
-  title: string
+type OrganismFooterProps = InstanceType<typeof OrganismFooter>['$props']
+
+const getProps = (storyArgs: typeof Default.args): OrganismFooterProps => {
+  return {
+    ...meta.args,
+    ...storyArgs,
+  } as OrganismFooterProps
 }
 
 describe('OrganismFooter', () => {
-  it('renders properly using Storybook args', () => {
+  it('renders root semantic layout structure and title text content properly', () => {
     const wrapper = mount(OrganismFooter, {
-      props: Default.args as defaultProps,
+      props: getProps(Default.args),
     })
 
-    expect(wrapper.text()).toContain('organism-footer')
+    const currentYear = new Date().getFullYear().toString()
+
+    expect(wrapper.find('[data-testid="organism-footer"]').exists()).toBe(true)
+    expect(wrapper.find('h2').text()).toBe('Core Design System Inc.')
+    expect(wrapper.text()).toContain(currentYear)
+    expect(wrapper.text()).toContain('All rights reserved.')
   })
 
-  it('receives correct props from Storybook args', () => {
+  it('receives correct configuration title props from Storybook arguments mapping blocks', () => {
     const wrapper = mount(OrganismFooter, {
-      props: Default.args as defaultProps,
+      props: getProps(AlternativeTitle.args),
     })
 
+    expect(wrapper.props('title')).toEqual('Monorepo Platform Footer Layer')
+    expect(wrapper.find('h2').text()).toBe('Monorepo Platform Footer Layer')
+  })
 
-    // Verify title (string)
-    expect(wrapper.props('title')).toEqual('')
+  it('renders child context template node slots smoothly inside the container layout layer', () => {
+    const wrapper = mount(OrganismFooter, {
+      props: getProps(Default.args),
+      slots: {
+        default: '<span class="mock-nav">Footer Nav Elements</span>',
+      },
+    })
+
+    const slottedEl = wrapper.find('.mock-nav')
+    expect(slottedEl.exists()).toBe(true)
+    expect(slottedEl.text()).toBe('Footer Nav Elements')
   })
 })

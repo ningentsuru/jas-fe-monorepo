@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { ref, watch } from 'vue' // Using standard Vue reactive primitives instead
+import { ref, watch } from 'vue' 
 import MoleculeModal from './MoleculeModal.vue'
 
 const meta: Meta<typeof MoleculeModal> = {
@@ -17,10 +17,8 @@ const meta: Meta<typeof MoleculeModal> = {
   render: (args) => ({
     components: { MoleculeModal },
     setup() {
-      // Sync the initial Storybook canvas args into a local Vue reactive reference
       const localShow = ref(args.show)
 
-      // Keep the local state perfectly synchronized if someone toggles the Storybook panel control switch manually
       watch(
         () => args.show,
         (newVal) => {

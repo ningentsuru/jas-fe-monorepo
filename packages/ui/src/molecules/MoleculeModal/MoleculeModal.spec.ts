@@ -14,7 +14,6 @@ const getProps = (storyArgs: typeof Default.args): MoleculeModalProps => {
 
 describe('MoleculeModal', () => {
   beforeEach(() => {
-    // Stub native HTML5 <dialog> API triggers which aren't supported natively in headless environments
     HTMLDialogElement.prototype.showModal = vi.fn()
     HTMLDialogElement.prototype.close = vi.fn()
   })
@@ -36,10 +35,9 @@ describe('MoleculeModal', () => {
     const showSpy = vi.spyOn(HTMLDialogElement.prototype, 'showModal')
 
     mount(MoleculeModal, {
-      props: getProps(Default.args), // show: true
+      props: getProps(Default.args), 
     })
 
-    // Allow watch expression chains and nextTick loops to settle down the runtime thread
     await vi.dynamicImportSettled()
 
     expect(showSpy).toHaveBeenCalled()
@@ -53,7 +51,6 @@ describe('MoleculeModal', () => {
       props: getProps(Default.args),
     })
 
-    // Mock that the element was open prior to state updates
     const dialogEl = wrapper.find('dialog').element as HTMLDialogElement
     Object.defineProperty(dialogEl, 'open', { value: true, writable: true })
 
@@ -90,7 +87,6 @@ describe('MoleculeModal', () => {
 
     const dialog = wrapper.find('dialog')
 
-    // Simulate keyboard Escape button triggers natively hitting the canvas element layout block
     await dialog.trigger('cancel')
 
     expect(wrapper.emitted('close')).toBeTruthy()
