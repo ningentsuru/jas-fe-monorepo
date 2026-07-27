@@ -41,9 +41,6 @@ importers:
       vue-router:
         specifier: ^5.2.0
         version: 5.2.0(@vue/compiler-sfc@3.5.40)(esbuild@0.28.1)(pinia@4.0.2(@vue/devtools-api@8.1.5)(typescript@6.0.3)(vue@3.5.40(typescript@6.0.3)))(rolldown@1.1.5)(vite@8.1.5(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0))(vue@3.5.40(typescript@6.0.3))
-      vue-to-print:
-        specifier: ^1.5.1
-        version: 1.5.1(vue@3.5.40(typescript@6.0.3))
     devDependencies:
       '@playwright/test':
         specifier: ^1.62.0
@@ -3794,11 +3791,6 @@ packages:
       vite:
         optional: true
 
-  vue-to-print@1.5.1:
-    resolution: {integrity: sha512-Z8LeXBmw9J5zQrtcqNQeoFNprgs6ituih682SAOv06ExZljvIjt2CEAW7N1XAjLpgzx9LKMrl500G2ZeGugLUg==}
-    peerDependencies:
-      vue: ^3.0.0
-
   vue-tsc@3.3.8:
     resolution: {integrity: sha512-xXmYlVQpcwJDWyGlqbHrGVOl1h3UOsASymRibrHc+iy9j/UNnOrOn4u+fntHz4D6Cs74RtapeqVV6CzJeg+UlA==}
     hasBin: true
@@ -7402,10 +7394,6 @@ snapshots:
       - rollup
       - unloader
       - webpack
-
-  vue-to-print@1.5.1(vue@3.5.40(typescript@6.0.3)):
-    dependencies:
-      vue: 3.5.40(typescript@6.0.3)
 
   vue-tsc@3.3.8(typescript@6.0.3):
     dependencies:

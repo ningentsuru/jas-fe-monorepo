@@ -1,17 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { AtomButton } from '@repo/ui'
-import { useVueToPrint } from 'vue-to-print'
 import resume from '@/data/resume.json'
 import { useDateFormat } from '@/composables/useDateFormat'
 
 const { dateToFormat } = useDateFormat()
-const cvContent = ref<HTMLElement>(null!)
-
-const { handlePrint } = useVueToPrint({
-  content: cvContent,
-  documentTitle: 'My-Resume',
-})
 
 const formatResumeDate = (dateStr: string) => {
   if (!dateStr) return ''
@@ -23,16 +15,9 @@ const formatResumeDate = (dateStr: string) => {
 
 <template>
   <article
-    ref="cvContent"
-    class="his-cv-view bg-background text-foreground border-border font-display mx-auto my-4 w-full border p-4 transition-colors duration-300 sm:p-12"
+    class="his-cv-view bg-background text-foreground border-border font-display mx-auto my-4 w-full border p-4 transition-colors duration-300 sm:p-12 print:border-transparent"
     data-testid="his-cv-view"
   >
-    <div class="mb-6 hidden justify-end print:hidden">
-      <AtomButton variant="default" class="cursor-pointer font-medium" @click="handlePrint">
-        🖨️ Save as PDF
-      </AtomButton>
-    </div>
-
     <header class="flex flex-col items-center justify-center text-center">
       <h1 class="text-xl font-bold tracking-tight sm:text-2xl">{{ resume.basics.name }}</h1>
       <p class="text-muted-foreground mt-1 text-lg font-medium sm:text-xl">
