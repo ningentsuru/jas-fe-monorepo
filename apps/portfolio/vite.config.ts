@@ -1,14 +1,25 @@
 import { fileURLToPath, URL } from 'node:url'
-
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import { resolve } from 'path'
 import tailwindcss from '@tailwindcss/vite'
+import federation from '@originjs/vite-plugin-federation' // 1. Import the federation plugin
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue(), vueDevTools(), tailwindcss()],
+  plugins: [
+    vue(),
+    vueDevTools(),
+    tailwindcss(),
+    // 2. Connect to your live, deployed Storybook assets on Vercel
+    federation({
+      name: 'portfolio_host',
+      remotes: {
+        repo_ui_remote: 'https://jas-storybook.vercel.app/',
+      },
+      shared: ['vue'],
+    }),
+  ],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -18,5 +29,9 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0',
+  },
+  // 3. Set build configuration to align with the remote provider target
+  build: {
+    target: 'esnext',
   },
 })
