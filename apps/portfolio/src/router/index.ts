@@ -21,35 +21,23 @@ const routes: Array<RouteRecordRaw> = [
     path: ROUTES.HIS_CV_VIEW.path,
     name: ROUTES.HIS_CV_VIEW.name,
     component: () => import('@/views/HisCvView'),
-    meta: {
-      layout: 'DefaultLayout',
-    },
   },
   {
     path: ROUTES.ABOUTE_ME_VIEW.path,
     name: ROUTES.ABOUTE_ME_VIEW.name,
     component: () => import('@/views/AbouteMeView'),
-    meta: {
-      layout: 'DefaultLayout',
-    },
   },
   {
     path: ROUTES.ABOUT_THIS_MONOREPO_VIEW.path,
     name: ROUTES.ABOUT_THIS_MONOREPO_VIEW.name,
     component: () => import('@/views/AboutThisMonorepoView'),
-    meta: {
-      layout: 'DefaultLayout',
-    },
-  },
-  {
-    path: ROUTES.JOB_SEARCH_VIEW.path,
-    name: ROUTES.JOB_SEARCH_VIEW.name,
-    component: () => import('@/views/JobSearchView'),
-    meta: {
-      layout: 'DefaultLayout',
-    },
   },
   // plop:inject-routes-component-do-not-removed
+  {
+    path: ROUTES.NOT_FOUND_VIEW.path,
+    name: ROUTES.NOT_FOUND_VIEW.name,
+    component: () => import('@/views/NotFoundView'),
+  },
 ]
 
 const router = createRouter({

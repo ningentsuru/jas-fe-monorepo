@@ -253,7 +253,7 @@ module.exports = function (plop) {
             type: 'modify',
             path: '{{folder}}/{{apps}}/src/router/index.ts',
             pattern: /\/\/ plop:inject-routes-component-do-not-removed/g,
-            template: `{\n    path: ROUTES.${constantCase(data.name)}.path,\n    name: ROUTES.${constantCase(data.name)}.name,\n    component: () => import('@/views/${data.name}'),\n    meta: {\n      layout: 'DefaultLayout',\n    },\n  },\n  // plop:inject-routes-component-do-not-removed`,
+            template: `{\n    path: ROUTES.${constantCase(data.name)}.path,\n    name: ROUTES.${constantCase(data.name)}.name,\n    component: () => import('@/views/${data.name}'),\n  },\n  // plop:inject-routes-component-do-not-removed`,
           },
           {
             type: 'modify',

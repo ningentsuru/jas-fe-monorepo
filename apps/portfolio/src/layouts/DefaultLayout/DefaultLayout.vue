@@ -62,12 +62,22 @@ const getTheme = computed(() => {
         </template>
       </OrganismHeader>
     </template>
+
     <template #default>
-      <main class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <slot />
-        <span class="sr-only">default-layout</span>
-      </main>
+      <Suspense>
+        <template #default>
+          <!-- CRITICAL: flex-1 + h-full + min-h-0 + flex flex-col -->
+          <main class="container mx-auto flex h-full min-h-0 flex-1 flex-col px-4 sm:px-6 lg:px-8">
+            <slot />
+            <span class="sr-only">default-layout</span>
+          </main>
+        </template>
+        <template #fallback>
+          <main class="flex h-screen w-screen items-center justify-center">Loading data...</main>
+        </template>
+      </Suspense>
     </template>
+
     <template #footer>
       <OrganismFooter title="This is footer">
         <div>Note: By holding the theme toggle you can choose different themes.</div>
