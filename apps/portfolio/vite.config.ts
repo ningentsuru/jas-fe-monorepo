@@ -15,7 +15,7 @@ export default defineConfig({
     federation({
       name: 'portfolio_host',
       remotes: {
-        repo_ui_remote: 'https://jas-storybook.vercel.app/',
+        repo_ui_remote: 'https://vercel.app',
       },
       shared: ['vue'],
     }),
