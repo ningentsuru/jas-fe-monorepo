@@ -156,6 +156,14 @@
       "keywords": ["Stripe", "GrowthBook", "MoEngage", "Google Tag Manager"]
     },
     {
+      "name": "Databases",
+      "level": "Senior",
+      "keywords": [
+        "MySQL (joins, filtering, query optimization)",
+        "NoSQL (CRUD, aggregation pipelines, embedding vs. referencing design)"
+      ]
+    },
+    {
       "name": "AI-Assisted Development",
       "level": "Senior",
       "keywords": [

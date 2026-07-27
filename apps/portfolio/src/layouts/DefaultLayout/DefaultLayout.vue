@@ -9,21 +9,12 @@ import {
   AtomButton,
 } from '@repo/ui'
 import { useAppTheme } from '@/composables/useAppTheme'
-import type { Themes } from '@/types'
+import { NAVIGATIONS } from '@/constants'
+import type { Themes, NavItem } from '@/types'
 
 const { isDark, theme, toggleTheme, setTheme } = useAppTheme()
 
-const navItems = computed(() => [
-  {
-    label: 'About',
-    children: [
-      { label: 'Me', href: '/about-me' },
-      { label: 'This Monorepo', href: '/about-this-monorepo' },
-    ],
-  },
-  { label: 'Job Search', href: '/job-search' },
-  { label: 'His CV', href: '/his-cv' },
-])
+const navItems = NAVIGATIONS as unknown as NavItem[]
 
 const getTheme = computed(() => {
   const t = theme.value as string

@@ -14,11 +14,9 @@ export function useLongPressToggle(
   const { delay = 1000, onToggle, onLongToggle } = options
   let timer: ReturnType<typeof setTimeout> | null = null
   const isLongPressed = ref(false)
-  // Track if we are currently handling a touch interaction to ignore mouse emulations
   const isTouchInteraction = ref(false)
 
   function start(isTouch = false) {
-    // Prevent double firing if timer already exists
     if (timer) return
 
     isTouchInteraction.value = isTouch
@@ -27,32 +25,29 @@ export function useLongPressToggle(
     timer = setTimeout(() => {
       isLongPressed.value = true
       onLongToggle?.()
-      // Reset touch flag after long press triggers
       if (isTouch) isTouchInteraction.value = false
     }, delay)
   }
 
   function cancel(isTouch = false) {
-    // If this cancel is from a mouse event, but we just finished a touch interaction, ignore it
     if (!isTouch && isTouchInteraction.value) {
       isTouchInteraction.value = false
       return
     }
+
+    const wasLongPressed = isLongPressed.value
 
     if (timer) {
       clearTimeout(timer)
       timer = null
     }
 
-    // Only trigger short toggle if long press didn't happen
-    if (!isLongPressed.value) {
+    if (!wasLongPressed) {
       onToggle?.()
     }
 
-    // Reset state in next tick to allow UI updates to finish
-    setTimeout(() => {
-      isLongPressed.value = false
-    }, 0)
+    isLongPressed.value = false
+    isTouchInteraction.value = false
   }
 
   function handleLeave(isTouch = false) {
@@ -84,9 +79,7 @@ export function useLongPressToggle(
     if (!element.value) return
     const el = element.value
 
-    // Mouse Events
-    const onMouseDown = (e: MouseEvent) => {
-      // Ignore mouse events if they immediately follow a touch interaction
+    const onMouseDown = () => {
       if (isTouchInteraction.value) return
       start(false)
     }
@@ -98,10 +91,8 @@ export function useLongPressToggle(
     el.addEventListener('mouseup', onMouseUp)
     el.addEventListener('mouseleave', onMouseLeave)
 
-    // Touch Events
-    // REMOVED { passive: true } so we can call preventDefault()
     const onTouchStart = (e: TouchEvent) => {
-      e.preventDefault() // Stops mouse emulation
+      e.preventDefault()
       start(true)
     }
 
@@ -122,7 +113,6 @@ export function useLongPressToggle(
     el.addEventListener('keydown', handleKeyDown)
     el.addEventListener('keyup', handleKeyUp)
 
-    // store for removal via closure
     ;(el as any).__longPressHandlers = {
       onMouseDown,
       onMouseUp,
