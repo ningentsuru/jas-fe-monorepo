@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import AtomButton from './AtomButton.tsx'
+import AtomButton from './AtomButton'
 
 const meta: Meta<typeof AtomButton> = {
   title: 'Components/AtomButton',

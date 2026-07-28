@@ -1,4 +1,3 @@
-// packages/ui/src/atoms/AtomWordSwap/AtomWordSwap.stories.ts
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import AtomWordSwap from './AtomWordSwap'
 

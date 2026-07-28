@@ -1,4 +1,3 @@
-// packages/ui/src/atoms/AtomWordSwap/AtomWordSwap.spec.ts
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import AtomWordSwap from './AtomWordSwap'

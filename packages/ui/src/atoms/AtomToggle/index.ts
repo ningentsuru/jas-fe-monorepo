@@ -1,1 +1,1 @@
-export { default } from './AtomToggle.tsx'
+export { default } from './AtomToggle'

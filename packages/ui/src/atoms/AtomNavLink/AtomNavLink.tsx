@@ -1,4 +1,3 @@
-// packages/ui/src/atoms/AtomNavLink/AtomNavLink.tsx
 import { defineComponent, type PropType } from 'vue'
 import { AtomButton } from '../../'
 

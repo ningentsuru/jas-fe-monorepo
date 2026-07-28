@@ -1,1 +1,1 @@
-export { default } from './AtomInput.tsx'
+export { default } from './AtomInput'

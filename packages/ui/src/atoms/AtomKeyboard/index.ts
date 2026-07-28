@@ -1,1 +1,1 @@
-export { default } from './AtomKeyboard.tsx'
+export { default } from './AtomKeyboard'

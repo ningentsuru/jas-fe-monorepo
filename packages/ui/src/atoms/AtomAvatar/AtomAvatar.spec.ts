@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import AtomAvatar from './AtomAvatar.tsx'
+import AtomAvatar from './AtomAvatar'
 import meta, { Default, Squared, CustomNumericSize } from './AtomAvatar.stories'
 
 type AtomAvatarProps = InstanceType<typeof AtomAvatar>['$props']

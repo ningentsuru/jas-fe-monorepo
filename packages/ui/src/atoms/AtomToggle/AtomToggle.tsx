@@ -1,4 +1,3 @@
-// packages/ui/src/atoms/AtomToggle/AtomToggle.tsx
 import { defineComponent, withDirectives, type Component, type PropType } from 'vue'
 import { AtomIcon } from '../../'
 import { vLongPressToggle } from '../../directives/longPressToggle'

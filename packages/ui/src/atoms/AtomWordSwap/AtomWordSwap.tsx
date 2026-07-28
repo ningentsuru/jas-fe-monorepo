@@ -1,4 +1,3 @@
-// packages/ui/src/atoms/AtomWordSwap/AtomWordSwap.tsx
 import {
   defineComponent,
   ref,

@@ -1,1 +1,1 @@
-export { default } from './AtomNavLink.tsx'
+export { default } from './AtomNavLink'

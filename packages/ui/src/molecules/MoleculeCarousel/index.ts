@@ -1,1 +1,1 @@
-export { default } from './MoleculeCarousel.vue'
+export { default } from './MoleculeCarousel'

@@ -1,1 +1,1 @@
-export { default } from './AtomWordSwap.tsx'
+export { default } from './AtomWordSwap'

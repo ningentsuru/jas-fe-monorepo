@@ -1,1 +1,1 @@
-export { default } from './AtomIcon.tsx'
+export { default } from './AtomIcon'

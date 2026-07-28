@@ -1,4 +1,3 @@
-// packages/ui/eslint.config.mjs
 import {
   baseParserOptions,
   vueConfigsFlat,
@@ -7,7 +6,6 @@ import {
 } from '@repo/eslint-config'
 
 export default [
-  // FIX: This must sit as an isolated, unnamed object block at index 0 of your array!
   {
     ignores: [
       '**/*.mjs',
