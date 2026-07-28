@@ -6,5 +6,6 @@ export const NAVIGATIONS = [
       { label: 'This Monorepo', href: '/about-this-monorepo' },
     ],
   },
+  { label: 'Activity', href: '/activity' },
   { label: 'His CV', href: '/his-cv' },
 ] as const

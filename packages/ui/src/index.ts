@@ -10,6 +10,7 @@ export { default as AtomNavLink } from './atoms/AtomNavLink'
 export { default as AtomSelect } from './atoms/AtomSelect'
 export { default as AtomToggle } from './atoms/AtomToggle'
 export { default as AtomWordSwap } from './atoms/AtomWordSwap'
+export { default as AtomKeyboard } from './atoms/AtomKeyboard'
 // plop:inject-atoms-component-do-not-removed
 
 // Molecules
@@ -18,6 +19,7 @@ export { default as MoleculeNavAccordion } from './molecules/MoleculeNavAccordio
 export { default as MoleculeNavDropdown } from './molecules/MoleculeNavDropdown'
 export { default as MoleculeThemeToggle } from './molecules/MoleculeThemeToggle'
 export { default as MoleculeTooltip } from './molecules/MoleculeTooltip'
+export { default as MoleculeCarousel } from './molecules/MoleculeCarousel'
 // plop:inject-molecules-component-do-not-removed
 
 // Organisms

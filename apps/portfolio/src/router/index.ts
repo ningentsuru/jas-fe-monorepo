@@ -32,6 +32,11 @@ const routes: Array<RouteRecordRaw> = [
     name: ROUTES.ABOUT_THIS_MONOREPO_VIEW.name,
     component: () => import('@/views/AboutThisMonorepoView'),
   },
+  {
+    path: ROUTES.ACTIVITY_VIEW.path,
+    name: ROUTES.ACTIVITY_VIEW.name,
+    component: () => import('@/views/ActivityView'),
+  },
   // plop:inject-routes-component-do-not-removed
   {
     path: ROUTES.NOT_FOUND_VIEW.path,
