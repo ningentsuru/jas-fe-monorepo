@@ -1,1 +1,1 @@
-export { default } from './AtomButton.vue'
+export { default } from './AtomButton.tsx'

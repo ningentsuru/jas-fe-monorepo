@@ -1,4 +1,3 @@
-// packages/ui/.storybook/main.ts
 import type { StorybookConfig } from '@storybook/vue3-vite'
 import { dirname } from 'path'
 import { fileURLToPath } from 'url'

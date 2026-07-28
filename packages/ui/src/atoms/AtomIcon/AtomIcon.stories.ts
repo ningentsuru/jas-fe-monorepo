@@ -1,32 +1,37 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { Atom } from '@lucide/vue'
-import AtomIcon from './AtomIcon.vue'
+import { Smile } from '@lucide/vue'
+import AtomIcon from './AtomIcon'
 
 const meta: Meta<typeof AtomIcon> = {
-  component: AtomIcon,
   title: 'Components/AtomIcon',
+  component: AtomIcon,
+  argTypes: {
+    size: {
+      type: { name: 'other', value: 'string | number' },
+      description: 'Accepts preset names or a custom pixel number value',
+    },
+  },
+  args: {
+    name: 'Smile Icon',
+    icon: Smile,
+    size: 'md',
+  },
 }
 
 export default meta
 type Story = StoryObj<typeof AtomIcon>
 
-export const Default: Story = {
+export const Default: Story = {}
+
+export const TextFallbackState: Story = {
   args: {
-    name: 'Default Icon Text',
-    size: 'md',
+    icon: undefined,
+    name: 'Fallback Text',
   },
 }
 
-export const WithNumericSize: Story = {
+export const CustomNumericSize: Story = {
   args: {
-    name: 'Custom Pixels',
-    size: 42,
-  },
-}
-
-export const WithIconComponent: Story = {
-  args: {
-    size: 'lg',
-    icon: Atom,
+    size: 48,
   },
 }

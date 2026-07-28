@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import AtomNavLink from './AtomNavLink.vue'
+import AtomNavLink from './AtomNavLink'
 
 const meta: Meta<typeof AtomNavLink> = {
-  component: AtomNavLink,
   title: 'Components/AtomNavLink',
+  component: AtomNavLink,
   argTypes: {
     size: {
       type: { name: 'other', value: 'string | number' },

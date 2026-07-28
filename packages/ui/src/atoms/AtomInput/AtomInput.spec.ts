@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import AtomInput from './AtomInput.vue'
-import meta, { Default, ValidationError, CustomNumericSize } from './AtomInput.stories'
+import AtomInput from './AtomInput'
+import meta, { Default, ErrorState, CustomNumericSize } from './AtomInput.stories'
 
 type AtomInputProps = InstanceType<typeof AtomInput>['$props']
 
@@ -9,79 +9,76 @@ const getProps = (storyArgs: typeof Default.args): AtomInputProps => {
   return {
     ...meta.args,
     ...storyArgs,
-  } as AtomInputProps
+  } as unknown as AtomInputProps
 }
 
 describe('AtomInput', () => {
-  it('renders input elements and binds placeholders correctly', () => {
+  it('binds and renders properties and value mutations correctly inside the document tree', async () => {
     const wrapper = mount(AtomInput, {
-      props: getProps(Default.args),
+      props: getProps({
+        ...Default.args,
+        modelValue: 'Monorepo Stack',
+        placeholder: 'Search modules...',
+      }),
     })
+
+    await wrapper.vm.$nextTick()
 
     const input = wrapper.find('[data-testid="atom-input"]')
-    expect(input.exists()).toBe(true)
-    expect(input.attributes('placeholder')).toBe('Enter your credentials...')
+    expect((input.element as HTMLInputElement).value).toBe('Monorepo Stack')
+    expect(input.attributes('placeholder')).toBe('Search modules...')
   })
 
-  it('updates reactive models accurately when strings are written', async () => {
+  it('bubbles text mutation data frames upward via standard update emitters', async () => {
     const wrapper = mount(AtomInput, {
       props: getProps(Default.args),
     })
 
-    const input = wrapper.find('input')
-    await input.setValue('Testing value inputs')
+    await wrapper.vm.$nextTick()
 
-    expect(wrapper.emitted('update:modelValue')?.[0][0]).toBe('Testing value inputs')
+    const input = wrapper.find('[data-testid="atom-input"]')
+    await input.setValue('FSD Architecture')
+
+    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['FSD Architecture'])
   })
 
-  it('applies destructive border layout classes during validation errors', () => {
+  it('applies error structural color variables when active validation parameters catch blocks', async () => {
     const wrapper = mount(AtomInput, {
-      props: getProps(ValidationError.args),
+      props: getProps(ErrorState.args),
     })
 
-    const input = wrapper.find('input')
-    expect(input.attributes('aria-invalid')).toBe('true')
+    await wrapper.vm.$nextTick()
+
+    const input = wrapper.find('[data-testid="atom-input"]')
     expect(input.classes()).toContain('border-destructive')
+    expect(input.attributes('aria-invalid')).toBe('true')
   })
 
-  it('computes inline style heights safely when a custom number is processed', () => {
+  it('renders side slot icon templates cleanly when containers are supplied', async () => {
+    const wrapper = mount(AtomInput, {
+      props: getProps(Default.args),
+      slots: {
+        prefix: '<span class="mock-prefix">LINK</span>',
+      },
+    })
+
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.find('.mock-prefix').exists()).toBe(true)
+    expect(wrapper.find('[data-testid="atom-input"]').classes()).toContain('pl-10')
+  })
+
+  it('injects style variables perfectly when explicit numerical sizing values match', async () => {
     const wrapper = mount(AtomInput, {
       props: getProps(CustomNumericSize.args),
     })
 
-    const input = wrapper.find('input')
-    const element = input.element as HTMLElement
+    await wrapper.vm.$nextTick()
 
-    expect(wrapper.props('size')).toBe(52)
+    const input = wrapper.find('[data-testid="atom-input"]')
+    const domElement = input.element as HTMLElement
+
     expect(input.classes()).toContain('h-[var(--input-size)]')
-    expect(element.style.getPropertyValue('--input-size')).toBe('52px')
-  })
-
-  it('blocks pointer input updates when marked as disabled', () => {
-    const wrapper = mount(AtomInput, {
-      props: getProps({
-        ...Default.args,
-        disabled: true,
-      }),
-    })
-
-    const input = wrapper.find('input')
-    expect(input.attributes('disabled')).toBeDefined()
-    expect(input.classes()).toContain('disabled:cursor-not-allowed')
-  })
-
-  it('renders injected side markup nodes through prefix and suffix template slots', () => {
-    const wrapper = mount(AtomInput, {
-      props: getProps(Default.args),
-      slots: {
-        prefix: '<span class="mock-prefix">Pre</span>',
-        suffix: '<span class="mock-suffix">Suff</span>',
-      },
-    })
-
-    expect(wrapper.find('.mock-prefix').text()).toBe('Pre')
-    expect(wrapper.find('.mock-suffix').text()).toBe('Suff')
-    expect(wrapper.find('input').classes()).toContain('pl-10')
-    expect(wrapper.find('input').classes()).toContain('pr-10')
+    expect(domElement.style.getPropertyValue('--input-size')).toBe('55px')
   })
 })

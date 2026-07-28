@@ -1,1 +1,1 @@
-export { default } from './AtomToggle.vue'
+export { default } from './AtomToggle.tsx'

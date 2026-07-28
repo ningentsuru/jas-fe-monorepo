@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-expect-error: Shared global style asset bundle handles downstream variable injections
 import './style.css'
 
 // Atoms

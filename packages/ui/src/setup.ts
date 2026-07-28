@@ -8,11 +8,11 @@ export const globalLongPressHandlers = {
 vi.mock('./directives/longPressToggle', () => {
   return {
     vLongPressToggle: {
-      mounted(el: HTMLElement, binding: any) {
+      mounted(el: HTMLElement, binding: import('vue').DirectiveBinding) {
         globalLongPressHandlers.onToggle = binding.value?.onToggle
         globalLongPressHandlers.onLongToggle = binding.value?.onLongToggle
       },
-      updated(el: HTMLElement, binding: any) {
+      updated(el: HTMLElement, binding: import('vue').DirectiveBinding) {
         globalLongPressHandlers.onToggle = binding.value?.onToggle
         globalLongPressHandlers.onLongToggle = binding.value?.onLongToggle
       },

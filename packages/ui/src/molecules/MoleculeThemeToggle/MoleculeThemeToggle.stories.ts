@@ -20,7 +20,7 @@ const meta: Meta<typeof MoleculeThemeToggle> = {
     currentTheme: 'light',
     size: 'md',
   },
-  render: (args) => ({
+  render: (args: unkown) => ({
     components: { MoleculeThemeToggle },
     setup() {
       const localTheme = ref(args.currentTheme)

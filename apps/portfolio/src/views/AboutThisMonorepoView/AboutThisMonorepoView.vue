@@ -10,7 +10,6 @@ export interface CarouselItem {
   alt?: string
 }
 
-// 1. Define your slide deck data payload using the library's structural typing contract
 const portfolioProjects = ref<CarouselItem[]>([
   {
     id: 'proj-1',
@@ -40,18 +39,17 @@ const portfolioProjects = ref<CarouselItem[]>([
 
 const currentSlideIndex = ref(0)
 
-// 2. Handle active slide mutations bubbling upward from the component's internal lifecycle triggers
 function handleSlideChange(newIndex: number) {
   currentSlideIndex.value = newIndex
 }
 </script>
+
 <template>
   <div
     class="about-this-monorepo-view bg-background font-display w-full py-12"
     data-testid="about-this-monorepo-view"
   >
-    <div class="container mx-auto flex max-w-5xl flex-col gap-8 px-4">
-      <!-- Section Header -->
+    <div class="container mx-auto flex flex-col gap-8">
       <div class="border-border flex flex-col gap-1 border-b pb-4">
         <h2 class="text-foreground text-2xl font-bold tracking-tight">
           Production Architecture Deployments
@@ -61,7 +59,6 @@ function handleSlideChange(newIndex: number) {
         </p>
       </div>
 
-      <!-- 3. Consume the MoleculeCarousel Component Natively -->
       <div class="w-full">
         <MoleculeCarousel
           :items="portfolioProjects"
@@ -73,7 +70,6 @@ function handleSlideChange(newIndex: number) {
         />
       </div>
 
-      <!-- 4. Sync Parent Layout Context to the Active Carousel State Variable -->
       <div class="meta-footer bg-muted/30 border-border flex flex-col gap-2 rounded-lg border p-4">
         <div class="text-primary font-mono text-xs font-semibold tracking-wider uppercase">
           Active Monitor Feed Tracker

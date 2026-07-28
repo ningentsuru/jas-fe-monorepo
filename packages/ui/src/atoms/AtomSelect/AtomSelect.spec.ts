@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import AtomSelect from './AtomSelect.vue'
+import AtomSelect from './AtomSelect'
 import meta, { Default, ValidationError, CustomNumericSize } from './AtomSelect.stories'
 
 type AtomSelectProps = InstanceType<typeof AtomSelect>['$props']
@@ -9,24 +9,28 @@ const getProps = (storyArgs: typeof Default.args): AtomSelectProps => {
   return {
     ...meta.args,
     ...storyArgs,
-  } as AtomSelectProps
+  } as unknown as AtomSelectProps
 }
 
 describe('AtomSelect', () => {
-  it('renders dropdown placeholder and select parameters correctly', () => {
+  it('renders dropdown placeholder and select parameters correctly', async () => {
     const wrapper = mount(AtomSelect, {
       props: getProps(Default.args),
     })
+
+    await wrapper.vm.$nextTick()
 
     const selectEl = wrapper.find('[data-testid="atom-select"]')
     expect(selectEl.exists()).toBe(true)
     expect(wrapper.text()).toContain('Choose your tech stack')
   })
 
-  it('renders the complete iterable option mapping array list accurately', () => {
+  it('renders the complete iterable option mapping array list accurately', async () => {
     const wrapper = mount(AtomSelect, {
       props: getProps(Default.args),
     })
+
+    await wrapper.vm.$nextTick()
 
     const options = wrapper.findAll('option')
     expect(options.length).toBe(5)
@@ -34,7 +38,7 @@ describe('AtomSelect', () => {
     expect(options[3].attributes('disabled')).toBeDefined()
   })
 
-  it('binds the initial input values correctly onto the selection node', () => {
+  it('binds the initial input values correctly onto the selection node', async () => {
     const wrapper = mount(AtomSelect, {
       props: getProps({
         ...Default.args,
@@ -42,24 +46,30 @@ describe('AtomSelect', () => {
       }),
     })
 
+    await wrapper.vm.$nextTick()
+
     const select = wrapper.find('select').element as HTMLSelectElement
     expect(select.value).toBe('react')
   })
 
-  it('injects structural styling attributes when flagged with validation errors', () => {
+  it('injects structural styling attributes when flagged with validation errors', async () => {
     const wrapper = mount(AtomSelect, {
       props: getProps(ValidationError.args),
     })
+
+    await wrapper.vm.$nextTick()
 
     const selectEl = wrapper.find('select')
     expect(selectEl.attributes('aria-invalid')).toBe('true')
     expect(selectEl.classes()).toContain('border-destructive')
   })
 
-  it('handles downstream custom variable heights when primitive sizing numbers are provided', () => {
+  it('handles downstream custom variable heights when primitive sizing numbers are provided', async () => {
     const wrapper = mount(AtomSelect, {
       props: getProps(CustomNumericSize.args),
     })
+
+    await wrapper.vm.$nextTick()
 
     const selectEl = wrapper.find('select')
     const element = selectEl.element as HTMLElement
@@ -69,13 +79,15 @@ describe('AtomSelect', () => {
     expect(element.style.getPropertyValue('--select-size')).toBe('58px')
   })
 
-  it('disables interactions dynamically when specified by parameter states', () => {
+  it('disables interactions dynamically when specified by parameter states', async () => {
     const wrapper = mount(AtomSelect, {
       props: getProps({
         ...Default.args,
         disabled: true,
       }),
     })
+
+    await wrapper.vm.$nextTick()
 
     const selectEl = wrapper.find('select')
     expect(selectEl.attributes('disabled')).toBeDefined()

@@ -1,1 +1,1 @@
-export { default } from './AtomKeyboard.vue'
+export { default } from './AtomKeyboard.tsx'

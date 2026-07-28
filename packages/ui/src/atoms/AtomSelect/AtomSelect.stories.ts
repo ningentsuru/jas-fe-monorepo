@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import AtomSelect from './AtomSelect.vue'
+import AtomSelect from './AtomSelect'
 
 const sampleOptions = [
   { value: 'vue', label: 'Vue.js Framework' },
@@ -24,6 +24,14 @@ const meta: Meta<typeof AtomSelect> = {
     disabled: false,
     error: false,
   },
+
+  render: (args) => ({
+    components: { AtomSelect },
+    setup() {
+      return { args }
+    },
+    template: '<AtomSelect v-bind="args" v-model="args.modelValue" />',
+  }),
 }
 
 export default meta

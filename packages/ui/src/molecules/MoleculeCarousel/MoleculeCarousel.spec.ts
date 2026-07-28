@@ -79,7 +79,6 @@ describe('MoleculeCarousel', () => {
     const prevBtn = wrapper.find('[data-testid="prev-btn"]')
     const track = wrapper.find('[data-testid="carousel-track"]')
 
-    // At index 0, clicking prev loops seamlessly to the last slide (index 2)
     await prevBtn.trigger('click')
     expect(track.attributes('style')).toContain('transform: translateX(-200%);')
   })
@@ -101,7 +100,6 @@ describe('MoleculeCarousel', () => {
       global: { stubs: { AtomButton: true, AtomIcon: true } },
     })
 
-    // At initial index 0, loop=false hides the previous control arrow trigger
     expect(wrapper.find('[data-testid="prev-btn"]').exists()).toBe(false)
     expect(wrapper.find('[data-testid="next-btn"]').exists()).toBe(true)
   })
@@ -119,7 +117,6 @@ describe('MoleculeCarousel', () => {
     const track = wrapper.find('[data-testid="carousel-track"]')
     expect(track.attributes('style')).toContain('transform: translateX(-0%);')
 
-    // Advance mock clock to execute the autoPlay tracking intervals loop pass
     await vi.advanceTimersByTimeAsync(2000)
     expect(track.attributes('style')).toContain('transform: translateX(-100%);')
     await vi.advanceTimersByTimeAsync(2000)
@@ -137,7 +134,6 @@ describe('MoleculeCarousel', () => {
 
     expect(track.attributes('style')).toContain('transform: translateX(-0%);')
 
-    // Fire hardware right arrow keyboard controls natively onto the component container focus tree
     await rootEl.trigger('keydown', { key: 'ArrowRight' })
     expect(track.attributes('style')).toContain('transform: translateX(-100%);')
   })

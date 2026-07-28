@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import AtomIcon from './AtomIcon.vue'
-import meta, { Default, WithNumericSize, WithIconComponent } from './AtomIcon.stories'
+import { Smile } from '@lucide/vue'
+import AtomIcon from './AtomIcon'
+import meta, { Default, TextFallbackState, CustomNumericSize } from './AtomIcon.stories'
 
 type AtomIconProps = InstanceType<typeof AtomIcon>['$props']
 
@@ -9,36 +10,40 @@ const getProps = (storyArgs: typeof Default.args): AtomIconProps => {
   return {
     ...meta.args,
     ...storyArgs,
-  } as AtomIconProps
+  } as unknown as AtomIconProps
 }
 
 describe('AtomIcon', () => {
-  it('renders text when no icon is provided', () => {
+  it('renders a custom dynamic icon component correctly when passed down', async () => {
     const wrapper = mount(AtomIcon, {
       props: getProps(Default.args),
     })
 
-    expect(wrapper.text()).toContain('Default Icon Text')
-    expect(wrapper.find('.atom-icon').attributes('style')).toBeUndefined()
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.find('[data-testid="atom-icon"]').exists()).toBe(true)
+    expect(wrapper.findComponent(Smile).exists()).toBe(true)
   })
 
-  it('applies custom inline style for pixel values', () => {
+  it('falls back seamlessly to rendering text spans if component object is missing', async () => {
     const wrapper = mount(AtomIcon, {
-      props: getProps(WithNumericSize.args),
+      props: getProps(TextFallbackState.args),
     })
 
-    const targetElement = wrapper.find('[data-testid="atom-icon"]')
+    await wrapper.vm.$nextTick()
 
-    expect(targetElement.attributes('style')).toContain('--icon-size: 42px')
+    expect(wrapper.text()).toContain('Fallback Text')
+    expect(wrapper.findComponent(Smile).exists()).toBe(false)
   })
 
-  it('renders injected dynamic functional component structure', () => {
+  it('safely pipes pixel sizing attributes as custom inline CSS variables when numbers match', async () => {
     const wrapper = mount(AtomIcon, {
-      props: getProps(WithIconComponent.args),
+      props: getProps(CustomNumericSize.args),
     })
 
-    expect(wrapper.find('svg').exists()).toBe(true)
-    expect(wrapper.find('svg').classes()).toContain('w-8')
-    expect(wrapper.find('svg').classes()).toContain('h-8')
+    await wrapper.vm.$nextTick()
+
+    const domElement = wrapper.element as HTMLElement
+    expect(domElement.style.getPropertyValue('--icon-size')).toBe('48px')
   })
 })

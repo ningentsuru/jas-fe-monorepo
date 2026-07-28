@@ -72,7 +72,6 @@ function stopAutoPlay() {
   }
 }
 
-// Handle native accessibility keyboard mapping controls smoothly
 function handleKeyDown(event: KeyboardEvent) {
   if (event.key === 'ArrowLeft' && canPrev.value) {
     event.preventDefault()
@@ -117,7 +116,6 @@ onUnmounted(() => {
     role="region"
     aria-label="Content Carousel"
   >
-    <!-- Slides Track Rail Grid Slider Wrapper -->
     <div
       class="flex h-full transition-transform duration-500 ease-out"
       :style="{ transform: `translateX(-${activeIndex * 100}%)` }"
@@ -140,7 +138,6 @@ onUnmounted(() => {
           loading="lazy"
         />
 
-        <!-- Text Overlay Mask Layer -->
         <div
           v-if="item.title || item.description"
           class="absolute inset-x-0 bottom-0 flex flex-col gap-2 bg-linear-to-t from-black/80 via-black/40 to-transparent p-6 pt-20 text-white"
@@ -155,7 +152,6 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <!-- Navigation Control Triggers (Rendered dynamically if track counts exceed 1) -->
     <template v-if="items.length > 1">
       <AtomButton
         v-if="canPrev"
@@ -181,7 +177,6 @@ onUnmounted(() => {
         <AtomIcon :icon="ChevronRight" size="md" />
       </AtomButton>
 
-      <!-- Pagination Indicator Array Grid Layout -->
       <div
         class="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2"
         data-testid="carousel-indicators"

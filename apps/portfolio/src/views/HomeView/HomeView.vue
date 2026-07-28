@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { OrganismHero } from '@repo/ui'
+console.log('ESLint verification test loop tracer parameter')
 </script>
 
 <template>

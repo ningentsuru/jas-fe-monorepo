@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import AtomInput from './AtomInput.vue'
+import AtomInput from './AtomInput'
 
 const meta: Meta<typeof AtomInput> = {
   title: 'Components/AtomInput',
@@ -7,7 +7,7 @@ const meta: Meta<typeof AtomInput> = {
   argTypes: {
     size: {
       type: { name: 'other', value: 'string | number' },
-      description: 'Accepts preset names (sm, md, lg, xl) or a custom pixel number value',
+      description: 'Accepts preset name strings or a custom numeric height value',
     },
     type: {
       control: 'select',
@@ -16,7 +16,7 @@ const meta: Meta<typeof AtomInput> = {
   },
   args: {
     modelValue: '',
-    placeholder: 'Enter your credentials...',
+    placeholder: 'Enter secure credential node strings...',
     disabled: false,
     error: false,
     size: 'md',
@@ -29,29 +29,34 @@ type Story = StoryObj<typeof AtomInput>
 
 export const Default: Story = {}
 
-export const WithValue: Story = {
-  args: {
-    modelValue: 'John Doe',
-  },
-}
-
-export const ValidationError: Story = {
+export const ErrorState: Story = {
   args: {
     error: true,
-    placeholder: 'Invalid email formatting detected',
+    placeholder: 'Invalid parameter layout detected...',
   },
 }
 
 export const CustomNumericSize: Story = {
   args: {
-    size: 52,
-    placeholder: 'Custom height input layer',
+    size: 55,
   },
 }
 
-export const DisabledState: Story = {
-  args: {
-    disabled: true,
-    modelValue: 'Locked configuration contents',
-  },
+export const WithPrefixAndSuffix: Story = {
+  render: (args) => ({
+    components: { AtomInput },
+    setup() {
+      return { args }
+    },
+    template: `
+      <AtomInput v-bind="args">
+        <template #prefix>
+          <span class="text-xs select-none">🌐</span>
+        </template>
+        <template #suffix>
+          <span class="text-xs select-none">🔍</span>
+        </template>
+      </AtomInput>
+    `,
+  }),
 }
