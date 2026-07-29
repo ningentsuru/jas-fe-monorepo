@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import MoleculeCarousel from './MoleculeCarousel'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import MoleculeCarousel, { type MoleculeCarouselProps } from './MoleculeCarousel'
 
 const mockCarouselSlides = [
   {
@@ -39,7 +39,7 @@ const meta: Meta<typeof MoleculeCarousel> = {
 }
 
 export default meta
-type Story = StoryObj<typeof MoleculeCarousel>
+type Story = StoryObj<MoleculeCarouselProps>
 
 export const Default: Story = {}
 

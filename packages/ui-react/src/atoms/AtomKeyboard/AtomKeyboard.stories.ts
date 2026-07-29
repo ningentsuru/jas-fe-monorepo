@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import AtomKeyboard from './AtomKeyboard'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import AtomKeyboard, { type AtomKeyboardProps } from './AtomKeyboard'
 
 const meta: Meta<typeof AtomKeyboard> = {
   title: 'Components/AtomKeyboard',
@@ -10,7 +10,7 @@ const meta: Meta<typeof AtomKeyboard> = {
 }
 
 export default meta
-type Story = StoryObj<typeof AtomKeyboard>
+type Story = StoryObj<AtomKeyboardProps>
 
 export const Default: Story = {}
 

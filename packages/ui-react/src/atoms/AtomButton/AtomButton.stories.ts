@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import AtomButton from './AtomButton'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import AtomButton, { type AtomButtonProps } from './AtomButton'
 
 const meta: Meta<typeof AtomButton> = {
   title: 'Components/AtomButton',
@@ -21,18 +21,12 @@ const meta: Meta<typeof AtomButton> = {
     variant: 'default',
     disabled: false,
     type: 'button',
+    children: 'Button Text',
   },
-  render: (args) => ({
-    components: { AtomButton },
-    setup() {
-      return { args }
-    },
-    template: '<AtomButton v-bind="args">Click me</AtomButton>',
-  }),
 }
 
 export default meta
-type Story = StoryObj<typeof AtomButton>
+type Story = StoryObj<AtomButtonProps>
 
 export const Default: Story = {}
 
@@ -67,5 +61,6 @@ export const ExternalLink: Story = {
   args: {
     href: 'https://google.com',
     target: '_blank',
+    children: 'External Redirect',
   },
 }

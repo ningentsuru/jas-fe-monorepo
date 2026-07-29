@@ -1,9 +1,10 @@
-import { defineComponent, ref, onUnmounted, nextTick, type PropType } from 'vue'
+import { useState, useEffect, useRef, useCallback, type ReactNode } from 'react'
 
 export interface MoleculeTooltipProps {
   title?: string
   position?: 'top' | 'bottom' | 'left' | 'right'
   delay?: number
+  children?: ReactNode
 }
 
 interface ArrowCoords {
@@ -16,244 +17,228 @@ interface ArrowCoords {
   [key: string]: string
 }
 
-export const MoleculeTooltip = defineComponent({
-  name: 'MoleculeTooltip',
-  props: {
-    title: {
-      type: String as PropType<string>,
-      default: '',
-    },
-    position: {
-      type: String as PropType<'top' | 'bottom' | 'left' | 'right'>,
-      default: 'top',
-    },
-    delay: {
-      type: Number as PropType<number>,
-      default: 200,
-    },
-  },
-  setup(props, { slots }) {
-    const isVisible = ref<boolean>(false)
-    const isCalculating = ref<boolean>(false)
-    const triggerRef = ref<HTMLElement | null>(null)
-    const tooltipRef = ref<HTMLElement | null>(null)
+export const MoleculeTooltip = ({
+  title = '',
+  position = 'top',
+  delay = 200,
+  children
+}: MoleculeTooltipProps) => {
+  const [isVisible, setIsVisible] = useState<boolean>(false)
+  const [isCalculating, setIsCalculating] = useState<boolean>(false)
 
-    const coords = ref({ top: 0, left: 0 })
-    const arrowCoords = ref<ArrowCoords>({
-      top: '',
-      left: '',
-      bottom: '',
-      right: '',
-      transform: '',
-      borders: ''
-    })
+  const triggerRef = useRef<HTMLDivElement>(null)
+  const tooltipRef = useRef<HTMLDivElement>(null)
 
-    let timer: ReturnType<typeof setTimeout> | null = null
-    let resizeObserver: ResizeObserver | null = null
-    let rafId: number | null = null
+  const [coords, setCoords] = useState({ top: 0, left: 0 })
+  const [arrowCoords, setArrowCoords] = useState<ArrowCoords>({
+    top: '',
+    left: '',
+    bottom: '',
+    right: '',
+    transform: '',
+    borders: ''
+  })
 
-    onUnmounted(() => {
-      cleanup()
-    })
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const rafIdRef = useRef<number | null>(null)
+  const resizeObserverRef = useRef<ResizeObserver | null>(null)
 
-    function show() {
-      if (timer) clearTimeout(timer)
+  const destroyListeners = useCallback(() => {
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('resize', recalculatePosition)
+      window.removeEventListener('scroll', recalculatePosition)
+    }
+    if (resizeObserverRef.current) {
+      resizeObserverRef.current.disconnect()
+      resizeObserverRef.current = null
+    }
+    if (rafIdRef.current) {
+      cancelAnimationFrame(rafIdRef.current)
+      rafIdRef.current = null
+    }
+  }, [])
 
-      isCalculating.value = true
-      isVisible.value = true
+  const recalculatePosition = useCallback(() => {
+    if (!triggerRef.current || !tooltipRef.current) return
 
-      recalculatePosition()
+    const trigger = triggerRef.current.getBoundingClientRect()
+    const tooltipWidth = tooltipRef.current.offsetWidth || 120
+    const tooltipHeight = tooltipRef.current.offsetHeight || 40
 
-      nextTick(() => {
-        recalculatePosition()
-        isCalculating.value = false
-        setupListeners()
-      })
+    const pad = 12
+    const gap = 8
+    const vw = typeof window !== 'undefined' ? window.innerWidth : 1024
+    const vh = typeof window !== 'undefined' ? window.innerHeight : 768
+
+    let newTop = 0
+    let newLeft = 0
+    let actualPosition = position
+
+    if (position === 'top' && trigger.top - tooltipHeight - gap < pad) {
+      actualPosition = 'bottom'
+    } else if (position === 'bottom' && trigger.bottom + tooltipHeight + gap > vh - pad) {
+      actualPosition = 'top'
+    } else if (position === 'left' && trigger.left - tooltipWidth - gap < pad) {
+      actualPosition = 'right'
+    } else if (position === 'right' && trigger.right + tooltipWidth + gap > vw - pad) {
+      actualPosition = 'left'
     }
 
-    function hide() {
-      destroyListeners()
+    const scrollY = typeof window !== 'undefined' ? window.scrollY : 0
+    const scrollX = typeof window !== 'undefined' ? window.scrollX : 0
 
-      if (timer) clearTimeout(timer)
-      timer = setTimeout(() => {
-        isVisible.value = false
-      }, props.delay)
-    }
-
-    function setupListeners() {
-      destroyListeners()
-
-      if (typeof window === 'undefined') return
-      window.addEventListener('resize', recalculatePosition)
-      window.addEventListener('scroll', recalculatePosition, { passive: true })
-
-      if (tooltipRef.value && typeof ResizeObserver !== 'undefined') {
-        resizeObserver = new ResizeObserver(() => {
-          if (rafId) cancelAnimationFrame(rafId)
-          rafId = requestAnimationFrame(() => {
-            recalculatePosition()
-          })
+    switch (actualPosition) {
+      case 'top':
+        newTop = trigger.top + scrollY - tooltipHeight - gap
+        newLeft = trigger.left + scrollX + trigger.width / 2 - tooltipWidth / 2
+        setArrowCoords({
+          top: '100%',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          borders: 'border-t-card border-x-transparent border-b-transparent',
+          bottom: '',
+          right: ''
         })
-        resizeObserver.observe(tooltipRef.value)
-      }
+        break
+      case 'bottom':
+        newTop = trigger.bottom + scrollY + gap
+        newLeft = trigger.left + scrollX + trigger.width / 2 - tooltipWidth / 2
+        setArrowCoords({
+          bottom: '100%',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          borders: 'border-b-card border-x-transparent border-t-transparent',
+          top: '',
+          right: ''
+        })
+        break
+      case 'left':
+        newTop = trigger.top + scrollY + trigger.height / 2 - tooltipHeight / 2
+        newLeft = trigger.left + scrollX - tooltipWidth - gap
+        setArrowCoords({
+          top: '50%',
+          left: '100%',
+          transform: 'translateY(-50%)',
+          borders: 'border-l-card border-y-transparent border-r-transparent',
+          bottom: '',
+          right: ''
+        })
+        break
+      case 'right':
+        newTop = trigger.top + scrollY + trigger.height / 2 - tooltipHeight / 2
+        newLeft = trigger.right + scrollX + gap
+        setArrowCoords({
+          top: '50%',
+          right: '100%',
+          transform: 'translateY(-50%)',
+          borders: 'border-r-card border-y-transparent border-l-transparent',
+          bottom: '',
+          left: ''
+        })
+        break
     }
 
-    function destroyListeners() {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('resize', recalculatePosition)
-        window.removeEventListener('scroll', recalculatePosition)
-      }
+    if (newLeft < pad) newLeft = pad
+    if (newLeft + tooltipWidth > vw - pad) newLeft = vw - pad - tooltipWidth
 
-      if (resizeObserver) {
-        resizeObserver.disconnect()
-        resizeObserver = null
-      }
-      if (rafId) {
-        cancelAnimationFrame(rafId)
-        rafId = null
-      }
+    setCoords({ top: newTop, left: newLeft })
+  }, [position])
+
+  const setupListeners = useCallback(() => {
+    destroyListeners()
+
+    if (typeof window === 'undefined') return
+    window.addEventListener('resize', recalculatePosition)
+    window.addEventListener('scroll', recalculatePosition, { passive: true })
+
+    if (tooltipRef.current && typeof ResizeObserver !== 'undefined') {
+      resizeObserverRef.current = new ResizeObserver(() => {
+        if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current)
+        rafIdRef.current = requestAnimationFrame(() => {
+          recalculatePosition()
+        })
+      })
+      resizeObserverRef.current.observe(tooltipRef.current)
     }
+  }, [recalculatePosition, destroyListeners])
 
-    function cleanup() {
-      if (timer) clearTimeout(timer)
+  const showTooltip = () => {
+    if (timerRef.current) clearTimeout(timerRef.current)
+    setIsCalculating(true)
+    setIsVisible(true)
+    setTimeout(() => {
+      recalculatePosition()
+      setIsCalculating(false)
+      setupListeners()
+    }, 0)
+  }
+
+  const hideTooltip = () => {
+    destroyListeners()
+    if (timerRef.current) clearTimeout(timerRef.current)
+    timerRef.current = setTimeout(() => {
+      setIsVisible(false)
+    }, delay)
+  }
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current)
       destroyListeners()
     }
+  }, [destroyListeners])
 
-    function recalculatePosition() {
-      if (!triggerRef.value || !tooltipRef.value) return
-
-      const trigger = triggerRef.value.getBoundingClientRect()
-
-      const tooltipWidth = tooltipRef.value.offsetWidth || 120
-      const tooltipHeight = tooltipRef.value.offsetHeight || 40
-
-      const pad = 12
-      const gap = 8
-      const vw = typeof window !== 'undefined' ? window.innerWidth : 1024
-      const vh = typeof window !== 'undefined' ? window.innerHeight : 768
-
-      let actualPos: 'top' | 'bottom' | 'left' | 'right' = props.position
-
-      if (actualPos === 'left' || actualPos === 'right') {
-        const fitsLeft = trigger.left - tooltipWidth - gap >= pad
-        const fitsRight = trigger.right + tooltipWidth + gap <= vw - pad
-
-        if (actualPos === 'left' && !fitsLeft) {
-          actualPos = fitsRight ? 'right' : trigger.top - tooltipHeight - gap >= pad ? 'top' : 'bottom'
-        } else if (actualPos === 'right' && !fitsRight) {
-          actualPos = fitsLeft ? 'left' : trigger.top - tooltipHeight - gap >= pad ? 'top' : 'bottom'
-        }
-      }
-
-      if (actualPos === 'top' && trigger.top - tooltipHeight - gap < pad) {
-        actualPos = 'bottom'
-      } else if (actualPos === 'bottom' && trigger.bottom + tooltipHeight + gap > vh - pad) {
-        actualPos = 'top'
-      }
-
-      let idealLeft = 0
-      let idealTop = 0
-
-      if (actualPos === 'top' || actualPos === 'bottom') {
-        idealLeft = trigger.left + (trigger.width - tooltipWidth) / 2
-        idealTop = actualPos === 'top' ? trigger.top - tooltipHeight - gap : trigger.bottom + gap
-      } else {
-        idealLeft = actualPos === 'left' ? trigger.left - tooltipWidth - gap : trigger.right + gap
-        idealTop = trigger.top + (trigger.height - tooltipHeight) / 2
-      }
-
-      if (idealLeft < pad) idealLeft = pad
-      if (idealLeft + tooltipWidth > vw - pad) idealLeft = vw - tooltipWidth - pad
-
-      if (idealTop < pad) idealTop = pad
-      if (idealTop + tooltipHeight > vh - pad) idealTop = vh - tooltipHeight - pad
-
-      coords.value = {
-        left: idealLeft - trigger.left,
-        top: idealTop - trigger.top,
-      }
-
-      const triggerCenterH = trigger.left + trigger.width / 2
-      const triggerCenterV = trigger.top + trigger.height / 2
-
-      const arrow: ArrowCoords = {
-        top: '',
-        left: '',
-        bottom: '',
-        right: '',
-        transform: 'rotate(45deg)',
-        borders: '',
-      }
-
-      if (actualPos === 'top' || actualPos === 'bottom') {
-        arrow[actualPos === 'top' ? 'bottom' : 'top'] = '-4px'
-        const arrowLeft = triggerCenterH - idealLeft - 4
-        arrow.left = `${Math.max(8, Math.min(tooltipWidth - 16, arrowLeft))}px`
-        arrow.borders = actualPos === 'top' ? 'border-r border-b' : 'border-l border-t'
-      } else {
-        arrow[actualPos === 'left' ? 'right' : 'left'] = '-4px'
-        const arrowTop = triggerCenterV - idealTop - 4
-        arrow.top = `${Math.max(8, Math.min(tooltipHeight - 16, arrowTop))}px`
-        arrow.borders = actualPos === 'left' ? 'border-r border-t' : 'border-l border-b'
-      }
-
-      arrowCoords.value = arrow
-    }
-
-    return () => (
+  return (
+    <>
       <div
         ref={triggerRef}
-        class="molecule-tooltip relative inline-block"
-        data-testid="molecule-tooltip"
-        onMouseenter={show}
-        onMouseleave={hide}
+        className="molecule-tooltip-trigger inline-block"
+        onMouseEnter={showTooltip}
+        onMouseLeave={hideTooltip}
+        onFocus={showTooltip}
+        onBlur={hideTooltip}
+        aria-describedby={isVisible ? 'tooltip-content' : undefined}
+        data-testid="molecule-tooltip-trigger"
       >
-        {slots.default ? (
-          slots.default()
-        ) : (
-          <span class="border-foreground cursor-help border-b border-dotted">
-            {props.title}
-          </span>
-        )}
-
-        {isVisible.value && (
-          <div
-            ref={tooltipRef}
-            style={
-              isCalculating.value
-                ? { top: '-9999px', left: '-9999px', opacity: '0' }
-                : { top: `${coords.value.top}px`, left: `${coords.value.left}px` }
-            }
-            class="border-border bg-card text-foreground absolute z-50 w-max max-w-xs transform rounded-md border p-3 shadow-lg transition-opacity data-visible"
-            onMouseenter={show}
-            onMouseleave={hide}
-          >
-            {props.title && (
-              <p class="text-muted-foreground mb-1 text-xs font-semibold tracking-wider uppercase">
-                {props.title}
-              </p>
-            )}
-            <div class="text-sm">
-              {slots.content ? slots.content() : props.title}
-            </div>
-
-            {!isCalculating.value && (
-              <div
-                style={{
-                  top: arrowCoords.value.top,
-                  left: arrowCoords.value.left,
-                  bottom: arrowCoords.value.bottom,
-                  right: arrowCoords.value.right,
-                  transform: arrowCoords.value.transform,
-                }}
-                class={['border-border bg-card absolute h-2 w-2', arrowCoords.value.borders]}
-              />
-            )}
-          </div>
-        )}
+        {children}
       </div>
-    )
-  },
-})
+
+      {isVisible && (
+        <div
+          ref={tooltipRef}
+          id="tooltip-content"
+          role="tooltip"
+          className={[
+            'molecule-tooltip bg-card text-card-foreground border-border hc:border-2 absolute z-[100] max-w-xs rounded-md border px-3 py-1.5 text-sm font-medium shadow-md transition-opacity duration-200 ease-in-out data-[theme=high-contrast]:border-2',
+            isCalculating ? 'opacity-0' : 'opacity-100'
+          ].join(' ')}
+          style={{
+            top: `${coords.top}px`,
+            left: `${coords.left}px`,
+            pointerEvents: 'none'
+          }}
+          data-testid="tooltip-content"
+        >
+          {title}
+          <div
+            className={[
+              'absolute h-0 w-0 border-[6px]',
+              arrowCoords.borders
+            ].join(' ')}
+            style={{
+              top: arrowCoords.top,
+              bottom: arrowCoords.bottom,
+              left: arrowCoords.left,
+              right: arrowCoords.right,
+              transform: arrowCoords.transform
+            }}
+            aria-hidden="true"
+            data-testid="tooltip-arrow"
+          />
+        </div>
+      )}
+    </>
+  )
+}
 
 export default MoleculeTooltip

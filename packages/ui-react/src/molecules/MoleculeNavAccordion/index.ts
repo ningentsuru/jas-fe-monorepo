@@ -1,2 +1,3 @@
 export { default } from './MoleculeNavAccordion'
-export type { MoleculeNavAccordionProps } from './MoleculeNavAccordion'
+export { MoleculeNavAccordion } from './MoleculeNavAccordion'
+export type { MoleculeNavAccordionProps, NavItem } from './MoleculeNavAccordion'

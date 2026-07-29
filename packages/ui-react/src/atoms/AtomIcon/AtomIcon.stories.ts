@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { Smile } from '@lucide/vue'
-import AtomIcon from './AtomIcon'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { Smile } from 'lucide-react'
+import AtomIcon, { type AtomIconProps } from './AtomIcon'
 
 const meta: Meta<typeof AtomIcon> = {
   title: 'Components/AtomIcon',
@@ -19,7 +19,7 @@ const meta: Meta<typeof AtomIcon> = {
 }
 
 export default meta
-type Story = StoryObj<typeof AtomIcon>
+type Story = StoryObj<AtomIconProps>
 
 export const Default: Story = {}
 

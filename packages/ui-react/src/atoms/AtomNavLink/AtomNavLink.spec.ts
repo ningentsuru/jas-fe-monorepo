@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest'
-import { mount } from '@vue/test-utils'
+import React from 'react'
+import { describe, it, expect, vi } from 'vitest'
+import { render, screen, fireEvent } from '@testing-library/react'
 import AtomNavLink from './AtomNavLink'
-import AtomButton from '../AtomButton/AtomButton'
 import meta, {
   Default,
   ActiveLink,
@@ -9,86 +9,73 @@ import meta, {
   RouterLinkVariant,
 } from './AtomNavLink.stories'
 
-type AtomNavLinkProps = InstanceType<typeof AtomNavLink>['$props']
+type AtomNavLinkProps = React.ComponentProps<typeof AtomNavLink>
 
 const getProps = (storyArgs: typeof Default.args): AtomNavLinkProps => {
   return {
     ...meta.args,
     ...storyArgs,
-  } as unknown as AtomNavLinkProps
+  } as AtomNavLinkProps
 }
 
 describe('AtomNavLink', () => {
-  it('renders label text contents correctly', async () => {
-    const wrapper = mount(AtomNavLink, {
-      props: getProps(Default.args),
-    })
+  it('renders label text contents correctly', () => {
+    const props = getProps(Default.args)
+    render(React.createElement(AtomNavLink, props))
 
-    await wrapper.vm.$nextTick()
-
-    expect(wrapper.text()).toContain('Dashboard Overview')
-    expect(wrapper.props('label')).toBe('Dashboard Overview')
+    const linkElement = screen.getByTestId('atom-button')
+    expect(linkElement).not.toBeNull()
+    expect(linkElement.textContent).toContain('Dashboard Overview')
   })
 
-  it('applies text-primary styling only when marked as active', async () => {
-    const defaultWrapper = mount(AtomNavLink, {
-      props: getProps(Default.args),
-    })
-    const activeWrapper = mount(AtomNavLink, {
-      props: getProps(ActiveLink.args),
-    })
+  it('applies text-primary styling only when marked as active', () => {
+    const defaultProps = getProps(Default.args)
+    const activeProps = getProps(ActiveLink.args)
 
-    await Promise.all([defaultWrapper.vm.$nextTick(), activeWrapper.vm.$nextTick()])
+    const { unmount } = render(React.createElement(AtomNavLink, defaultProps))
+    let linkElement = screen.getByTestId('atom-button')
+    expect(linkElement.classList.contains('text-foreground')).toBe(true)
+    expect(linkElement.classList.contains('text-primary')).toBe(false)
+    unmount()
 
-    const defButton = defaultWrapper.findComponent(AtomButton)
-    const actButton = activeWrapper.findComponent(AtomButton)
-
-    expect(defButton.classes()).toContain('text-foreground')
-    expect(actButton.classes()).toContain('text-primary')
+    render(React.createElement(AtomNavLink, activeProps))
+    linkElement = screen.getByTestId('atom-button')
+    expect(linkElement.classList.contains('text-primary')).toBe(true)
   })
 
-  it('safely pipes downstream custom numeric sizes to internal button mechanisms', async () => {
-    const wrapper = mount(AtomNavLink, {
-      props: getProps(CustomNumericSize.args),
-    })
+  it('safely pipes downstream custom numeric sizes to internal button mechanisms', () => {
+    const props = getProps(CustomNumericSize.args)
+    render(React.createElement(AtomNavLink, props))
 
-    await wrapper.vm.$nextTick()
-
-    expect(wrapper.props('size')).toBe(52)
+    const linkElement = screen.getByTestId('atom-button')
+    expect(linkElement.style.getPropertyValue('--button-size')).toBe('52px')
   })
 
-  it('passes routing properties directly down to the core layout layers', async () => {
-    const wrapper = mount(AtomNavLink, {
-      props: getProps(RouterLinkVariant.args),
-    })
+  it('passes routing properties directly down to the core layout layers', () => {
+    const props = getProps(RouterLinkVariant.args)
+    render(React.createElement(AtomNavLink, props))
 
-    await wrapper.vm.$nextTick()
-
-    expect(wrapper.props('to')).toBe('/settings')
+    const linkElement = screen.getByTestId('atom-button')
+    expect(linkElement.getAttribute('href')).toBe('/settings')
   })
 
-  it('renders injected markup content via the named trailing slot structure', async () => {
-    const wrapper = mount(AtomNavLink, {
-      props: getProps(Default.args),
-      slots: {
-        trailing: '<span class="badge-mock">Icon</span>',
-      },
-    })
+  it('renders injected markup content via the named trailing slot structure', () => {
+    const trailingNode = React.createElement('span', { className: 'badge-mock', 'data-testid': 'badge-mock' }, 'Icon')
+    const props = { ...getProps(Default.args), trailing: trailingNode }
+    render(React.createElement(AtomNavLink, props))
 
-    await wrapper.vm.$nextTick()
-
-    expect(wrapper.find('.badge-mock').exists()).toBe(true)
-    expect(wrapper.find('.badge-mock').text()).toBe('Icon')
+    const badge = screen.getByTestId('badge-mock')
+    expect(badge).not.toBeNull()
+    expect(badge.textContent).toBe('Icon')
   })
 
-  it('bubbles inner click triggers upward seamlessly', async () => {
-    const wrapper = mount(AtomNavLink, {
-      props: getProps(Default.args),
-    })
+  it('bubbles inner click triggers upward seamlessly', () => {
+    const clickSpy = vi.fn()
+    const props = { ...getProps(Default.args), onClick: clickSpy }
+    render(React.createElement(AtomNavLink, props))
 
-    await wrapper.vm.$nextTick()
-
-    await wrapper.findComponent(AtomButton).trigger('click')
-    expect(wrapper.emitted('click')).toBeTruthy()
+    const linkElement = screen.getByTestId('atom-button')
+    fireEvent.click(linkElement)
+    expect(clickSpy).toHaveBeenCalledTimes(1)
   })
 })

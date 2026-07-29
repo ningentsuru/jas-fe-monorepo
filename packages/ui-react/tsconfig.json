@@ -1,11 +1,19 @@
 {
-  "extends": "@repo/typescript-config/vue.json",
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "extends": "@repo/typescript-config/base.json",
   "compilerOptions": {
     "composite": true,
     "outDir": "dist",
     "declaration": true,
-    "types": ["node", "vite/client"]
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "moduleResolution": "bundler",
+    "types": [
+      "node"
+    ]
   },
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx"
+  ]
 }

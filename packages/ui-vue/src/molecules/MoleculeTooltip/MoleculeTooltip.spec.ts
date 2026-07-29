@@ -52,18 +52,16 @@ describe('MoleculeTooltip', () => {
       props: getProps(Default.args),
       global: {
         stubs: {
-          transition: true, // Short-circuit animation hooks to instantly render layout state changes
+          transition: true,
         },
       },
     })
 
-    // The inner container wrapper is securely hidden initially
     expect(wrapper.find('.bg-card').exists()).toBe(false)
 
     const trigger = wrapper.find('[data-testid="molecule-tooltip"]')
     await trigger.trigger('mouseenter')
 
-    // Advance timers and flush microtask cycles to handle show() nextTick positioning tasks
     await vi.runOnlyPendingTimersAsync()
     await wrapper.vm.$nextTick()
 
@@ -89,10 +87,8 @@ describe('MoleculeTooltip', () => {
     await trigger.trigger('mouseleave')
     await wrapper.vm.$nextTick()
 
-    // Tooltip remains visible during the custom delay loop cycle
     expect(wrapper.find('.bg-card').exists()).toBe(true)
 
-    // Advance vitest clocks past your custom fast action boundary threshold (50ms)
     await vi.advanceTimersByTimeAsync(50)
     await wrapper.vm.$nextTick()
 

@@ -1,12 +1,31 @@
+import React from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { MoleculeThemeToggle } from './MoleculeThemeToggle'
-import { globalLongPressHandlers } from '../../setup'
+import { render, screen, fireEvent, act } from '@testing-library/react'
+import MoleculeThemeToggle, { type MoleculeThemeToggleProps } from './MoleculeThemeToggle'
 import meta, { Default, DarkModeActive, CustomForestTheme } from './MoleculeThemeToggle.stories'
 
-type MoleculeThemeToggleProps = InstanceType<typeof MoleculeThemeToggle>['$props']
+vi.mock('../../', () => ({
+  AtomToggle: ({ icon: Icon, onToggle, onLongToggle }: any) =>
+    React.createElement('button', {
+      type: 'button',
+      'data-testid': 'mock-toggle-btn',
+      'data-icon-name': Icon?.name || Icon?.displayName || 'UnknownIcon',
+      onClick: onToggle,
+      onContextMenu: (e: any) => { e.preventDefault(); onLongToggle(); }
+    }, 'Toggle'),
+  AtomSelect: ({ value, options, onUpdateModelValue }: any) =>
+    React.createElement('select', {
+      'data-testid': 'mock-select',
+      value,
+      onChange: (e: any) => onUpdateModelValue(e.target.value)
+    }, options.map((opt: any) => React.createElement('option', { key: opt.value, value: opt.value }, opt.label))),
+  AtomButton: ({ children, type, onClick }: any) =>
+    React.createElement('button', { type: type || 'button', onClick, 'data-testid': `mock-btn-${type || 'button'}` }, children),
+  MoleculeModal: ({ children, show, title }: any) =>
+    show ? React.createElement('div', { 'data-testid': 'molecule-modal', 'data-title': title }, children) : null
+}))
 
-const getProps = (storyArgs: typeof Default.args): MoleculeThemeToggleProps => {
+const getProps = (storyArgs?: Partial<MoleculeThemeToggleProps>): MoleculeThemeToggleProps => {
   return {
     ...meta.args,
     ...storyArgs,
@@ -15,72 +34,68 @@ const getProps = (storyArgs: typeof Default.args): MoleculeThemeToggleProps => {
 
 describe('MoleculeThemeToggle', () => {
   beforeEach(() => {
-    HTMLDialogElement.prototype.showModal = vi.fn()
-    HTMLDialogElement.prototype.close = vi.fn()
     document.body.innerHTML = ''
   })
 
   it('renders core container toggle layout structures correctly', () => {
-    const wrapper = mount(MoleculeThemeToggle, {
-      props: getProps(Default.args),
-    })
+    render(React.createElement(MoleculeThemeToggle, getProps(Default.args)))
 
-    expect(wrapper.find('[data-testid="molecule-theme-toggle"]').exists()).toBe(true)
-    expect(wrapper.text()).toContain('molecule-theme-toggle')
+    const wrapper = screen.getByTestId('molecule-theme-toggle')
+    expect(wrapper).toBeDefined()
+    expect(screen.getByText('molecule-theme-toggle')).toBeDefined()
   })
 
-  it('receives correct structural props passed down from Storybook arguments', () => {
-    const wrapper = mount(MoleculeThemeToggle, {
-      props: getProps(DarkModeActive.args),
-    })
+  it('receives correct structural props passed down from Storybook arguments and toggles appropriately', () => {
+    const handleToggle = vi.fn()
+    render(React.createElement(MoleculeThemeToggle, getProps({
+      ...DarkModeActive.args,
+      onToggle: handleToggle
+    })))
 
-    expect(wrapper.props('isToggled')).toBe(true)
-    expect(wrapper.props('currentTheme')).toBe('dark')
+    const btn = screen.getByTestId('mock-toggle-btn')
+    fireEvent.click(btn)
+    expect(handleToggle).toHaveBeenCalledTimes(1)
   })
 
-  it('bubbles primary click toggle notifications upward when tap actions fire', async () => {
-    const wrapper = mount(MoleculeThemeToggle, {
-      props: getProps(Default.args),
-    })
+  it('bubbles primary click toggle notifications upward when tap actions fire', () => {
+    const handleToggle = vi.fn()
+    render(React.createElement(MoleculeThemeToggle, getProps({
+      ...Default.args,
+      onToggle: handleToggle
+    })))
 
-    if (globalLongPressHandlers.onToggle) {
-      globalLongPressHandlers.onToggle()
-    }
+    const btn = screen.getByTestId('mock-toggle-btn')
+    fireEvent.click(btn)
 
-    expect(wrapper.emitted('toggle')).toBeTruthy()
+    expect(handleToggle).toHaveBeenCalledTimes(1)
   })
 
-  it('mounts and displays modal theme lists after triggering long-toggle hooks', async () => {
-    const wrapper = mount(MoleculeThemeToggle, {
-      props: getProps(Default.args),
-      attachTo: document.body,
-    })
+  it('mounts and displays modal theme lists after triggering long-toggle hooks', () => {
+    const handleLongToggle = vi.fn()
+    render(React.createElement(MoleculeThemeToggle, getProps({
+      ...Default.args,
+      onLongToggle: handleLongToggle
+    })))
 
-    if (globalLongPressHandlers.onLongToggle) {
-      globalLongPressHandlers.onLongToggle()
-    }
+    const btn = screen.getByTestId('mock-toggle-btn')
 
-    await wrapper.vm.$nextTick()
+    fireEvent.contextMenu(btn)
 
-    const modalElement = document.body.querySelector('[data-testid="molecule-modal"]')
-
-    expect(modalElement).not.toBeNull()
-    expect(wrapper.emitted('longToggle')).toBeTruthy()
-
-    wrapper.unmount()
+    const modalElement = screen.getByTestId('molecule-modal')
+    expect(modalElement).toBeDefined()
+    expect(modalElement.getAttribute('data-title')).toBe('Choose more themes!')
+    expect(handleLongToggle).toHaveBeenCalledTimes(1)
   })
 
-  it('changes primary display icon layout choices dynamically depending on current active themes', async () => {
-    const lightWrapper = mount(MoleculeThemeToggle, {
-      props: getProps(Default.args),
-    })
-    const forestWrapper = mount(MoleculeThemeToggle, {
-      props: getProps(CustomForestTheme.args),
-    })
+  it('changes primary display icon layout choices dynamically depending on current active themes', () => {
+    const { rerender } = render(React.createElement(MoleculeThemeToggle, getProps(Default.args)))
+    const lightBtn = screen.getByTestId('mock-toggle-btn')
+    const lightIcon = lightBtn.getAttribute('data-icon-name')
 
-    const lightToggle = lightWrapper.findComponent({ name: 'AtomToggle' })
-    const forestToggle = forestWrapper.findComponent({ name: 'AtomToggle' })
+    rerender(React.createElement(MoleculeThemeToggle, getProps(CustomForestTheme.args)))
+    const forestBtn = screen.getByTestId('mock-toggle-btn')
+    const forestIcon = forestBtn.getAttribute('data-icon-name')
 
-    expect(lightToggle.props('icon')).not.toEqual(forestToggle.props('icon'))
+    expect(lightIcon).not.toEqual(forestIcon)
   })
 })

@@ -1,12 +1,19 @@
-import { describe, it, expect } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { h } from 'vue'
-import { OrganismHeader } from './OrganismHeader'
+import React from 'react'
+import { describe, it, expect, vi } from 'vitest'
+import { render, screen } from '@testing-library/react'
+import OrganismHeader, { type OrganismHeaderProps } from './OrganismHeader'
 import meta, { Default, EmptyNavigationShell } from './OrganismHeader.stories'
 
-type OrganismHeaderProps = InstanceType<typeof OrganismHeader>['$props']
+let capturedNavItems: any = null
 
-const getProps = (storyArgs: typeof Default.args): OrganismHeaderProps => {
+vi.mock('../../', () => ({
+  OrganismNavigation: ({ items }: { items: any }) => {
+    capturedNavItems = items
+    return React.createElement('nav', { 'data-testid': 'mock-navigation' }, 'Navigation Inner Context')
+  }
+}))
+
+const getProps = (storyArgs?: Partial<OrganismHeaderProps>): OrganismHeaderProps => {
   return {
     ...meta.args,
     ...storyArgs,
@@ -15,65 +22,62 @@ const getProps = (storyArgs: typeof Default.args): OrganismHeaderProps => {
 
 describe('OrganismHeader', () => {
   it('renders root semantic structure layout context elements correctly', () => {
-    const wrapper = mount(OrganismHeader, {
-      props: getProps(Default.args),
-      global: {
-        stubs: {
-          OrganismNavigation: true,
-        },
-      },
-    })
+    render(React.createElement(OrganismHeader, getProps(Default.args)))
 
-    expect(wrapper.find('header').exists()).toBe(true)
-    expect(wrapper.find('header').classes()).toContain('sticky')
-    expect(wrapper.find('header').classes()).toContain('bg-card')
+    const header = screen.getByTestId('organism-header')
+    expect(header).toBeDefined()
+    expect(header.classList.contains('sticky')).toBe(true)
+    expect(header.classList.contains('bg-card')).toBe(true)
   })
 
   it('pipes navigational array payload items data properties downwards securely', () => {
-    const wrapper = mount(OrganismHeader, {
-      props: getProps(Default.args),
-      global: { stubs: { OrganismNavigation: true } },
-    })
+    capturedNavItems = null
+    render(React.createElement(OrganismHeader, getProps(Default.args)))
 
-    expect(wrapper.props('navItems')).toBeDefined()
-    expect(wrapper.props('navItems')?.length).toBe(3)
-    expect(wrapper.props('navItems')?.[0].label).toBe('Dashboard')
+    expect(capturedNavItems).not.toBeNull()
+    expect(capturedNavItems.length).toBe(3)
+    expect(capturedNavItems[0].label).toBe('Dashboard')
   })
 
   it('supplies fallback array structures safely when props contain empty elements', () => {
-    const wrapper = mount(OrganismHeader, {
-      props: getProps(EmptyNavigationShell.args),
-      global: { stubs: { OrganismNavigation: true } },
-    })
+    capturedNavItems = null
+    render(React.createElement(OrganismHeader, getProps(EmptyNavigationShell.args)))
 
-    expect(wrapper.props('navItems')).toEqual([])
+    expect(capturedNavItems).toEqual([])
   })
 
   it('renders branding template slots context details within the header layout accurately', () => {
-    const wrapper = mount(OrganismHeader, {
-      props: getProps(Default.args),
-      global: { stubs: { OrganismNavigation: true } },
-      slots: {
-        branding: () => h('span', { class: 'logo-mock' }, 'Core Brand Logo'),
-      },
-    })
+    const brandingNode = React.createElement('span', { 'data-testid': 'logo-mock' }, 'Core Brand Logo')
 
-    const brandingEl = wrapper.find('.logo-mock')
-    expect(brandingEl.exists()).toBe(true)
-    expect(brandingEl.text()).toBe('Core Brand Logo')
+    render(
+      React.createElement(OrganismHeader, getProps(Default.args), null)
+    )
+    render(
+      React.createElement(OrganismHeader, getProps({
+        ...Default.args,
+        branding: brandingNode
+      }))
+    )
+
+    const brandingEl = screen.getByTestId('logo-mock')
+    expect(brandingEl).toBeDefined()
+    expect(brandingEl.textContent).toBe('Core Brand Logo')
   })
 
   it('mounts auxiliary items through the named theme-toggle component configuration slots', () => {
-    const wrapper = mount(OrganismHeader, {
-      props: getProps(Default.args),
-      global: { stubs: { OrganismNavigation: true } },
-      slots: {
-        'theme-toggle': () => h('div', { class: 'toggle-mock' }, 'Theme Action Button'),
-      },
-    })
+    const toggleNode = React.createElement('div', { 'data-testid': 'toggle-mock' }, 'Theme Action Button')
 
-    const toggleWrapper = wrapper.find('.border-l')
-    expect(toggleWrapper.exists()).toBe(true)
-    expect(toggleWrapper.find('.toggle-mock').text()).toBe('Theme Action Button')
+    render(
+      React.createElement(OrganismHeader, getProps({
+        ...Default.args,
+        themeToggle: toggleNode
+      }))
+    )
+
+    const container = screen.getByTestId('theme-toggle-container')
+    const innerToggle = screen.getByTestId('toggle-mock')
+
+    expect(container).toBeDefined()
+    expect(innerToggle.textContent).toBe('Theme Action Button')
   })
 })

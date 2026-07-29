@@ -1,11 +1,10 @@
+import React from 'react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { MoleculeTooltip } from './MoleculeTooltip'
+import { render, screen, fireEvent, act } from '@testing-library/react'
+import MoleculeTooltip, { type MoleculeTooltipProps } from './MoleculeTooltip'
 import meta, { Default, PositionBottom, FastDelay } from './MoleculeTooltip.stories'
 
-type MoleculeTooltipProps = InstanceType<typeof MoleculeTooltip>['$props']
-
-const getProps = (storyArgs: typeof Default.args): MoleculeTooltipProps => {
+const getProps = (storyArgs?: Partial<MoleculeTooltipProps>): MoleculeTooltipProps => {
   return {
     ...meta.args,
     ...storyArgs,
@@ -17,9 +16,9 @@ describe('MoleculeTooltip', () => {
     vi.useFakeTimers()
 
     global.ResizeObserver = class {
-      observe() {}
-      unobserve() {}
-      disconnect() {}
+      observe() { }
+      unobserve() { }
+      disconnect() { }
     }
 
     Object.defineProperty(HTMLElement.prototype, 'offsetWidth', { configurable: true, value: 120 })
@@ -36,62 +35,74 @@ describe('MoleculeTooltip', () => {
 
   afterEach(() => {
     vi.useRealTimers()
+    vi.restoreAllMocks()
   })
 
   it('renders root hover container elements cleanly with default configurations', () => {
-    const wrapper = mount(MoleculeTooltip, {
-      props: getProps(Default.args),
-    })
+    const childNode = React.createElement('span', null, 'Hover Content Target')
+    render(React.createElement(MoleculeTooltip, getProps(Default.args), childNode))
 
-    expect(wrapper.find('[data-testid="molecule-tooltip"]').exists()).toBe(true)
-    expect(wrapper.text()).toContain('Tax Information Override')
+    const trigger = screen.getByTestId('molecule-tooltip-trigger')
+    expect(trigger).toBeDefined()
+    expect(trigger.textContent).toContain('Hover Content Target')
   })
 
   it('mounts hidden elements securely and mounts panels when hovering trigger targets', async () => {
-    const wrapper = mount(MoleculeTooltip, {
-      props: getProps(Default.args),
+    const childNode = React.createElement('button', null, 'Target')
+    render(React.createElement(MoleculeTooltip, getProps(Default.args), childNode))
+
+    expect(screen.queryByTestId('tooltip-content')).toBeNull()
+
+    const trigger = screen.getByTestId('molecule-tooltip-trigger')
+
+    fireEvent.mouseEnter(trigger)
+
+    act(() => {
+      vi.advanceTimersByTime(0)
     })
 
-    expect(wrapper.find('.data-visible').exists()).toBe(false)
-
-    const trigger = wrapper.find('[data-testid="molecule-tooltip"]')
-    await trigger.trigger('mouseenter')
-    await wrapper.vm.$nextTick()
-
-    expect(wrapper.find('.data-visible').exists()).toBe(true)
+    const tooltip = screen.getByTestId('tooltip-content')
+    expect(tooltip).toBeDefined()
+    expect(tooltip.textContent).toContain('Tax Information Override')
   })
 
-  it('triggers visibility exit timeout loops gracefully when unhovering', async () => {
-    const wrapper = mount(MoleculeTooltip, {
-      props: getProps(FastDelay.args),
+  it('triggers visibility exit timeout loops gracefully when unhovering', () => {
+    const childNode = React.createElement('button', null, 'Target')
+    render(React.createElement(MoleculeTooltip, getProps(FastDelay.args), childNode))
+
+    const trigger = screen.getByTestId('molecule-tooltip-trigger')
+
+    fireEvent.mouseEnter(trigger)
+    act(() => {
+      vi.advanceTimersByTime(0)
     })
 
-    const trigger = wrapper.find('[data-testid="molecule-tooltip"]')
-    await trigger.trigger('mouseenter')
-    await wrapper.vm.$nextTick()
-    expect(wrapper.find('.data-visible').exists()).toBe(true)
+    expect(screen.getByTestId('tooltip-content')).toBeDefined()
 
-    await trigger.trigger('mouseleave')
-    await wrapper.vm.$nextTick()
+    fireEvent.mouseLeave(trigger)
 
-    expect(wrapper.find('.data-visible').exists()).toBe(true)
+    act(() => {
+      vi.advanceTimersByTime(20)
+    })
+    expect(screen.getByTestId('tooltip-content')).toBeDefined()
 
-    await vi.advanceTimersByTimeAsync(50)
-    await wrapper.vm.$nextTick()
-
-    expect(wrapper.find('.data-visible').exists()).toBe(false)
+    act(() => {
+      vi.advanceTimersByTime(30)
+    })
+    expect(screen.queryByTestId('tooltip-content')).toBeNull()
   })
 
-  it('accepts orientation positions parameters precisely matching interface properties', async () => {
-    const wrapper = mount(MoleculeTooltip, {
-      props: getProps(PositionBottom.args),
+  it('accepts orientation positions parameters precisely matching interface properties', () => {
+    const childNode = React.createElement('button', null, 'Target')
+    render(React.createElement(MoleculeTooltip, getProps(PositionBottom.args), childNode))
+
+    const trigger = screen.getByTestId('molecule-tooltip-trigger')
+    fireEvent.mouseEnter(trigger)
+    act(() => {
+      vi.advanceTimersByTime(0)
     })
 
-    const trigger = wrapper.find('[data-testid="molecule-tooltip"]')
-    await trigger.trigger('mouseenter')
-    await wrapper.vm.$nextTick()
-
-    const panel = wrapper.find('.data-visible')
-    expect(panel.exists()).toBe(true)
+    const arrow = screen.getByTestId('tooltip-arrow')
+    expect(arrow.className).toContain('border-b-card')
   })
 })

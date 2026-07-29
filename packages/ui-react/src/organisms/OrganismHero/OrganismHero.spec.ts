@@ -1,16 +1,23 @@
-import { describe, it, expect } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { OrganismHero } from './OrganismHero'
-import meta, {
-  Default,
-  LeftAligned,
-  WithImageBackground,
-  WithVideoBackground,
-} from './OrganismHero.stories'
+import React from 'react'
+import { describe, it, expect, vi } from 'vitest'
+import { render, screen } from '@testing-library/react'
+import OrganismHero, { type OrganismHeroProps } from './OrganismHero'
+import meta, { Default, LeftAligned, WithImageBackground, WithVideoBackground } from './OrganismHero.stories'
 
-type OrganismHeroProps = InstanceType<typeof OrganismHero>['$props']
+vi.mock('../../', () => ({
+  AtomButton: ({ children, to, href, target, variant, size }: any) =>
+    React.createElement('button', {
+      type: 'button',
+      'data-testid': 'mock-button',
+      'data-to': to,
+      'data-href': href,
+      'data-target': target,
+      'data-variant': variant,
+      'data-size': size
+    }, children)
+}))
 
-const getProps = (storyArgs: typeof Default.args): OrganismHeroProps => {
+const getProps = (storyArgs?: Partial<OrganismHeroProps>): OrganismHeroProps => {
   return {
     ...meta.args,
     ...storyArgs,
@@ -19,79 +26,79 @@ const getProps = (storyArgs: typeof Default.args): OrganismHeroProps => {
 
 describe('OrganismHero', () => {
   it('renders title headings and paragraph body content accurately', () => {
-    const wrapper = mount(OrganismHero, {
-      props: getProps(Default.args),
-    })
+    render(React.createElement(OrganismHero, getProps(Default.args)))
 
-    expect(wrapper.find('[data-testid="organism-hero"]').exists()).toBe(true)
-    expect(wrapper.find('h1').text()).toBe('The Next Generation Monorepo Framework')
-    expect(wrapper.find('p').text()).toContain('Build fluid, micro-frontend experiences')
-    expect(wrapper.find('.sr-only').text()).toBe('organism-hero')
+    const hero = screen.getByTestId('organism-hero')
+    const title = screen.getByTestId('hero-title')
+    const subtitle = screen.getByTestId('hero-subtitle')
+
+    expect(hero).toBeDefined()
+    expect(title.textContent).toBe('The Next Generation Monorepo Framework')
+    expect(subtitle.textContent).toContain('Build fluid, micro-frontend experiences')
+    expect(screen.getByText('organism-hero')).toBeDefined()
   })
 
   it('mutates container styling layouts dynamically depending on the alignment parameter', () => {
-    const defaultWrapper = mount(OrganismHero, {
-      props: getProps(Default.args),
-    })
-    const leftWrapper = mount(OrganismHero, {
-      props: getProps(LeftAligned.args),
-    })
+    const { rerender } = render(React.createElement(OrganismHero, getProps(Default.args)))
+    const defaultHero = screen.getByTestId('organism-hero')
+    expect(defaultHero.classList.contains('text-center')).toBe(true)
+    expect(defaultHero.classList.contains('justify-center')).toBe(true)
 
-    expect(defaultWrapper.classes()).toContain('text-center')
-    expect(defaultWrapper.classes()).toContain('justify-center')
-
-    expect(leftWrapper.classes()).toContain('text-left')
-    expect(leftWrapper.classes()).toContain('justify-start')
+    rerender(React.createElement(OrganismHero, getProps(LeftAligned.args)))
+    const leftHero = screen.getByTestId('organism-hero')
+    expect(leftHero.classList.contains('text-left')).toBe(true)
+    expect(leftHero.classList.contains('justify-start')).toBe(true)
   })
 
   it('renders the blur overlay layer when an image background is provided', () => {
-    const wrapper = mount(OrganismHero, {
-      props: getProps(WithImageBackground.args),
-    })
+    render(React.createElement(OrganismHero, getProps(WithImageBackground.args)))
 
-    expect(wrapper.find('video').exists()).toBe(false)
-    expect(wrapper.find('.backdrop-blur-\\[2px\\]').exists()).toBe(true)
+    expect(screen.queryByTestId('hero-video')).toBeNull()
+    const overlay = screen.getByTestId('hero-overlay')
+    expect(overlay).toBeDefined()
+    expect(overlay.classList.contains('backdrop-blur-[2px]')).toBe(true)
   })
 
   it('mounts the background video layer and passes the poster attributes securely', () => {
-    const wrapper = mount(OrganismHero, {
-      props: getProps(WithVideoBackground.args),
-    })
+    render(React.createElement(OrganismHero, getProps(WithVideoBackground.args)))
 
-    const videoEl = wrapper.find('video')
-    expect(videoEl.exists()).toBe(true)
-    expect(videoEl.attributes('poster')).toBe('https://unsplash.com')
-    expect(videoEl.find('source').attributes('src')).toBe('https://mixkit.co')
-    expect(wrapper.find('.backdrop-blur-\\[2px\\]').exists()).toBe(true)
+    const videoEl = screen.getByTestId('hero-video') as HTMLVideoElement
+    const sourceEl = screen.getByTestId('hero-video-source') as HTMLSourceElement
+    const overlay = screen.getByTestId('hero-overlay')
+
+    expect(videoEl).toBeDefined()
+    expect(videoEl.getAttribute('poster')).toBe('https://unsplash.com')
+    expect(sourceEl.getAttribute('src')).toBe('https://mixkit.co')
+    expect(overlay).toBeDefined()
   })
 
   it('pipes anchor properties, targets, and labels straight to nested action button elements', () => {
-    const wrapper = mount(OrganismHero, {
-      props: getProps(Default.args),
-    })
+    render(React.createElement(OrganismHero, getProps(Default.args)))
 
-    const buttonTexts = wrapper.findAll('span').filter(el => {
-      return el.text() === 'Explore Core Atoms' || el.text() === 'View GitHub Source'
-    })
+    const buttons = screen.getAllByTestId('mock-button')
+    expect(buttons.length).toBe(2)
 
-    expect(buttonTexts.length).toBe(2)
-    expect(buttonTexts.at(0)?.text()).toBe('Explore Core Atoms')
-    expect(buttonTexts.at(1)?.text()).toBe('View GitHub Source')
+    expect(buttons[0].textContent).toBe('Explore Core Atoms')
+    expect(buttons[0].getAttribute('data-href')).toBe('#explore')
+    expect(buttons[0].getAttribute('data-target')).toBe('_self')
+    expect(buttons[0].getAttribute('data-variant')).toBe('primary')
+
+    expect(buttons[1].textContent).toBe('View GitHub Source')
+    expect(buttons[1].getAttribute('data-href')).toBe('https://github.com')
+    expect(buttons[1].getAttribute('data-target')).toBe('_blank')
+    expect(buttons[1].getAttribute('data-variant')).toBe('secondary')
   })
 
   it('omits button structures completely from the layout tree if parameters are empty', () => {
-    const wrapper = mount(OrganismHero, {
-      props: getProps({
-        ...Default.args,
-        ctaLabel: '',
-        secondaryLabel: '',
-      }),
-    })
+    render(React.createElement(OrganismHero, getProps({
+      ...Default.args,
+      ctaLabel: '',
+      secondaryLabel: '',
+    })))
 
-    const hasText1 = wrapper.text().includes('Explore Core Atoms')
-    const hasText2 = wrapper.text().includes('View GitHub Source')
-
-    expect(hasText1).toBe(false)
-    expect(hasText2).toBe(false)
+    expect(screen.queryByTestId('mock-button')).toBeNull()
+    const heroText = screen.getByTestId('organism-hero').textContent;
+    expect(heroText).not.toContain('Explore Core Atoms')
+    expect(heroText).not.toContain('View GitHub Source')
   })
 })

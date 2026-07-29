@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { MoleculeNavAccordion } from './MoleculeNavAccordion'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import MoleculeNavAccordion, { type MoleculeNavAccordionProps } from './MoleculeNavAccordion'
 
 const mockItemWithChildren = {
   label: 'Engineering Space',
@@ -25,7 +25,7 @@ const meta: Meta<typeof MoleculeNavAccordion> = {
 }
 
 export default meta
-type Story = StoryObj<typeof MoleculeNavAccordion>
+type Story = StoryObj<MoleculeNavAccordionProps>
 
 export const Default: Story = {}
 

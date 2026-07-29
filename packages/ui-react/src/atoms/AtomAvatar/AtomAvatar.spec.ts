@@ -1,9 +1,10 @@
+import React from 'react'
 import { describe, it, expect } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { render, screen } from '@testing-library/react'
 import AtomAvatar from './AtomAvatar'
 import meta, { Default, Squared, CustomNumericSize } from './AtomAvatar.stories'
 
-type AtomAvatarProps = InstanceType<typeof AtomAvatar>['$props']
+type AtomAvatarProps = React.ComponentProps<typeof AtomAvatar>
 
 const getProps = (storyArgs: typeof Default.args): AtomAvatarProps => {
   return {
@@ -14,46 +15,45 @@ const getProps = (storyArgs: typeof Default.args): AtomAvatarProps => {
 
 describe('AtomAvatar', () => {
   it('renders matching initials properly from the username string data input', () => {
-    const wrapper = mount(AtomAvatar, {
-      props: getProps(Default.args),
-    })
+    const props = getProps(Default.args)
+    render(React.createElement(AtomAvatar, props))
 
-    expect(wrapper.text()).toBe('JO')
-    expect(wrapper.attributes('data-testid')).toBe('atom-avatar')
+    const element = screen.getByTestId('atom-avatar')
+    expect(element).not.toBeNull()
+    expect(element.textContent).toBe('JO')
   })
 
   it('renders a generic placeholder fallback for missing username states', () => {
-    const wrapper = mount(AtomAvatar, {
-      props: getProps({
-        ...Default.args,
-        username: '  ',
-      }),
+    const props = getProps({
+      ...Default.args,
+      username: '  ',
     })
+    render(React.createElement(AtomAvatar, props))
 
-    expect(wrapper.text()).toBe('??')
+    const element = screen.getByTestId('atom-avatar')
+    expect(element.textContent).toBe('??')
   })
 
   it('toggles border curvature styles correctly dynamically based on the round flag status', () => {
-    const roundWrapper = mount(AtomAvatar, {
-      props: getProps(Default.args),
-    })
-    const squareWrapper = mount(AtomAvatar, {
-      props: getProps(Squared.args),
-    })
+    const roundProps = getProps(Default.args)
+    const squareProps = getProps(Squared.args)
 
-    expect(roundWrapper.classes()).toContain('rounded-full')
-    expect(squareWrapper.classes()).toContain('rounded-md')
+    const { unmount } = render(React.createElement(AtomAvatar, roundProps))
+    let element = screen.getByTestId('atom-avatar')
+    expect(element.classList.contains('rounded-full')).toBe(true)
+    unmount()
+
+    render(React.createElement(AtomAvatar, squareProps))
+    element = screen.getByTestId('atom-avatar')
+    expect(element.classList.contains('rounded-md')).toBe(true)
   })
 
   it('safely registers layout size overrides via inline CSS variables when numbers are detected', () => {
-    const wrapper = mount(AtomAvatar, {
-      props: getProps(CustomNumericSize.args),
-    })
+    const props = getProps(CustomNumericSize.args)
+    render(React.createElement(AtomAvatar, props))
 
-    const domElement = wrapper.element as HTMLElement
-
-    expect(wrapper.props('size')).toBe(75)
-    expect(wrapper.classes()).toContain('h-[var(--avatar-size)]')
-    expect(domElement.style.getPropertyValue('--avatar-size')).toBe('75px')
+    const element = screen.getByTestId('atom-avatar')
+    expect(element.classList.contains('h-[var(--avatar-size)]')).toBe(true)
+    expect(element.style.getPropertyValue('--avatar-size')).toBe('75px')
   })
 })

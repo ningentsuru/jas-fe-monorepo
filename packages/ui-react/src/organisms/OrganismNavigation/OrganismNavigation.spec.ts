@@ -1,11 +1,23 @@
+import React from 'react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { OrganismNavigation } from './OrganismNavigation'
+import { render, screen, fireEvent, act } from '@testing-library/react'
+import OrganismNavigation, { type OrganismNavigationProps } from './OrganismNavigation'
 import meta, { Default } from './OrganismNavigation.stories'
 
-type OrganismNavigationProps = InstanceType<typeof OrganismNavigation>['$props']
+let capturedItemsList: any[] = []
 
-const getProps = (storyArgs: typeof Default.args): OrganismNavigationProps => {
+vi.mock('../../', () => ({
+  AtomButton: ({ children, onClick, 'data-testid': testId }: any) =>
+    React.createElement('button', { type: 'button', onClick, 'data-testid': testId }, children),
+  MoleculeNavDropdown: ({ item, index, isOpen }: any) => {
+    capturedItemsList.push(item)
+    return React.createElement('div', { 'data-testid': 'mock-dropdown', 'data-index': index, 'data-open': isOpen }, item.label)
+  },
+  MoleculeNavAccordion: ({ item, isOpen }: any) =>
+    React.createElement('div', { 'data-testid': 'mock-accordion', 'data-open': isOpen }, item.label)
+}))
+
+const getProps = (storyArgs?: Partial<OrganismNavigationProps>): OrganismNavigationProps => {
   return {
     ...meta.args,
     ...storyArgs,
@@ -14,6 +26,7 @@ const getProps = (storyArgs: typeof Default.args): OrganismNavigationProps => {
 
 describe('OrganismNavigation', () => {
   beforeEach(() => {
+    capturedItemsList = []
     document.body.innerHTML = ''
     document.body.style.overflow = ''
   })
@@ -23,73 +36,43 @@ describe('OrganismNavigation', () => {
   })
 
   it('renders root navigation wrapper component correctly', () => {
-    const wrapper = mount(OrganismNavigation, {
-      props: getProps(Default.args),
-      global: {
-        stubs: {
-          MoleculeNavDropdown: true,
-          MoleculeNavAccordion: true,
-          AtomButton: true,
-        },
-      },
-    })
+    render(React.createElement(OrganismNavigation, getProps(Default.args)))
 
-    const navEl = wrapper.find('[data-testid="organism-navigation"]')
-    expect(navEl.exists()).toBe(true)
-    expect(wrapper.find('.sr-only').text()).toBe('organism-navigation')
+    const nav = screen.getByTestId('organism-navigation')
+    expect(nav).toBeDefined()
+    expect(screen.getByText('organism-navigation')).toBeDefined()
   })
 
   it('receives correct structural items array matching Storybook configurations', () => {
-    const wrapper = mount(OrganismNavigation, {
-      props: getProps(Default.args),
-      global: {
-        stubs: { MoleculeNavDropdown: true, MoleculeNavAccordion: true, AtomButton: true },
-      },
-    })
+    render(React.createElement(OrganismNavigation, getProps(Default.args)))
 
-    const items = wrapper.props('items')
-
-    expect(items).toBeDefined()
-    if (!items) throw new Error('Props items should be defined')
-
-    expect(items.length).toBe(4)
-    expect(items[1].label).toBe('Services Matrix')
+    expect(capturedItemsList.length).toBe(4)
+    expect(capturedItemsList[1].label).toBe('Services Matrix')
   })
 
   it('handles rendering loop iterations for desktop dropdown child elements cleanly', () => {
-    const wrapper = mount(OrganismNavigation, {
-      props: getProps(Default.args),
-      global: {
-        stubs: { MoleculeNavDropdown: true, MoleculeNavAccordion: true, AtomButton: true },
-      },
-    })
+    render(React.createElement(OrganismNavigation, getProps(Default.args)))
 
-    const dropdowns = wrapper.findAllComponents({ name: 'MoleculeNavDropdown' })
+    const dropdowns = screen.getAllByTestId('mock-dropdown')
     expect(dropdowns.length).toBe(4)
   })
 
-  it('toggles mobile drawer overlay visibility attributes smoothly on menu button interaction triggers', async () => {
-    const wrapper = mount(OrganismNavigation, {
-      props: getProps(Default.args),
-      global: {
-        stubs: { MoleculeNavDropdown: true, MoleculeNavAccordion: true, AtomButton: true },
-      },
-    })
+  it('toggles mobile drawer overlay visibility attributes smoothly on menu button interaction triggers', () => {
+    render(React.createElement(OrganismNavigation, getProps(Default.args)))
 
-    expect(wrapper.find('.data-mobile-dialog').exists()).toBe(false)
+    expect(screen.queryByTestId('mobile-dialog')).toBeNull()
 
-    const openBtn = wrapper.find('[data-testid="mobile-open-btn"]')
-    await openBtn.trigger('click')
-    await wrapper.vm.$nextTick()
+    const openBtn = screen.getByTestId('mobile-open-btn')
+    fireEvent.click(openBtn)
 
-    expect(wrapper.find('.data-mobile-dialog').exists()).toBe(true)
+    const dialog = screen.getByTestId('mobile-dialog')
+    expect(dialog).toBeDefined()
     expect(document.body.style.overflow).toBe('hidden')
 
-    const closeBtn = wrapper.find('[data-testid="mobile-close-btn"]')
-    await closeBtn.trigger('click')
-    await wrapper.vm.$nextTick()
+    const closeBtn = screen.getByTestId('mobile-close-btn')
+    fireEvent.click(closeBtn)
 
-    expect(wrapper.find('.data-mobile-dialog').exists()).toBe(false)
+    expect(screen.queryByTestId('mobile-dialog')).toBeNull()
     expect(document.body.style.overflow).toBe('')
   })
 })

@@ -1,95 +1,59 @@
-import {
-  defineComponent,
-  ref,
-  onMounted,
-  onUnmounted,
-  computed,
-  Transition,
-  type PropType,
-} from 'vue'
+import { useState, useEffect, useMemo } from 'react'
 
 export type WordSwapTransition =
-  'fade' | 'slide-up' | 'slide-down' | 'scale-up' | 'scale-down' | 'blur' | 'flip'
+  | 'fade'
+  | 'slide-up'
+  | 'slide-down'
+  | 'scale-up'
+  | 'scale-down'
+  | 'blur'
+  | 'flip'
 
 export interface AtomWordSwapProps {
-  words: string[]
+  words?: string[]
   interval?: number
   transition?: WordSwapTransition
 }
 
-export default defineComponent({
-  name: 'AtomWordSwap',
-  props: {
-    words: {
-      type: Array as PropType<string[]>,
-      default: () => ['Hello', 'World'],
-    },
-    interval: {
-      type: Number,
-      default: 2000,
-    },
-    transition: {
-      type: String as PropType<WordSwapTransition>,
-      default: 'fade',
-    },
-  },
-  setup(props) {
-    const currentIndex = ref(0)
-    const key = ref(0)
-    let timer: ReturnType<typeof setTimeout> | null = null
-    let isUnmounted = false
+export const AtomWordSwap = ({
+  words = ['Hello', 'World'],
+  interval = 2000,
+  transition = 'fade'
+}: AtomWordSwapProps) => {
+  const [currentIndex, setCurrentIndex] = useState(0)
 
-    const maxWidth = computed(() => {
-      if (!props.words.length) return '0ch'
-      const longest = props.words.reduce((a, b) => (a.length > b.length ? a : b))
-      return `${longest.length + 0.5}ch`
-    })
+  const maxWidth = useMemo(() => {
+    if (!words || words.length === 0) return '0ch'
+    const longest = words.reduce((a, b) => (a.length > b.length ? a : b), '')
+    return `${longest.length + 0.5}ch`
+  }, [words])
 
-    function swapWord() {
-      if (isUnmounted || props.words.length <= 1) return
+  useEffect(() => {
+    if (!words || words.length <= 1) return
 
-      key.value++
-      currentIndex.value = (currentIndex.value + 1) % props.words.length
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % words.length)
+    }, interval)
 
-      if (!isUnmounted) {
-        timer = setTimeout(swapWord, props.interval)
-      }
-    }
+    return () => clearInterval(timer)
+  }, [words, interval])
 
-    onMounted(() => {
-      timer = setTimeout(swapWord, props.interval)
-    })
-
-    onUnmounted(() => {
-      isUnmounted = true
-      if (timer) {
-        clearTimeout(timer)
-        timer = null
-      }
-    })
-
-    return () => (
+  return (
+    <span
+      className="atom-word-swap text-foreground font-display relative inline-block text-center font-medium transition-all duration-300 select-none"
+      style={{ minWidth: maxWidth, height: '1.2em' }}
+      data-testid="atom-word-swap"
+    >
       <span
-        class="atom-word-swap text-foreground font-display relative inline-block text-center font-medium transition-all duration-300 select-none"
-        style={{ minWidth: maxWidth.value, height: '1.2em' }}
-        data-testid="atom-word-swap"
+        key={currentIndex}
+        className={`absolute inset-0 flex items-center justify-center whitespace-nowrap transition-${transition}-enter-active`}
+        style={{ animation: `swap-${transition} 0.5s ease-in-out` }}
+        data-testid="atom-word-swap-inner"
       >
-        <Transition
-          enterActiveClass={`transition-${props.transition}-enter-active`}
-          enterFromClass={`transition-${props.transition}-enter-from`}
-          enterToClass={`transition-${props.transition}-enter-to`}
-          leaveActiveClass={`transition-${props.transition}-leave-active`}
-          leaveFromClass={`transition-${props.transition}-leave-from`}
-          leaveToClass={`transition-${props.transition}-leave-to`}
-        >
-          <span
-            key={key.value}
-            class="absolute inset-0 flex items-center justify-center whitespace-nowrap"
-          >
-            {props.words[currentIndex.value]}
-          </span>
-        </Transition>
+        {words[currentIndex]}
       </span>
-    )
-  },
-})
+    </span>
+  )
+}
+
+export default AtomWordSwap

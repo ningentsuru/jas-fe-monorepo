@@ -1,13 +1,12 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { ref, watch } from 'vue'
-import { MoleculeThemeToggle, type ThemeType } from './MoleculeThemeToggle'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import MoleculeThemeToggle, { type MoleculeThemeToggleProps } from './MoleculeThemeToggle'
 
 const meta: Meta<typeof MoleculeThemeToggle> = {
   title: 'Components/MoleculeThemeToggle',
   component: MoleculeThemeToggle,
   argTypes: {
     size: {
-      type: { name: 'other', value: 'string | number' },
+      control: { type: 'text' },
       description: 'Accepts preset name strings or custom pixel layout numbers',
     },
     currentTheme: {
@@ -20,56 +19,10 @@ const meta: Meta<typeof MoleculeThemeToggle> = {
     currentTheme: 'light',
     size: 'md',
   },
-  render: (args) => ({
-    components: { MoleculeThemeToggle },
-    setup() {
-      const localTheme = ref<ThemeType>(args.currentTheme ?? 'light')
-      const localToggled = ref<boolean>(args.isToggled ?? false)
-
-      watch(
-        () => args.currentTheme,
-        (newTheme) => {
-          if (newTheme) localTheme.value = newTheme
-        },
-      )
-      watch(
-        () => args.isToggled,
-        (newToggle) => {
-          if (newToggle !== undefined) localToggled.value = newToggle
-        },
-      )
-
-      function handleToggle() {
-        localToggled.value = !localToggled.value
-        localTheme.value = localToggled.value ? 'dark' : 'light'
-      }
-
-      function handleSetTheme(theme: ThemeType) {
-        localTheme.value = theme
-        localToggled.value = theme !== 'light'
-      }
-
-      return { args, localTheme, localToggled, handleToggle, handleSetTheme }
-    },
-    template: `
-      <div class="p-6">
-        <MoleculeThemeToggle
-          v-bind="args"
-          :current-theme="localTheme"
-          :is-toggled="localToggled"
-          @toggle="handleToggle"
-          @set-theme="handleSetTheme"
-        />
-        <div class="mt-4 text-sm text-muted-foreground">
-          Active Theme State: <span class="font-bold font-mono text-foreground">{{ localTheme }}</span>
-        </div>
-      </div>
-    `,
-  }),
 }
 
 export default meta
-type Story = StoryObj<typeof MoleculeThemeToggle>
+type Story = StoryObj<MoleculeThemeToggleProps>
 
 export const Default: Story = {}
 

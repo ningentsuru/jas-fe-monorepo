@@ -1,11 +1,23 @@
-import { describe, it, expect } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { MoleculeNavDropdown } from './MoleculeNavDropdown'
+import React from 'react'
+import { describe, it, expect, vi } from 'vitest'
+import { render, screen, fireEvent } from '@testing-library/react'
+import MoleculeNavDropdown, { type MoleculeNavDropdownProps } from './MoleculeNavDropdown'
 import meta, { Default, OpenedDropdown, SingleLinkNoDropdown } from './MoleculeNavDropdown.stories'
 
-type MoleculeNavDropdownProps = InstanceType<typeof MoleculeNavDropdown>['$props']
+vi.mock('../../', () => ({
+  AtomIcon: ({ className, size }: { className?: string; size: string }) =>
+    React.createElement('span', { 'data-testid': 'mock-icon', 'data-size': size, className }, 'icon'),
+  AtomButton: ({ children, onClick, className, to }: { children: React.ReactNode; onClick?: (e: any) => void; className?: string; to?: string }) =>
+    React.createElement('button', { type: 'button', onClick, className, 'data-testid': 'mock-button', 'data-to': to }, children),
+  AtomNavLink: ({ label, to, onClick }: { label: string; to?: string; onClick?: () => void }) =>
+    React.createElement(
+      'button',
+      { type: 'button', onClick, 'data-testid': 'mock-nav-link', 'data-to': to },
+      React.createElement('span', null, label)
+    )
+}))
 
-const getProps = (storyArgs: typeof Default.args): MoleculeNavDropdownProps => {
+const getProps = (storyArgs?: Partial<MoleculeNavDropdownProps>): MoleculeNavDropdownProps => {
   return {
     ...meta.args,
     ...storyArgs,
@@ -14,87 +26,84 @@ const getProps = (storyArgs: typeof Default.args): MoleculeNavDropdownProps => {
 
 describe('MoleculeNavDropdown', () => {
   it('renders dropdown root element and base title labels correctly', () => {
-    const wrapper = mount(MoleculeNavDropdown, {
-      props: getProps(Default.args),
-    })
+    render(React.createElement(MoleculeNavDropdown, getProps(Default.args)))
 
-    expect(wrapper.find('[data-testid="molecule-nav-dropdown"]').exists()).toBe(true)
-    expect(wrapper.text()).toContain('Products')
+    const root = screen.getByTestId('molecule-nav-dropdown')
+    expect(root).toBeDefined()
+    expect(document.body.contains(root)).toBe(true)
+    expect(screen.getByText('Products')).toBeDefined()
   })
 
-  it('receives correct configuration parameters from story inputs', () => {
-    const wrapper = mount(MoleculeNavDropdown, {
-      props: getProps(OpenedDropdown.args),
-    })
+  it('receives correct configuration parameters from story inputs and reflects visibility states', () => {
+    render(React.createElement(MoleculeNavDropdown, getProps(OpenedDropdown.args)))
 
-    expect(wrapper.props('isOpen')).toBe(true)
-    expect(wrapper.props('index')).toBe(2)
+    const panel = screen.getByTestId('dropdown-panel')
+    expect(panel.classList.contains('visible')).toBe(true)
+    expect(panel.classList.contains('scale-100')).toBe(true)
+    expect(panel.classList.contains('opacity-100')).toBe(true)
   })
 
   it('renders child list anchors cleanly through custom AtomNavLink sub-components', () => {
-    const wrapper = mount(MoleculeNavDropdown, {
-      props: getProps(OpenedDropdown.args),
-    })
+    render(React.createElement(MoleculeNavDropdown, getProps(OpenedDropdown.args)))
 
-    const links = wrapper.findAllComponents({ name: 'AtomNavLink' })
+    const links = screen.getAllByTestId('mock-nav-link')
     expect(links.length).toBe(3)
-    expect(wrapper.text()).toContain('Web Applications')
-    expect(wrapper.text()).toContain('Cloud Architecture')
+    expect(screen.getByText('Web Applications')).toBeDefined()
+    expect(screen.getByText('Cloud Architecture')).toBeDefined()
   })
 
   it('hides popover panels using visibility layout classes when marked closed', () => {
-    const wrapper = mount(MoleculeNavDropdown, {
-      props: getProps(Default.args),
-    })
+    render(React.createElement(MoleculeNavDropdown, getProps(Default.args)))
 
-    const dropdownContainer = wrapper.find('.absolute')
-    expect(dropdownContainer.classes()).toContain('invisible')
-    expect(dropdownContainer.classes()).toContain('scale-95')
-    expect(dropdownContainer.classes()).toContain('opacity-0')
+    const panel = screen.getByTestId('dropdown-panel')
+    expect(panel.classList.contains('invisible')).toBe(true)
+    expect(panel.classList.contains('scale-95')).toBe(true)
+    expect(panel.classList.contains('opacity-0')).toBe(true)
   })
 
-  it('swaps popover classes instantly when active visibility variables become true', () => {
-    const wrapper = mount(MoleculeNavDropdown, {
-      props: getProps(OpenedDropdown.args),
-    })
+  it('bubbles structural toggle notifications upward including parameters on click actions', () => {
+    const handleToggle = vi.fn()
+    render(
+      React.createElement(MoleculeNavDropdown, getProps({
+        ...Default.args,
+        onToggle: handleToggle,
+      }))
+    )
 
-    const dropdownContainer = wrapper.find('.absolute')
-    expect(dropdownContainer.classes()).toContain('visible')
-    expect(dropdownContainer.classes()).toContain('scale-100')
-    expect(dropdownContainer.classes()).toContain('opacity-100')
+    const button = screen.getByTestId('mock-button')
+    fireEvent.click(button)
+
+    expect(handleToggle).toHaveBeenCalledTimes(1)
+    expect(handleToggle).toHaveBeenCalledWith(2)
   })
 
-  it('bubbles structural toggle notifications upward including parameters on click actions', async () => {
-    const wrapper = mount(MoleculeNavDropdown, {
-      props: getProps(Default.args),
-    })
+  it('skips toggle updates entirely if triggering a simple non-dropdown parameter link', () => {
+    const handleToggle = vi.fn()
+    render(
+      React.createElement(MoleculeNavDropdown, getProps({
+        ...SingleLinkNoDropdown.args,
+        onToggle: handleToggle,
+      }))
+    )
 
-    const button = wrapper.findComponent({ name: 'AtomButton' })
-    await button.trigger('click')
+    const button = screen.getByTestId('mock-button')
+    fireEvent.click(button)
 
-    expect(wrapper.emitted('toggle')).toBeTruthy()
-    expect(wrapper.emitted('toggle')?.[0]).toEqual([2])
+    expect(handleToggle).not.toHaveBeenCalled()
   })
 
-  it('skips toggle updates entirely if triggering a simple non-dropdown parameter link', async () => {
-    const wrapper = mount(MoleculeNavDropdown, {
-      props: getProps(SingleLinkNoDropdown.args),
-    })
+  it('bubbles navigate actions when clicking individual dropdown nested option links', () => {
+    const handleNavigate = vi.fn()
+    render(
+      React.createElement(MoleculeNavDropdown, getProps({
+        ...OpenedDropdown.args,
+        onNavigate: handleNavigate,
+      }))
+    )
 
-    const button = wrapper.findComponent({ name: 'AtomButton' })
-    await button.trigger('click')
+    const childLink = screen.getAllByTestId('mock-nav-link')[0]
+    fireEvent.click(childLink)
 
-    expect(wrapper.emitted('toggle')).toBeFalsy()
-  })
-
-  it('bubbles navigate actions when clicking individual dropdown nested option links', async () => {
-    const wrapper = mount(MoleculeNavDropdown, {
-      props: getProps(OpenedDropdown.args),
-    })
-
-    const childLink = wrapper.findAllComponents({ name: 'AtomNavLink' }).at(0)
-    await childLink?.trigger('click')
-
-    expect(wrapper.emitted('navigate')).toBeTruthy()
+    expect(handleNavigate).toHaveBeenCalledTimes(1)
   })
 })

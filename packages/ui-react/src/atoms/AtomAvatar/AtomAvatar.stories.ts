@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import AtomAvatar from './AtomAvatar'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import AtomAvatar, { type AtomAvatarProps } from './AtomAvatar'
 
 const meta: Meta<typeof AtomAvatar> = {
   title: 'Components/AtomAvatar',
@@ -18,7 +18,7 @@ const meta: Meta<typeof AtomAvatar> = {
 }
 
 export default meta
-type Story = StoryObj<typeof AtomAvatar>
+type Story = StoryObj<AtomAvatarProps>
 
 export const Default: Story = {}
 

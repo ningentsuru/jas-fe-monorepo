@@ -1,49 +1,46 @@
+import React from 'react'
 import { describe, it, expect } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { Smile } from '@lucide/vue'
+import { render, screen } from '@testing-library/react'
 import AtomIcon from './AtomIcon'
 import meta, { Default, TextFallbackState, CustomNumericSize } from './AtomIcon.stories'
 
-type AtomIconProps = InstanceType<typeof AtomIcon>['$props']
+type AtomIconProps = React.ComponentProps<typeof AtomIcon>
 
 const getProps = (storyArgs: typeof Default.args): AtomIconProps => {
   return {
     ...meta.args,
     ...storyArgs,
-  } as unknown as AtomIconProps
+  } as AtomIconProps
 }
 
 describe('AtomIcon', () => {
-  it('renders a custom dynamic icon component correctly when passed down', async () => {
-    const wrapper = mount(AtomIcon, {
-      props: getProps(Default.args),
-    })
+  it('renders a custom dynamic icon component correctly when passed down', () => {
+    const props = getProps(Default.args)
+    render(React.createElement(AtomIcon, props))
 
-    await wrapper.vm.$nextTick()
+    const iconContainer = screen.getByTestId('atom-icon')
+    expect(iconContainer).not.toBeNull()
 
-    expect(wrapper.find('[data-testid="atom-icon"]').exists()).toBe(true)
-    expect(wrapper.findComponent(Smile).exists()).toBe(true)
+    const svgElement = iconContainer.querySelector('svg')
+    expect(svgElement).not.toBeNull()
   })
 
-  it('falls back seamlessly to rendering text spans if component object is missing', async () => {
-    const wrapper = mount(AtomIcon, {
-      props: getProps(TextFallbackState.args),
-    })
+  it('falls back seamlessly to rendering text spans if component object is missing', () => {
+    const props = getProps(TextFallbackState.args)
+    render(React.createElement(AtomIcon, props))
 
-    await wrapper.vm.$nextTick()
+    const iconContainer = screen.getByTestId('atom-icon')
+    expect(iconContainer.textContent).toContain('Fallback Text')
 
-    expect(wrapper.text()).toContain('Fallback Text')
-    expect(wrapper.findComponent(Smile).exists()).toBe(false)
+    const svgElement = iconContainer.querySelector('svg')
+    expect(svgElement).toBeNull()
   })
 
-  it('safely pipes pixel sizing attributes as custom inline CSS variables when numbers match', async () => {
-    const wrapper = mount(AtomIcon, {
-      props: getProps(CustomNumericSize.args),
-    })
+  it('safely pipes pixel sizing attributes as custom inline CSS variables when numbers match', () => {
+    const props = getProps(CustomNumericSize.args)
+    render(React.createElement(AtomIcon, props))
 
-    await wrapper.vm.$nextTick()
-
-    const domElement = wrapper.element as HTMLElement
-    expect(domElement.style.getPropertyValue('--icon-size')).toBe('48px')
+    const iconContainer = screen.getByTestId('atom-icon')
+    expect(iconContainer.style.getPropertyValue('--icon-size')).toBe('48px')
   })
 })

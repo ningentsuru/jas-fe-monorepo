@@ -81,7 +81,6 @@ describe('OrganismNavigation', () => {
       },
     })
 
-    // Expect dialogue structural nodes to not exist initially
     expect(wrapper.find('[role="dialog"]').exists()).toBe(false)
 
     const openBtn = wrapper.find('[data-testid="mobile-open-btn"]')

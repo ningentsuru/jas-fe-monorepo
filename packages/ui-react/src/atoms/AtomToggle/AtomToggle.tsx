@@ -1,55 +1,62 @@
-import { defineComponent, withDirectives, type Component, type PropType } from 'vue'
+import { type ElementType, useRef } from 'react'
 import { AtomIcon } from '../../'
-import { vLongPressToggle } from '../../directives/longPressToggle'
 
 export interface AtomToggleProps {
-  icon: Component
+  icon: ElementType
   isToggled?: boolean
   size?: 'sm' | 'md' | 'lg' | 'xl' | number
+  onToggle?: () => void
+  onLongToggle?: () => void
 }
 
-export default defineComponent({
-  name: 'AtomToggle',
-  props: {
-    icon: {
-      type: Object as PropType<Component>,
-      required: true,
-    },
-    isToggled: {
-      type: Boolean,
-      default: false,
-    },
-    size: {
-      type: [String, Number] as PropType<'sm' | 'md' | 'lg' | 'xl' | number>,
-      default: 'sm',
-    },
-  },
-  emits: {
-    toggle: () => true,
-    longToggle: () => true,
-  },
-  setup(props, { emit }) {
-    return () => {
-      return withDirectives(
-        <button
-          type="button"
-          class="atom-toggle focus-visible:ring-ring focus-visible:ring-offset-background flex cursor-pointer items-center justify-center rounded-md border border-transparent transition-all duration-300 outline-none select-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-          data-testid="atom-toggle"
-        >
-          <AtomIcon icon={props.icon} size={props.size} />
-          <span class="sr-only">atom-toggle</span>
-        </button>,
-        [
-          [
-            vLongPressToggle,
-            {
-              delay: 200,
-              onToggle: () => emit('toggle'),
-              onLongToggle: () => emit('longToggle'),
-            },
-          ],
-        ],
-      )
+export const AtomToggle = ({
+  icon,
+  isToggled = false,
+  size = 'sm',
+  onToggle,
+  onLongToggle
+}: AtomToggleProps) => {
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const isLongPressRef = useRef<boolean>(false)
+
+  const handlePointerDown = () => {
+    isLongPressRef.current = false
+    timerRef.current = setTimeout(() => {
+      isLongPressRef.current = true
+      onLongToggle?.()
+    }, 200)
+  }
+
+  const handlePointerUp = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current)
+      timerRef.current = null
     }
-  },
-})
+    if (!isLongPressRef.current) {
+      onToggle?.()
+    }
+  }
+
+  const handlePointerLeave = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current)
+      timerRef.current = null
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      className={`atom-toggle focus-visible:ring-ring focus-visible:ring-offset-background flex cursor-pointer items-center justify-center rounded-md border border-transparent transition-all duration-300 outline-none select-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 ${isToggled ? 'atom-toggle--active' : ''}`}
+      data-testid="atom-toggle"
+      onPointerDown={handlePointerDown}
+      onPointerUp={handlePointerUp}
+      onPointerLeave={handlePointerLeave}
+    >
+      <AtomIcon icon={icon} size={size} />
+      <span className="sr-only">atom-toggle</span>
+    </button>
+  )
+}
+
+export default AtomToggle

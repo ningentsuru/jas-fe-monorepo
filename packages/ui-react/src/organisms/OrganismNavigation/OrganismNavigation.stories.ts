@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { OrganismNavigation } from './OrganismNavigation'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import OrganismNavigation, { type OrganismNavigationProps } from './OrganismNavigation'
 
 const mockNavigationTree = [
   { label: 'Home Page', href: '/' },
@@ -27,28 +27,10 @@ const meta: Meta<typeof OrganismNavigation> = {
   args: {
     items: mockNavigationTree,
   },
-  render: (args) => ({
-    components: { OrganismNavigation },
-    setup() {
-      return { args }
-    },
-    template: `
-      <div class="min-h-96 w-full border border-dashed border-neutral-300 p-4 rounded-lg bg-background">
-        <OrganismNavigation v-bind="args">
-          <template #branding>
-            <span class="font-bold text-foreground">LOGO BRAND</span>
-          </template>
-          <template #theme-toggle>
-            <div class="text-xs text-muted-foreground font-mono">Theme Selector Slot Layer</div>
-          </template>
-        </OrganismNavigation>
-      </div>
-    `,
-  }),
 }
 
 export default meta
-type Story = StoryObj<typeof OrganismNavigation>
+type Story = StoryObj<OrganismNavigationProps>
 
 export const Default: Story = {}
 

@@ -1,98 +1,59 @@
-import { defineComponent, computed, type Component, type PropType } from 'vue'
-
-export type VueClassBinding = string | unknown[] | Record<string, unknown>
+import { useMemo, type ElementType, type CSSProperties } from 'react'
 
 export interface AtomIconProps {
   name?: string
-  icon?: Component
+  icon?: ElementType
   size?: 'sm' | 'md' | 'lg' | 'xl' | number
-  class?: unknown
+  className?: string
 }
 
-type JsxIconComponent = Component & {
-  new (...args: unknown[]): {
-    $props: {
-      class?: string
+export const AtomIcon = ({
+  name = '',
+  icon: DynamicIcon,
+  size = 'md',
+  className = ''
+}: AtomIconProps) => {
+  const iconClass = useMemo(() => {
+    const baseClasses = 'text-[var(--color-foreground)] transition-colors'
+    const customSizeClass = className.trim()
+
+    if (typeof size === 'number') {
+      return `${baseClasses} w-[var(--icon-size)] h-[var(--icon-size)] ${customSizeClass}`.trim()
     }
-  }
+
+    const sizeMap: Record<string, string> = {
+      sm: 'w-4 h-4',
+      md: 'w-6 h-6',
+      lg: 'w-8 h-8',
+      xl: 'w-12 h-12',
+    }
+
+    const currentSize = sizeMap[size] || sizeMap.md
+    return `${baseClasses} ${currentSize} ${customSizeClass}`.trim()
+  }, [size, className])
+
+  const iconStyle = useMemo<CSSProperties>(() => {
+    if (typeof size === 'number') {
+      return { '--icon-size': `${size}px` } as CSSProperties
+    }
+    return {}
+  }, [size])
+
+  return (
+    <div
+      className="atom-icon inline-flex items-center justify-center"
+      data-testid="atom-icon"
+      style={iconStyle}
+    >
+      {DynamicIcon ? (
+        <DynamicIcon className={iconClass} />
+      ) : name ? (
+        <span className="text-sm">{name}</span>
+      ) : null}
+
+      <span className="sr-only">atom-icon</span>
+    </div>
+  )
 }
-
-export const AtomIcon = defineComponent({
-  name: 'AtomIcon',
-  props: {
-    name: {
-      type: String,
-      default: '',
-    },
-    icon: {
-      type: [Object, Function] as PropType<Component>,
-      default: undefined,
-    },
-    size: {
-      type: [String, Number] as PropType<'sm' | 'md' | 'lg' | 'xl' | number>,
-      default: 'md',
-    },
-    class: {
-      type: [String, Array, Object] as PropType<VueClassBinding>,
-      default: '',
-    },
-  },
-  setup(props) {
-    const iconClass = computed(() => {
-      const baseClasses = 'text-[var(--color-foreground)] transition-colors'
-
-      const incomingClasses = Array.isArray(props.class)
-        ? props.class.filter(Boolean).join(' ')
-        : typeof props.class === 'object' && props.class !== null
-          ? Object.keys(props.class)
-              .filter((key) => (props.class as unknown as Record<string, unknown>)[key])
-              .join(' ')
-          : (props.class as string) || ''
-
-      const customSizeClass = incomingClasses.trim()
-
-      if (typeof props.size === 'number') {
-        return `${baseClasses} w-[var(--icon-size)] h-[var(--icon-size)] ${customSizeClass}`.trim()
-      }
-
-      const sizeMap: Record<string, string> = {
-        sm: 'w-4 h-4',
-        md: 'w-6 h-6',
-        lg: 'w-8 h-8',
-        xl: 'w-12 h-12',
-      }
-
-      const currentSize = sizeMap[props.size] || sizeMap.md
-      return `${baseClasses} ${currentSize} ${customSizeClass}`.trim()
-    })
-
-    const iconStyle = computed(() => {
-      if (typeof props.size === 'number') {
-        return { '--icon-size': `${props.size}px` }
-      }
-      return {}
-    })
-
-    return () => {
-      const DynamicIcon = props.icon as JsxIconComponent
-
-      return (
-        <div
-          class="atom-icon inline-flex items-center justify-center"
-          data-testid="atom-icon"
-          style={iconStyle.value}
-        >
-          {props.icon ? (
-            <DynamicIcon class={iconClass.value} />
-          ) : props.name ? (
-            <span class="text-sm">{props.name}</span>
-          ) : null}
-
-          <span class="sr-only">atom-icon</span>
-        </div>
-      )
-    }
-  },
-})
 
 export default AtomIcon

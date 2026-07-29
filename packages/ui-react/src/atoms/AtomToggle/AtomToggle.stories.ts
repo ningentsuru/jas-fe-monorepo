@@ -1,13 +1,13 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { Atom } from '@lucide/vue'
-import AtomToggle from './AtomToggle'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { Atom } from 'lucide-react'
+import AtomToggle, { type AtomToggleProps } from './AtomToggle'
 
 const meta: Meta<typeof AtomToggle> = {
   title: 'Components/AtomToggle',
   component: AtomToggle,
   argTypes: {
     size: {
-      type: { name: 'other', value: 'string | number' },
+      control: { type: 'text' },
       description: 'Accepts preset names or a custom pixel number value',
     },
   },
@@ -19,7 +19,7 @@ const meta: Meta<typeof AtomToggle> = {
 }
 
 export default meta
-type Story = StoryObj<typeof AtomToggle>
+type Story = StoryObj<AtomToggleProps>
 
 export const Default: Story = {}
 

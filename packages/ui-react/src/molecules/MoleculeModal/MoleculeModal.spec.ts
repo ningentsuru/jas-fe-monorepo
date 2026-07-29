@@ -1,11 +1,10 @@
+import React from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
-import MoleculeModal from './MoleculeModal'
+import { render, screen, fireEvent } from '@testing-library/react'
+import MoleculeModal, { type MoleculeModalProps } from './MoleculeModal'
 import meta, { Default, WithoutCloseButton } from './MoleculeModal.stories'
 
-type MoleculeModalProps = InstanceType<typeof MoleculeModal>['$props']
-
-const getProps = (storyArgs: typeof Default.args): MoleculeModalProps => {
+const getProps = (storyArgs?: Partial<MoleculeModalProps>): MoleculeModalProps => {
   return {
     ...meta.args,
     ...storyArgs,
@@ -19,88 +18,97 @@ describe('MoleculeModal', () => {
   })
 
   it('renders modal markup architecture and slot layouts properly', () => {
-    const wrapper = mount(MoleculeModal, {
-      props: getProps(Default.args),
-      slots: {
-        default: '<div class="test-body">Main Data Context</div>',
-      },
-    })
+    const textNode = React.createElement('div', { 'data-testid': 'test-body' }, 'Main Data Context')
 
-    expect(wrapper.find('[data-testid="molecule-modal"]').exists()).toBe(true)
-    expect(wrapper.find('h1').text()).toBe('Account Settings Override')
-    expect(wrapper.find('.test-body').text()).toBe('Main Data Context')
+    render(
+      React.createElement(MoleculeModal, getProps(Default.args), textNode)
+    )
+
+    const modal = screen.getByTestId('molecule-modal')
+    const title = screen.getByTestId('modal-title')
+    const body = screen.getByTestId('test-body')
+
+    expect(modal).toBeDefined()
+    expect(title.textContent).toBe('Account Settings Override')
+    expect(body.textContent).toBe('Main Data Context')
   })
 
-  it('executes showModal mechanisms and blocks parent view overflows when visible', async () => {
+  it('executes showModal mechanisms and blocks parent view overflows when visible', () => {
     const showSpy = vi.spyOn(HTMLDialogElement.prototype, 'showModal')
 
-    mount(MoleculeModal, {
-      props: getProps(Default.args),
-    })
+    render(React.createElement(MoleculeModal, getProps(Default.args)))
 
-    await vi.dynamicImportSettled()
-
-    expect(showSpy).toHaveBeenCalled()
+    expect(showSpy).toHaveBeenCalledTimes(1)
     expect(document.body.style.overflow).toBe('hidden')
   })
 
-  it('executes close mechanisms and restores standard layout behaviors when show changes to false', async () => {
+  it('executes close mechanisms and restores standard layout behaviors when show changes to false', () => {
     const closeSpy = vi.spyOn(HTMLDialogElement.prototype, 'close')
 
-    const wrapper = mount(MoleculeModal, {
-      props: getProps(Default.args),
-    })
+    const { rerender } = render(React.createElement(MoleculeModal, getProps({ show: true })))
 
-    const dialogEl = wrapper.find('dialog').element as HTMLDialogElement
+    const dialogEl = screen.getByTestId('molecule-modal') as HTMLDialogElement
     Object.defineProperty(dialogEl, 'open', { value: true, writable: true })
 
-    await wrapper.setProps({ show: false })
-    await vi.dynamicImportSettled()
+    rerender(React.createElement(MoleculeModal, getProps({ show: false })))
 
-    expect(closeSpy).toHaveBeenCalled()
+    expect(closeSpy).toHaveBeenCalledTimes(1)
     expect(document.body.style.overflow).toBe('')
   })
 
   it('hides the topaction dismissal controller when specified by properties', () => {
-    const wrapper = mount(MoleculeModal, {
-      props: getProps(WithoutCloseButton.args),
-    })
+    render(React.createElement(MoleculeModal, getProps(WithoutCloseButton.args)))
 
-    expect(wrapper.find('button[aria-label="Close modal"]').exists()).toBe(false)
+    expect(screen.queryByTestId('modal-close-button')).toBeNull()
   })
 
-  it('bubbles close event triggers when interacting with target header targets', async () => {
-    const wrapper = mount(MoleculeModal, {
-      props: getProps(Default.args),
-    })
+  it('bubbles close event triggers when interacting with target header targets', () => {
+    const handleClose = vi.fn()
 
-    const dismissButton = wrapper.find('button[aria-label="Close modal"]')
-    await dismissButton.trigger('click')
+    render(
+      React.createElement(MoleculeModal, getProps({
+        ...Default.args,
+        onClose: handleClose
+      }))
+    )
 
-    expect(wrapper.emitted('close')).toBeTruthy()
+    const dismissButton = screen.getByTestId('modal-close-button')
+    fireEvent.click(dismissButton)
+
+    expect(handleClose).toHaveBeenCalledTimes(1)
   })
 
-  it('prevents native cancel responses and safely maps escape inputs to framework triggers', async () => {
-    const wrapper = mount(MoleculeModal, {
-      props: getProps(Default.args),
-    })
+  it('prevents native cancel responses and safely maps escape inputs to framework triggers', () => {
+    const handleClose = vi.fn()
 
-    const dialog = wrapper.find('dialog')
+    render(
+      React.createElement(MoleculeModal, getProps({
+        ...Default.args,
+        onClose: handleClose
+      }))
+    )
 
-    await dialog.trigger('cancel')
+    const dialog = screen.getByTestId('molecule-modal')
 
-    expect(wrapper.emitted('close')).toBeTruthy()
+    fireEvent(dialog, new Event('cancel'))
+
+    expect(handleClose).toHaveBeenCalledTimes(1)
   })
 
   it('renders complex injected template structures inside the structural footer slot area', () => {
-    const wrapper = mount(MoleculeModal, {
-      props: getProps(Default.args),
-      slots: {
-        footer: '<div class="custom-footer">Aligned Actions</div>',
-      },
-    })
+    const footerNode = React.createElement('div', { 'data-testid': 'custom-footer' }, 'Aligned Actions')
 
-    expect(wrapper.find('footer').exists()).toBe(true)
-    expect(wrapper.find('.custom-footer').text()).toBe('Aligned Actions')
+    render(
+      React.createElement(MoleculeModal, getProps({
+        ...Default.args,
+        footer: footerNode
+      }))
+    )
+
+    const footerWrapper = screen.getByTestId('modal-footer')
+    const customFooter = screen.getByTestId('custom-footer')
+
+    expect(footerWrapper).toBeDefined()
+    expect(customFooter.textContent).toBe('Aligned Actions')
   })
 })

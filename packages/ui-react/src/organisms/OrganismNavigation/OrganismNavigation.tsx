@@ -1,5 +1,5 @@
-import { defineComponent, ref, watch, onBeforeUnmount, type PropType } from 'vue'
-import { Menu, X } from '@lucide/vue'
+import { useState, useEffect, type ReactNode, type MouseEvent } from 'react'
+import { Menu, X } from 'lucide-react'
 import { AtomButton, MoleculeNavDropdown, MoleculeNavAccordion } from '../../'
 
 export interface NavItem {
@@ -8,46 +8,49 @@ export interface NavItem {
   children?: NavItem[]
 }
 
-export const OrganismNavigation = defineComponent({
-  name: 'OrganismNavigation',
-  props: {
-    items: {
-      type: Array as PropType<NavItem[]>,
-      default: () => [] as NavItem[],
-    },
-  },
-  setup(props, { slots }) {
-    const isMobileOpen = ref<boolean>(false)
-    const openDropdownIndex = ref<number | null>(null)
-    const openAccordionItems = ref<Record<string, boolean>>({})
+export interface OrganismNavigationProps {
+  items?: NavItem[]
+  branding?: ReactNode
+  themeToggle?: ReactNode
+}
 
-    function toggleMobile() {
-      isMobileOpen.value = !isMobileOpen.value
-    }
+export const OrganismNavigation = ({
+  items = [],
+  branding,
+  themeToggle
+}: OrganismNavigationProps) => {
+  const [isMobileOpen, setIsMobileOpen] = useState(false)
+  const [openDropdownIndex, setOpenDropdownIndex] = useState<number | null>(null)
+  const [openAccordionItems, setOpenAccordionItems] = useState<Record<string, boolean>>({})
 
-    function closeMobile() {
-      isMobileOpen.value = false
-    }
+  function toggleMobile() {
+    setIsMobileOpen((prev) => !prev)
+  }
 
-    function toggleDropdown(index: number, eventPayload?: unknown) {
-      if (eventPayload && typeof eventPayload === 'object' && 'stopPropagation' in eventPayload) {
-        ;(eventPayload as Event).stopPropagation()
-      }
-      openDropdownIndex.value = openDropdownIndex.value === index ? null : index
-    }
+  function closeMobile() {
+    setIsMobileOpen(false)
+  }
 
-    function closeDropdown() {
-      openDropdownIndex.value = null
-    }
+  function toggleDropdown(index: number) {
+    setOpenDropdownIndex((prev) => (prev === index ? null : index))
+  }
 
-    function toggleAccordion(label: string) {
-      openAccordionItems.value[label] = !openAccordionItems.value[label]
-    }
+  function closeDropdown() {
+    setOpenDropdownIndex(null)
+  }
 
-    function isOpen(label: string) {
-      return !!openAccordionItems.value[label]
-    }
+  function toggleAccordion(label: string) {
+    setOpenAccordionItems((prev) => ({
+      ...prev,
+      [label]: !prev[label]
+    }))
+  }
 
+  function isOpen(label: string) {
+    return !!openAccordionItems[label]
+  }
+
+  useEffect(() => {
     const handleDocumentClick = () => {
       closeDropdown()
     }
@@ -59,97 +62,97 @@ export const OrganismNavigation = defineComponent({
       }
     }
 
-    if (typeof window !== 'undefined') {
-      document.addEventListener('click', handleDocumentClick)
-      document.addEventListener('keydown', handleKeyDown)
-    }
+    document.addEventListener('click', handleDocumentClick)
+    document.addEventListener('keydown', handleKeyDown)
 
-    watch(isMobileOpen, (newVal) => {
-      if (typeof window === 'undefined') return
-      document.body.style.overflow = newVal ? 'hidden' : ''
-    })
-
-    onBeforeUnmount(() => {
-      if (typeof window === 'undefined') return
+    return () => {
       document.removeEventListener('click', handleDocumentClick)
       document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    document.body.style.overflow = isMobileOpen ? 'hidden' : ''
+    return () => {
       document.body.style.overflow = ''
-    })
+    }
+  }, [isMobileOpen])
 
-    return () => (
-      <nav class="font-display relative z-40 w-full" data-testid="organism-navigation">
-        <div class="hidden w-full items-center justify-between md:flex">
-          <div class="flex space-x-1" onClick={(e: MouseEvent) => e.stopPropagation()}>
-            {props.items.map((item, index) => (
-              <MoleculeNavDropdown
-                key={item.label}
-                item={item}
-                index={index}
-                isOpen={openDropdownIndex.value === index}
-                onToggle={(eventPayload) => toggleDropdown(index, eventPayload)}
-                onNavigate={closeDropdown}
-              />
-            ))}
-          </div>
-        </div>
-
-        <div class="flex justify-end md:hidden">
-          <AtomButton
-            data-testid="mobile-open-btn"
-            variant="ghost"
-            size="sm"
-            onClick={toggleMobile}
-            aria-label="Toggle menu"
-          >
-            <Menu class="text-foreground h-5 w-5" />
-          </AtomButton>
-        </div>
-
-        {isMobileOpen.value && (
-          <div class="fixed inset-0 z-50 flex md:hidden data-mobile-dialog" role="dialog" aria-modal="true">
-            <div
-              class="fixed inset-0 bg-black/40 backdrop-blur-sm data-[theme=high-contrast]:bg-black/75 data-[theme=high-contrast]:backdrop-blur-none"
-              onClick={closeMobile}
+  return (
+    <nav className="font-display relative z-40 w-full" data-testid="organism-navigation">
+      <div className="hidden w-full items-center justify-between md:flex">
+        <div className="flex space-x-1" onClick={(e: MouseEvent) => e.stopPropagation()}>
+          {items.map((item, index) => (
+            <MoleculeNavDropdown
+              key={item.label}
+              item={item}
+              index={index}
+              isOpen={openDropdownIndex === index}
+              onToggle={toggleDropdown}
+              onNavigate={closeDropdown}
             />
+          ))}
+        </div>
+      </div>
 
-            <div class="hc:border-2 border-border bg-card text-card-foreground relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto border-l shadow-xl transition-all duration-300 data-[theme=high-contrast]:border-2">
-              <div class="px-4 pt-5 pb-4">
-                <div class="mb-6 flex items-center justify-between">
-                  {slots.branding?.()}
-                  <AtomButton
-                    data-testid="mobile-close-btn"
-                    variant="ghost"
-                    size="sm"
-                    onClick={closeMobile}
-                    aria-label="Close menu"
-                  >
-                    <X class="text-foreground h-5 w-5" />
-                  </AtomButton>
-                </div>
+      <div className="flex justify-end md:hidden">
+        <AtomButton
+          data-testid="mobile-open-btn"
+          variant="ghost"
+          size="sm"
+          onClick={toggleMobile}
+          aria-label="Toggle menu"
+        >
+          <Menu className="text-foreground h-5 w-5" />
+        </AtomButton>
+      </div>
 
-                <div class="space-y-1">
-                  {props.items.map((item) => (
-                    <MoleculeNavAccordion
-                      key={item.label}
-                      item={item}
-                      isOpen={isOpen(item.label)}
-                      onToggle={() => toggleAccordion(item.label)}
-                      onNavigate={closeMobile}
-                    />
-                  ))}
-                </div>
+      {isMobileOpen && (
+        <div className="fixed inset-0 z-50 flex md:hidden data-mobile-dialog" role="dialog" aria-modal="true" data-testid="mobile-dialog">
+          <div
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm data-[theme=high-contrast]:bg-black/75 data-[theme=high-contrast]:backdrop-blur-none"
+            onClick={closeMobile}
+            data-testid="mobile-overlay"
+          />
 
-                <div class="border-border mt-6 border-t pt-6">
-                  {slots['theme-toggle']?.()}
-                </div>
+          <div className="hc:border-2 border-border bg-card text-card-foreground relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto border-l shadow-xl transition-all duration-300 data-[theme=high-contrast]:border-2">
+            <div className="px-4 pt-5 pb-4">
+              <div className="mb-6 flex items-center justify-between">
+                {branding}
+                <AtomButton
+                  data-testid="mobile-close-btn"
+                  variant="ghost"
+                  size="sm"
+                  onClick={closeMobile}
+                  aria-label="Close menu"
+                >
+                  <X className="text-foreground h-5 w-5" />
+                </AtomButton>
+              </div>
+
+              <div className="space-y-1">
+                {items.map((item) => (
+                  <MoleculeNavAccordion
+                    key={item.label}
+                    item={item}
+                    isOpen={isOpen(item.label)}
+                    onToggle={() => toggleAccordion(item.label)}
+                    onNavigate={closeMobile}
+                  />
+                ))}
+              </div>
+
+              <div className="border-border mt-6 border-t pt-6">
+                {themeToggle}
               </div>
             </div>
           </div>
-        )}
-        <span class="sr-only">organism-navigation</span>
-      </nav>
-    )
-  },
-})
+        </div>
+      )}
+      <span className="sr-only">organism-navigation</span>
+    </nav>
+  )
+}
 
 export default OrganismNavigation

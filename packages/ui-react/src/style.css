@@ -3,7 +3,6 @@
 @custom-variant dark (&:is([data-theme="dark"] *));
 
 @source "./**/*.tsx";
-@source "./**/*.vue";
 @source "./**/*.ts";
 
 @theme {

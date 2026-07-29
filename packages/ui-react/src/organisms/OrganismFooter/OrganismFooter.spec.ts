@@ -1,12 +1,10 @@
+import React from 'react'
 import { describe, it, expect } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { h } from 'vue'
-import { OrganismFooter } from './OrganismFooter'
+import { render, screen } from '@testing-library/react'
+import OrganismFooter, { type OrganismFooterProps } from './OrganismFooter'
 import meta, { Default, AlternativeTitle } from './OrganismFooter.stories'
 
-type OrganismFooterProps = InstanceType<typeof OrganismFooter>['$props']
-
-const getProps = (storyArgs: typeof Default.args): OrganismFooterProps => {
+const getProps = (storyArgs?: Partial<OrganismFooterProps>): OrganismFooterProps => {
   return {
     ...meta.args,
     ...storyArgs,
@@ -15,37 +13,33 @@ const getProps = (storyArgs: typeof Default.args): OrganismFooterProps => {
 
 describe('OrganismFooter', () => {
   it('renders root semantic layout structure and title text content properly', () => {
-    const wrapper = mount(OrganismFooter, {
-      props: getProps(Default.args),
-    })
+    render(React.createElement(OrganismFooter, getProps(Default.args)))
 
     const currentYear = new Date().getFullYear().toString()
+    const footer = screen.getByTestId('organism-footer')
+    const title = screen.getByTestId('footer-title')
 
-    expect(wrapper.find('[data-testid="organism-footer"]').exists()).toBe(true)
-    expect(wrapper.find('h2').text()).toBe('Core Design System Inc.')
-    expect(wrapper.text()).toContain(currentYear)
-    expect(wrapper.text()).toContain('All rights reserved.')
+    expect(footer).toBeDefined()
+    expect(document.body.contains(footer)).toBe(true)
+    expect(title.textContent).toBe('Core Design System Inc.')
+    expect(footer.textContent).toContain(currentYear)
+    expect(footer.textContent).toContain('All rights reserved.')
   })
 
   it('receives correct configuration title props from Storybook arguments mapping blocks', () => {
-    const wrapper = mount(OrganismFooter, {
-      props: getProps(AlternativeTitle.args),
-    })
+    render(React.createElement(OrganismFooter, getProps(AlternativeTitle.args)))
 
-    expect(wrapper.props('title')).toEqual('Monorepo Platform Footer Layer')
-    expect(wrapper.find('h2').text()).toBe('Monorepo Platform Footer Layer')
+    const title = screen.getByTestId('footer-title')
+    expect(title.textContent).toBe('Monorepo Platform Footer Layer')
   })
 
   it('renders child context template node slots smoothly inside the container layout layer', () => {
-    const wrapper = mount(OrganismFooter, {
-      props: getProps(Default.args),
-      slots: {
-        default: () => h('span', { class: 'mock-nav' }, 'Footer Nav Elements'),
-      },
-    })
+    const childNode = React.createElement('span', { 'data-testid': 'mock-nav' }, 'Footer Nav Elements')
 
-    const slottedEl = wrapper.find('.mock-nav')
-    expect(slottedEl.exists()).toBe(true)
-    expect(slottedEl.text()).toBe('Footer Nav Elements')
+    render(React.createElement(OrganismFooter, getProps(Default.args), childNode))
+
+    const slottedEl = screen.getByTestId('mock-nav')
+    expect(slottedEl).toBeDefined()
+    expect(slottedEl.textContent).toBe('Footer Nav Elements')
   })
 })

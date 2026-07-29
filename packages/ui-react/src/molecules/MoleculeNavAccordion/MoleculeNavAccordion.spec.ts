@@ -1,15 +1,22 @@
-import { describe, it, expect } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { MoleculeNavAccordion } from './MoleculeNavAccordion'
-import meta, {
-  Default,
-  ExpandedDropdown,
-  SingleLinkNoChildren,
-} from './MoleculeNavAccordion.stories'
+import React from 'react'
+import { describe, it, expect, vi } from 'vitest'
+import { render, screen, fireEvent } from '@testing-library/react'
+import MoleculeNavAccordion, { type MoleculeNavAccordionProps } from './MoleculeNavAccordion'
+import meta, { Default, ExpandedDropdown, SingleLinkNoChildren } from './MoleculeNavAccordion.stories'
 
-type MoleculeNavAccordionProps = InstanceType<typeof MoleculeNavAccordion>['$props']
+vi.mock('../../', () => ({
+  AtomIcon: ({ className, size }: { className?: string; size: string }) =>
+    React.createElement('span', { 'data-testid': 'mock-icon', 'data-size': size, className }, 'icon'),
+  AtomNavLink: ({ label, to, onClick, trailing }: { label: string; to?: string; onClick?: (e: any) => void; trailing?: React.ReactNode }) =>
+    React.createElement(
+      'button',
+      { type: 'button', onClick, 'data-testid': 'mock-nav-link', 'data-label': label, 'data-to': to },
+      React.createElement('span', null, label),
+      trailing
+    )
+}))
 
-const getProps = (storyArgs: typeof Default.args): MoleculeNavAccordionProps => {
+const getProps = (storyArgs?: Partial<MoleculeNavAccordionProps>): MoleculeNavAccordionProps => {
   return {
     ...meta.args,
     ...storyArgs,
@@ -18,78 +25,84 @@ const getProps = (storyArgs: typeof Default.args): MoleculeNavAccordionProps => 
 
 describe('MoleculeNavAccordion', () => {
   it('renders root layout block and primary labels accurately', () => {
-    const wrapper = mount(MoleculeNavAccordion, {
-      props: getProps(Default.args),
-    })
+    render(React.createElement(MoleculeNavAccordion, getProps(Default.args)))
 
-    expect(wrapper.find('[data-testid="molecule-nav-accordion"]').exists()).toBe(true)
-    expect(wrapper.text()).toContain('Engineering Space')
+    const root = screen.getByTestId('molecule-nav-accordion')
+    expect(root).toBeDefined()
+    expect(document.body.contains(root)).toBe(true)
+    expect(screen.getByText('Engineering Space')).toBeDefined()
   })
 
   it('verifies configuration props pass through securely matching types', () => {
-    const wrapper = mount(MoleculeNavAccordion, {
-      props: getProps(ExpandedDropdown.args),
-    })
+    render(React.createElement(MoleculeNavAccordion, getProps(ExpandedDropdown.args)))
 
-    expect(wrapper.props('isOpen')).toBe(true)
-    expect(wrapper.props('item').label).toBe('Engineering Space')
+    const panel = screen.getByTestId('accordion-panel')
+    expect(panel.classList.contains('visible')).toBe(true)
+    expect(panel.classList.contains('grid-rows-[1fr]')).toBe(true)
   })
 
   it('renders sub-item list mapping nodes correctly when children are present', () => {
-    const wrapper = mount(MoleculeNavAccordion, {
-      props: getProps(ExpandedDropdown.args),
-    })
+    render(React.createElement(MoleculeNavAccordion, getProps(ExpandedDropdown.args)))
 
-    const childrenLinks = wrapper.findAllComponents({ name: 'AtomNavLink' })
-
-    expect(childrenLinks.length).toBe(4)
-    expect(wrapper.text()).toContain('Component Atoms')
-    expect(wrapper.text()).toContain('Molecules Matrix')
+    const navLinks = screen.getAllByTestId('mock-nav-link')
+    expect(navLinks.length).toBe(4)
+    expect(screen.getByText('Component Atoms')).toBeDefined()
+    expect(screen.getByText('Molecules Matrix')).toBeDefined()
   })
 
   it('hides transition panel grids from view when marked closed', () => {
-    const wrapper = mount(MoleculeNavAccordion, {
-      props: getProps(Default.args),
-    })
+    render(React.createElement(MoleculeNavAccordion, getProps(Default.args)))
 
-    const transitionPanel = wrapper.find('[id^="accordion-menu-"]')
-    expect(transitionPanel.classes()).toContain('grid-rows-[0fr]')
-    expect(transitionPanel.classes()).toContain('invisible')
-    expect(transitionPanel.classes()).toContain('opacity-0')
+    const panel = screen.getByTestId('accordion-panel')
+    expect(panel.classList.contains('grid-rows-[0fr]')).toBe(true)
+    expect(panel.classList.contains('invisible')).toBe(true)
+    expect(panel.classList.contains('opacity-0')).toBe(true)
   })
 
   it('updates panel class attributes to track visibility states when open', () => {
-    const wrapper = mount(MoleculeNavAccordion, {
-      props: getProps(ExpandedDropdown.args),
-    })
+    render(React.createElement(MoleculeNavAccordion, getProps(ExpandedDropdown.args)))
 
-    const transitionPanel = wrapper.find('[id^="accordion-menu-"]')
-    expect(transitionPanel.classes()).toContain('grid-rows-[1fr]')
-    expect(transitionPanel.classes()).toContain('visible')
-    expect(transitionPanel.classes()).toContain('opacity-100')
+    const panel = screen.getByTestId('accordion-panel')
+    expect(panel.classList.contains('grid-rows-[1fr]')).toBe(true)
+    expect(panel.classList.contains('visible')).toBe(true)
+    expect(panel.classList.contains('opacity-100')).toBe(true)
   })
 
-  it('bubbles a toggle execution request upward when clicking items with child references', async () => {
-    const wrapper = mount(MoleculeNavAccordion, {
-      props: getProps(Default.args),
-    })
+  it('bubbles a toggle execution request upward when clicking items with child references', () => {
+    const handleToggle = vi.fn()
+    const handleNavigate = vi.fn()
 
-    const rootLink = wrapper.findAllComponents({ name: 'AtomNavLink' }).at(0)
-    await rootLink?.trigger('click')
+    render(
+      React.createElement(MoleculeNavAccordion, getProps({
+        ...Default.args,
+        onToggle: handleToggle,
+        onNavigate: handleNavigate,
+      }))
+    )
 
-    expect(wrapper.emitted('toggle')).toBeTruthy()
-    expect(wrapper.emitted('navigate')).toBeFalsy()
+    const rootLink = screen.getAllByTestId('mock-nav-link')[0]
+    fireEvent.click(rootLink)
+
+    expect(handleToggle).toHaveBeenCalledTimes(1)
+    expect(handleNavigate).not.toHaveBeenCalled()
   })
 
-  it('bubbles navigate triggers straight out if a basic single link configuration is activated', async () => {
-    const wrapper = mount(MoleculeNavAccordion, {
-      props: getProps(SingleLinkNoChildren.args),
-    })
+  it('bubbles navigate triggers straight out if a basic single link configuration is activated', () => {
+    const handleToggle = vi.fn()
+    const handleNavigate = vi.fn()
 
-    const rootLink = wrapper.findAllComponents({ name: 'AtomNavLink' }).at(0)
-    await rootLink?.trigger('click')
+    render(
+      React.createElement(MoleculeNavAccordion, getProps({
+        ...SingleLinkNoChildren.args,
+        onToggle: handleToggle,
+        onNavigate: handleNavigate,
+      }))
+    )
 
-    expect(wrapper.emitted('navigate')).toBeTruthy()
-    expect(wrapper.emitted('toggle')).toBeFalsy()
+    const rootLink = screen.getAllByTestId('mock-nav-link')[0]
+    fireEvent.click(rootLink)
+
+    expect(handleNavigate).toHaveBeenCalledTimes(1)
+    expect(handleToggle).not.toHaveBeenCalled()
   })
 })

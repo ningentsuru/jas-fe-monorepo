@@ -1,79 +1,103 @@
-import { describe, it, expect } from 'vitest'
-import { mount } from '@vue/test-utils'
-import AtomToggle from './AtomToggle'
-import { globalLongPressHandlers } from '../../setup'
+import React from 'react'
+import { describe, it, expect, vi } from 'vitest'
+import { render, screen, fireEvent, act } from '@testing-library/react'
+import AtomToggle, { type AtomToggleProps } from './AtomToggle'
 import meta, { Default, ToggledActive, CustomNumericSize } from './AtomToggle.stories'
 
-type AtomToggleProps = InstanceType<typeof AtomToggle>['$props']
+vi.mock('../../', () => ({
+  AtomIcon: ({ icon: Icon, size }: { icon: React.ElementType; size: string | number }) =>
+    React.createElement('div', { 'data-testid': 'atom-icon', 'data-size': size },
+      React.createElement(Icon, { 'data-testid': 'mocked-lucide-icon' })
+    )
+}))
 
-const getProps = (storyArgs: typeof Default.args): AtomToggleProps => {
+const getProps = (storyArgs?: Partial<AtomToggleProps>): AtomToggleProps => {
   return {
     ...meta.args,
     ...storyArgs,
-  } as unknown as AtomToggleProps
+  } as AtomToggleProps
 }
 
 describe('AtomToggle', () => {
-  it('renders matching text parameters and sub-elements accurately', async () => {
-    const wrapper = mount(AtomToggle, {
-      props: getProps(Default.args),
-    })
+  it('renders matching text parameters and sub-elements accurately', () => {
+    render(React.createElement(AtomToggle, getProps(Default.args)))
 
-    await wrapper.vm.$nextTick()
+    const button = screen.getByTestId('atom-toggle')
+    expect(button).toBeDefined()
+    expect(document.body.contains(button)).toBe(true)
 
-    expect(wrapper.find('[data-testid="atom-toggle"]').exists()).toBe(true)
-    expect(wrapper.text()).toContain('atom-toggle')
+    const textNode = screen.getByText('atom-toggle')
+    expect(textNode).toBeDefined()
   })
 
-  it('receives and pipes configuration inputs cleanly down the render path', async () => {
-    const wrapper = mount(AtomToggle, {
-      props: getProps(CustomNumericSize.args),
-    })
+  it('receives and pipes configuration inputs cleanly down the render path', () => {
+    render(React.createElement(AtomToggle, getProps(CustomNumericSize.args)))
 
-    await wrapper.vm.$nextTick()
-
-    expect(wrapper.props('size')).toBe(48)
-    expect(wrapper.props('isToggled')).toBe(false)
+    const iconWrapper = screen.getByTestId('atom-icon')
+    expect(iconWrapper.getAttribute('data-size')).toBe('48')
   })
 
-  it('verifies focus utility class configuration attributes are bound properly', async () => {
-    const wrapper = mount(AtomToggle, {
-      props: getProps(Default.args),
-    })
+  it('verifies focus utility class configuration attributes are bound properly', () => {
+    render(React.createElement(AtomToggle, getProps(Default.args)))
 
-    await wrapper.vm.$nextTick()
-
-    const button = wrapper.find('button')
-    expect(button.classes()).toContain('focus-visible:ring-ring')
-    expect(button.classes()).toContain('focus-visible:ring-2')
-    expect(button.classes()).toContain('focus-visible:outline-none')
+    const button = screen.getByTestId('atom-toggle')
+    expect(button.classList.contains('focus-visible:ring-ring')).toBe(true)
+    expect(button.classList.contains('focus-visible:ring-2')).toBe(true)
+    expect(button.classList.contains('focus-visible:outline-none')).toBe(true)
   })
 
-  it('receives and binds the active state toggled property correctly', async () => {
-    const wrapper = mount(AtomToggle, {
-      props: getProps(ToggledActive.args),
-    })
+  it('receives and binds the active state toggled property correctly', () => {
+    render(React.createElement(AtomToggle, getProps(ToggledActive.args)))
 
-    await wrapper.vm.$nextTick()
-
-    expect(wrapper.props('isToggled')).toBe(true)
+    const button = screen.getByTestId('atom-toggle')
+    expect(button.classList.contains('atom-toggle--active')).toBe(true)
   })
 
-  it('triggers custom structural click events correctly via long-press mock directives', async () => {
-    const wrapper = mount(AtomToggle, {
-      props: getProps(Default.args),
+  it('triggers custom structural click events correctly on standard press interaction', () => {
+    const handleToggle = vi.fn()
+    const handleLongToggle = vi.fn()
+
+    render(
+      React.createElement(AtomToggle, getProps({
+        onToggle: handleToggle,
+        onLongToggle: handleLongToggle,
+      }))
+    )
+
+    const button = screen.getByTestId('atom-toggle')
+
+    fireEvent.pointerDown(button)
+    fireEvent.pointerUp(button)
+
+    expect(handleToggle).toHaveBeenCalledTimes(1)
+    expect(handleLongToggle).not.toHaveBeenCalled()
+  })
+
+  it('triggers long press handlers when threshold timers are met', () => {
+    vi.useFakeTimers()
+    const handleToggle = vi.fn()
+    const handleLongToggle = vi.fn()
+
+    render(
+      React.createElement(AtomToggle, getProps({
+        onToggle: handleToggle,
+        onLongToggle: handleLongToggle,
+      }))
+    )
+
+    const button = screen.getByTestId('atom-toggle')
+
+    fireEvent.pointerDown(button)
+
+    act(() => {
+      vi.advanceTimersByTime(200)
     })
 
-    await wrapper.vm.$nextTick()
+    expect(handleLongToggle).toHaveBeenCalledTimes(1)
 
-    if (globalLongPressHandlers.onToggle) {
-      globalLongPressHandlers.onToggle()
-    }
-    expect(wrapper.emitted('toggle')).toBeTruthy()
+    fireEvent.pointerUp(button)
+    expect(handleToggle).not.toHaveBeenCalled()
 
-    if (globalLongPressHandlers.onLongToggle) {
-      globalLongPressHandlers.onLongToggle()
-    }
-    expect(wrapper.emitted('longToggle')).toBeTruthy()
+    vi.useRealTimers()
   })
 })

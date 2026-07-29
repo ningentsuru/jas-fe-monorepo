@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { OrganismFooter } from './OrganismFooter'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import OrganismFooter, { type OrganismFooterProps } from './OrganismFooter'
 
 const meta: Meta<typeof OrganismFooter> = {
   title: 'Components/OrganismFooter',
@@ -7,23 +7,10 @@ const meta: Meta<typeof OrganismFooter> = {
   args: {
     title: 'Core Design System Inc.',
   },
-  render: (args) => ({
-    components: { OrganismFooter },
-    setup() {
-      return { args }
-    },
-    template: `
-      <OrganismFooter v-bind="args">
-        <a href="#" class="hover:text-primary transition-colors">Privacy Policy</a>
-        <a href="#" class="hover:text-primary transition-colors">Terms of Service</a>
-        <a href="#" class="hover:text-primary transition-colors">Contact</a>
-      </OrganismFooter>
-    `,
-  }),
 }
 
 export default meta
-type Story = StoryObj<typeof OrganismFooter>
+type Story = StoryObj<OrganismFooterProps>
 
 export const Default: Story = {}
 

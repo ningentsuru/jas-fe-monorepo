@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { MoleculeNavDropdown } from './MoleculeNavDropdown'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import MoleculeNavDropdown, { type MoleculeNavDropdownProps } from './MoleculeNavDropdown'
 
 const mockItemWithChildren = {
   label: 'Products',
@@ -26,7 +26,7 @@ const meta: Meta<typeof MoleculeNavDropdown> = {
 }
 
 export default meta
-type Story = StoryObj<typeof MoleculeNavDropdown>
+type Story = StoryObj<MoleculeNavDropdownProps>
 
 export const Default: Story = {}
 

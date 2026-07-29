@@ -1,39 +1,36 @@
+import React from 'react'
 import { describe, it, expect } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { render, screen } from '@testing-library/react'
 import AtomKeyboard from './AtomKeyboard'
 import meta, { Default } from './AtomKeyboard.stories'
 
-type AtomKeyboardProps = InstanceType<typeof AtomKeyboard>['$props']
+type AtomKeyboardProps = React.ComponentProps<typeof AtomKeyboard>
 
 const getProps = (storyArgs: typeof Default.args): AtomKeyboardProps => {
   return {
     ...meta.args,
     ...storyArgs,
-  } as unknown as AtomKeyboardProps
+  } as AtomKeyboardProps
 }
 
 describe('AtomKeyboard', () => {
-  it('renders properly using Storybook args', async () => {
-    const wrapper = mount(AtomKeyboard, {
-      props: getProps(Default.args),
-    })
+  it('renders properly using Storybook args', () => {
+    const props = getProps(Default.args)
+    render(React.createElement(AtomKeyboard, props))
 
-    await wrapper.vm.$nextTick()
-
-    expect(wrapper.find('[data-testid="atom-keyboard"]').exists()).toBe(true)
-    expect(wrapper.text()).toContain('atom-keyboard')
+    const keyboard = screen.getByTestId('atom-keyboard')
+    expect(keyboard).not.toBeNull()
+    expect(keyboard.textContent).toContain('⌘')
+    expect(keyboard.textContent).toContain('atom-keyboard')
   })
 
-  it('receives and renders the correct character prop input into the canvas', async () => {
-    const wrapper = mount(AtomKeyboard, {
-      props: getProps({
-        character: 'K',
-      }),
+  it('receives and renders the correct character prop input into the canvas', () => {
+    const props = getProps({
+      character: 'K',
     })
+    render(React.createElement(AtomKeyboard, props))
 
-    await wrapper.vm.$nextTick()
-
-    expect(wrapper.props('character')).toEqual('K')
-    expect(wrapper.text()).toContain('K')
+    const keyboard = screen.getByTestId('atom-keyboard')
+    expect(keyboard.textContent).toContain('K')
   })
 })

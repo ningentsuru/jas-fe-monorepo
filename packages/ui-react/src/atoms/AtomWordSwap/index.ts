@@ -1,2 +1,3 @@
 export { default } from './AtomWordSwap'
-export type { AtomWordSwapProps } from './AtomWordSwap'
+export { AtomWordSwap } from './AtomWordSwap'
+export type { AtomWordSwapProps, WordSwapTransition } from './AtomWordSwap'

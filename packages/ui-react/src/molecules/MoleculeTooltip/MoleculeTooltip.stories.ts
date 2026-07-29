@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { MoleculeTooltip } from './MoleculeTooltip'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import MoleculeTooltip, { type MoleculeTooltipProps } from './MoleculeTooltip'
 
 const meta: Meta<typeof MoleculeTooltip> = {
   title: 'Components/MoleculeTooltip',
@@ -15,28 +15,10 @@ const meta: Meta<typeof MoleculeTooltip> = {
     position: 'top',
     delay: 200,
   },
-  render: (args) => ({
-    components: { MoleculeTooltip },
-    setup() {
-      return { args }
-    },
-    template: `
-      <div class="p-20 flex justify-center items-center">
-        <MoleculeTooltip v-bind="args">
-          <span class="text-blue-600 underline font-medium cursor-help">Hover over me</span>
-          <template #content>
-            <p class="max-w-xs leading-relaxed">
-              This data represents calculated system thresholds pulled directly from the monorepo core layers.
-            </p>
-          </template>
-        </MoleculeTooltip>
-      </div>
-    `,
-  }),
 }
 
 export default meta
-type Story = StoryObj<typeof MoleculeTooltip>
+type Story = StoryObj<MoleculeTooltipProps>
 
 export const Default: Story = {}
 

@@ -1,35 +1,20 @@
-import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import vueJsx from '@vitejs/plugin-vue-jsx'
-import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  plugins: [
-    vue(),
-    vueJsx({
-      include: /\.[jt]sx$/,
-    }),
-
-    tailwindcss(),
-  ],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-    },
-    extensions: ['.tsx', '.ts', '.vue', '.jsx', '.js', '.json', '.mjs'],
-  },
+  plugins: [],
   build: {
-    target: 'esnext',
     lib: {
-      entry: fileURLToPath(new URL('./src/index.ts', import.meta.url)),
-      name: 'UiLibrary',
-      fileName: 'index',
+      entry: 'src/index.ts',
+      name: 'UIReact',
+      fileName: 'ui-react',
     },
     rollupOptions: {
-      external: ['vue'],
+      external: ['react', 'react-dom'],
       output: {
-        globals: { vue: 'Vue' },
+        globals: {
+          react: 'React',
+          'react-dom': 'ReactDOM',
+        },
       },
     },
   },

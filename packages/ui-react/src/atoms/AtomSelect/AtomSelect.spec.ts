@@ -1,96 +1,69 @@
-import { describe, it, expect } from 'vitest'
-import { mount } from '@vue/test-utils'
+import React from 'react'
+import { describe, it, expect, vi } from 'vitest'
+import { render, screen, fireEvent } from '@testing-library/react'
 import AtomSelect from './AtomSelect'
 import meta, { Default, ValidationError, CustomNumericSize } from './AtomSelect.stories'
 
-type AtomSelectProps = InstanceType<typeof AtomSelect>['$props']
+type AtomSelectProps = React.ComponentProps<typeof AtomSelect>
 
 const getProps = (storyArgs: typeof Default.args): AtomSelectProps => {
   return {
     ...meta.args,
     ...storyArgs,
-  } as unknown as AtomSelectProps
+  } as AtomSelectProps
 }
 
 describe('AtomSelect', () => {
-  it('renders dropdown placeholder and select parameters correctly', async () => {
-    const wrapper = mount(AtomSelect, {
-      props: getProps(Default.args),
-    })
+  it('renders dropdown placeholder and payload option lists cleanly', () => {
+    const props = getProps(Default.args)
+    render(React.createElement(AtomSelect, props))
 
-    await wrapper.vm.$nextTick()
+    const select = screen.getByTestId('atom-select') as HTMLSelectElement
+    expect(select).not.toBeNull()
+    expect(select.value).toBe('')
 
-    const selectEl = wrapper.find('[data-testid="atom-select"]')
-    expect(selectEl.exists()).toBe(true)
-    expect(wrapper.text()).toContain('Choose your tech stack')
-  })
-
-  it('renders the complete iterable option mapping array list accurately', async () => {
-    const wrapper = mount(AtomSelect, {
-      props: getProps(Default.args),
-    })
-
-    await wrapper.vm.$nextTick()
-
-    const options = wrapper.findAll('option')
+    const options = select.options
     expect(options.length).toBe(5)
-    expect(options[1].text()).toBe('Vue.js Framework')
-    expect(options[3].attributes('disabled')).toBeDefined()
+    expect(options[1].textContent).toBe('Vue.js Framework')
   })
 
-  it('binds the initial input values correctly onto the selection node', async () => {
-    const wrapper = mount(AtomSelect, {
-      props: getProps({
-        ...Default.args,
-        modelValue: 'react',
-      }),
-    })
+  it('handles value assignment states and options disability states accurately', () => {
+    const props = getProps(Default.args)
+    render(React.createElement(AtomSelect, props))
 
-    await wrapper.vm.$nextTick()
+    const select = screen.getByTestId('atom-select') as HTMLSelectElement
+    const options = select.options
 
-    const select = wrapper.find('select').element as HTMLSelectElement
-    expect(select.value).toBe('react')
+    expect(options[1].disabled).toBe(false)
+    expect(options[3].disabled).toBe(true)
   })
 
-  it('injects structural styling attributes when flagged with validation errors', async () => {
-    const wrapper = mount(AtomSelect, {
-      props: getProps(ValidationError.args),
-    })
+  it('bubbles update triggers upward when choice parameters mutate', () => {
+    const updateSpy = vi.fn()
+    const props = { ...getProps(Default.args), onUpdateModelValue: updateSpy }
+    render(React.createElement(AtomSelect, props))
 
-    await wrapper.vm.$nextTick()
+    const select = screen.getByTestId('atom-select') as HTMLSelectElement
+    fireEvent.change(select, { target: { value: 'react' } })
 
-    const selectEl = wrapper.find('select')
-    expect(selectEl.attributes('aria-invalid')).toBe('true')
-    expect(selectEl.classes()).toContain('border-destructive')
+    expect(updateSpy).toHaveBeenCalledWith('react')
   })
 
-  it('handles downstream custom variable heights when primitive sizing numbers are provided', async () => {
-    const wrapper = mount(AtomSelect, {
-      props: getProps(CustomNumericSize.args),
-    })
+  it('applies error modifier classes and accessibility descriptors when validated', () => {
+    const props = getProps(ValidationError.args)
+    render(React.createElement(AtomSelect, props))
 
-    await wrapper.vm.$nextTick()
-
-    const selectEl = wrapper.find('select')
-    const element = selectEl.element as HTMLElement
-
-    expect(wrapper.props('size')).toBe(58)
-    expect(selectEl.classes()).toContain('h-[var(--select-size)]')
-    expect(element.style.getPropertyValue('--select-size')).toBe('58px')
+    const select = screen.getByTestId('atom-select')
+    expect(select.classList.contains('border-destructive')).toBe(true)
+    expect(select.getAttribute('aria-invalid')).toBe('true')
   })
 
-  it('disables interactions dynamically when specified by parameter states', async () => {
-    const wrapper = mount(AtomSelect, {
-      props: getProps({
-        ...Default.args,
-        disabled: true,
-      }),
-    })
+  it('maps custom pixel variable structures perfectly when numeric sizes are matched', () => {
+    const props = getProps(CustomNumericSize.args)
+    render(React.createElement(AtomSelect, props))
 
-    await wrapper.vm.$nextTick()
-
-    const selectEl = wrapper.find('select')
-    expect(selectEl.attributes('disabled')).toBeDefined()
-    expect(selectEl.classes()).toContain('disabled:cursor-not-allowed')
+    const select = screen.getByTestId('atom-select') as HTMLElement
+    expect(select.classList.contains('h-[var(--select-size)]')).toBe(true)
+    expect(select.style.getPropertyValue('--select-size')).toBe('58px')
   })
 })

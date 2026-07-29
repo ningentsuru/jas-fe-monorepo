@@ -1,122 +1,118 @@
-import { defineComponent, ref, computed, watch, type Component, type PropType } from 'vue'
+import { useState, useMemo, useEffect, type ElementType, type FormEvent } from 'react'
 import { MoleculeModal, AtomToggle, AtomSelect, AtomButton } from '../../'
-import { Sun, Moon, Palette, LoaderPinwheel } from '@lucide/vue'
+import { Sun, Moon, Palette, LoaderPinwheel } from 'lucide-react'
+import { createPortal } from 'react-dom'
 
 export type ThemeType =
-  'light' | 'dark' | 'forest' | 'midnight' | 'ocean' | 'sunset' | 'high-contrast'
+  | 'light'
+  | 'dark'
+  | 'forest'
+  | 'midnight'
+  | 'ocean'
+  | 'sunset'
+  | 'high-contrast'
 
-export const MoleculeThemeToggle = defineComponent({
-  name: 'MoleculeThemeToggle',
-  props: {
-    isToggled: {
-      type: Boolean as PropType<boolean>,
-      default: false,
-    },
-    currentTheme: {
-      type: String as PropType<ThemeType>,
-      default: 'light',
-    },
-    size: {
-      type: [String, Number] as PropType<'sm' | 'md' | 'lg' | 'xl' | number>,
-      default: 'md',
-    },
-    icon: {
-      type: Object as PropType<Component>,
-    },
-  },
-  emits: {
-    toggle: () => true,
-    longToggle: () => true,
-    setTheme: (theme: string) => typeof theme === 'string',
-  },
-  setup(props, { emit }) {
-    const showModal = ref<boolean>(false)
+export interface MoleculeThemeToggleProps {
+  isToggled?: boolean
+  currentTheme?: ThemeType
+  size?: 'sm' | 'md' | 'lg' | 'xl' | number
+  icon?: ElementType
+  onToggle?: () => void
+  onLongToggle?: () => void
+  onSetTheme?: (theme: string) => void
+}
 
-    const optionTheme = [
-      { label: 'Light', value: 'light' },
-      { label: 'Dark', value: 'dark' },
-      { label: 'Forest', value: 'forest' },
-      { label: 'Ocean', value: 'ocean' },
-      { label: 'Sunset', value: 'sunset' },
-      { label: 'High Contrast', value: 'high-contrast' },
-    ]
+export const MoleculeThemeToggle = ({
+  isToggled = false,
+  currentTheme = 'light',
+  size = 'md',
+  icon,
+  onToggle,
+  onLongToggle,
+  onSetTheme
+}: MoleculeThemeToggleProps) => {
+  const [showModal, setShowModal] = useState(false)
+  const [selectedTheme, setSelectedTheme] = useState<string>(currentTheme)
+  const [mounted, setMounted] = useState(false)
 
-    const selectedTheme = ref<string>(props.currentTheme)
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
-    const getIcon = computed(() =>
-      showModal.value
-        ? LoaderPinwheel
-        : !['light', 'dark'].includes(selectedTheme.value)
-          ? Palette
-          : props.isToggled
-            ? Moon
-            : Sun,
-    )
+  const optionTheme = [
+    { label: 'Light', value: 'light' },
+    { label: 'Dark', value: 'dark' },
+    { label: 'Forest', value: 'forest' },
+    { label: 'Ocean', value: 'ocean' },
+    { label: 'Sunset', value: 'sunset' },
+    { label: 'High Contrast', value: 'high-contrast' },
+  ]
 
-    function modalToggle() {
-      showModal.value = true
-      emit('longToggle')
-    }
+  const getIcon = useMemo(() => {
+    if (showModal) return LoaderPinwheel
+    if (!['light', 'dark'].includes(selectedTheme)) return Palette
+    return isToggled ? Moon : Sun
+  }, [showModal, selectedTheme, isToggled])
 
-    function closeModal() {
-      showModal.value = false
-    }
+  function modalToggle() {
+    setShowModal(true)
+    onLongToggle?.()
+  }
 
-    function handleSubmit(event: Event) {
-      event.preventDefault()
-      emit('setTheme', selectedTheme.value)
-      closeModal()
-    }
+  function closeModal() {
+    setShowModal(false)
+  }
 
-    watch(
-      () => props.currentTheme,
-      (theme) => {
-        selectedTheme.value = theme
-      },
-    )
+  function handleSubmit(event: FormEvent) {
+    event.preventDefault()
+    onSetTheme?.(selectedTheme)
+    closeModal()
+  }
 
-    return () => (
-      <div class="theme-toggle-wrapper font-display">
-        <div class="molecule-theme-toggle" data-testid="molecule-theme-toggle">
-          <AtomToggle
-            class={[{ 'animate-spin [animation-duration:2s]': showModal.value === true }]}
-            icon={getIcon.value}
-            isToggled={props.isToggled}
-            size={props.size}
-            onToggle={() => emit('toggle')}
-            onLongToggle={modalToggle}
-          />
-          <span class="sr-only">molecule-theme-toggle</span>
-        </div>
+  useEffect(() => {
+    setSelectedTheme(currentTheme)
+  }, [currentTheme])
 
-        <teleport to="body">
-          <MoleculeModal
-            title="Choose more themes!"
-            show={showModal.value}
-            hideClose
-            onClose={closeModal}
-            class="border-border bg-card text-card-foreground relative z-50 w-full max-w-md rounded-lg border p-6 shadow-xl"
-          >
-            <form class="flex flex-col justify-between gap-4" onSubmit={handleSubmit}>
-              <AtomSelect
-                v-model={selectedTheme.value}
-                options={optionTheme}
-                class="cursor-pointer"
-              />
-              <div class="flex justify-between gap-2">
-                <AtomButton size="md" variant="primary" type="submit">
-                  <span>Apply</span>
-                </AtomButton>
-                <AtomButton size="md" variant="destructive" type="button" onClick={closeModal}>
-                  <span>Close</span>
-                </AtomButton>
-              </div>
-            </form>
-          </MoleculeModal>
-        </teleport>
+  return (
+    <div className="theme-toggle-wrapper font-display">
+      <div className="molecule-theme-toggle" data-testid="molecule-theme-toggle">
+        <AtomToggle
+          icon={icon || getIcon}
+          isToggled={isToggled}
+          size={size}
+          onToggle={() => onToggle?.()}
+          onLongToggle={modalToggle}
+        />
+        <span className="sr-only">molecule-theme-toggle</span>
       </div>
-    )
-  },
-})
+
+      {mounted && createPortal(
+        <MoleculeModal
+          title="Choose more themes!"
+          show={showModal}
+          hideClose
+          onClose={closeModal}
+        >
+          <form data-testid="theme-form" className="flex flex-col justify-between gap-4" onSubmit={handleSubmit}>
+            <AtomSelect
+              value={selectedTheme}
+              onUpdateModelValue={(val) => setSelectedTheme(val as string)}
+              options={optionTheme}
+            />
+            <div className="flex justify-between gap-2">
+              <AtomButton size="md" variant="primary" type="submit">
+                <span>Apply</span>
+              </AtomButton>
+              <AtomButton size="md" variant="destructive" type="button" onClick={closeModal}>
+                <span>Close</span>
+              </AtomButton>
+            </div>
+          </form>
+        </MoleculeModal>,
+        document.body
+      )}
+    </div>
+  )
+}
 
 export default MoleculeThemeToggle

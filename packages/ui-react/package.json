@@ -18,33 +18,32 @@
     "./style.css": "./dist/style.css"
   },
   "peerDependencies": {
-    "vue": "^3.5.40"
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
   },
   "dependencies": {
-    "@lucide/vue": "^1.27.0"
+    "lucide-react": "^0.470.0"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "@storybook/vue3-vite": "^10.5.5",
+    "@storybook/react-vite": "^10.5.5",
     "@tailwindcss/vite": "^4.3.3",
+    "@testing-library/react": "^16.1.0",
     "@tsconfig/node24": "^24.0.4",
     "@types/node": "^26.1.2",
-    "@vitejs/plugin-vue": "^6.0.8",
-    "@vitejs/plugin-vue-jsx": "^5.1.6",
-    "@vue/test-utils": "^2.4.11",
-    "@vue/tsconfig": "^0.9.1",
+    "@types/react": "^19.2.3",
+    "@types/react-dom": "^19.2.3",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-storybook": "^10.5.5",
-    "eslint-plugin-vue": "^9.32.0",
     "happy-dom": "^20.11.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
     "storybook": "^10.5.5",
     "tailwindcss": "^4.3.3",
     "typescript": "6.0.3",
     "vite": "^8.1.5",
-    "vitest": "^4.1.10",
-    "vue": "^3.5.40",
-    "vue-tsc": "^3.3.8"
+    "vitest": "^4.1.10"
   },
   "engines": {
     "node": "24.x"

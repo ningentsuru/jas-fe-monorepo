@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import AtomInput from './AtomInput'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import AtomInput, { type AtomInputProps } from './AtomInput'
 
 const meta: Meta<typeof AtomInput> = {
   title: 'Components/AtomInput',
@@ -25,7 +25,7 @@ const meta: Meta<typeof AtomInput> = {
 }
 
 export default meta
-type Story = StoryObj<typeof AtomInput>
+type Story = StoryObj<AtomInputProps>
 
 export const Default: Story = {}
 
@@ -40,23 +40,4 @@ export const CustomNumericSize: Story = {
   args: {
     size: 55,
   },
-}
-
-export const WithPrefixAndSuffix: Story = {
-  render: (args) => ({
-    components: { AtomInput },
-    setup() {
-      return { args }
-    },
-    template: `
-      <AtomInput v-bind="args">
-        <template #prefix>
-          <span class="text-xs select-none">🌐</span>
-        </template>
-        <template #suffix>
-          <span class="text-xs select-none">🔍</span>
-        </template>
-      </AtomInput>
-    `,
-  }),
 }

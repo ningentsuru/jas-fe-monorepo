@@ -1,15 +1,21 @@
+import React from 'react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { mount } from '@vue/test-utils'
-import MoleculeCarousel from './MoleculeCarousel'
+import { render, screen, fireEvent, act } from '@testing-library/react'
+import MoleculeCarousel, { type MoleculeCarouselProps } from './MoleculeCarousel'
 import meta, { Default, SingleSlideState } from './MoleculeCarousel.stories'
 
-type MoleculeCarouselProps = InstanceType<typeof MoleculeCarousel>['$props']
+vi.mock('../../', () => ({
+  AtomButton: ({ children, onClick, 'data-testid': testId }: any) =>
+    React.createElement('button', { type: 'button', onClick, 'data-testid': testId }, children),
+  AtomIcon: ({ icon: Icon, size }: any) =>
+    React.createElement('span', { 'data-testid': 'mock-icon', 'data-size': size }, 'icon')
+}))
 
-const getProps = (storyArgs: typeof Default.args): MoleculeCarouselProps => {
+const getProps = (storyArgs?: Partial<MoleculeCarouselProps>): MoleculeCarouselProps => {
   return {
     ...meta.args,
     ...storyArgs,
-  } as unknown as MoleculeCarouselProps
+  } as MoleculeCarouselProps
 }
 
 describe('MoleculeCarousel', () => {
@@ -22,63 +28,51 @@ describe('MoleculeCarousel', () => {
     vi.restoreAllMocks()
   })
 
-  it('renders root semantic structure layout context elements correctly', async () => {
-    const wrapper = mount(MoleculeCarousel, {
-      props: getProps(Default.args),
-      global: { stubs: { AtomButton: true, AtomIcon: true } },
-    })
+  it('renders root semantic structure layout context elements correctly', () => {
+    render(React.createElement(MoleculeCarousel, getProps(Default.args)))
 
-    await wrapper.vm.$nextTick()
+    const root = screen.getByTestId('molecule-carousel')
+    const track = screen.getByTestId('carousel-track')
 
-    expect(wrapper.find('[data-testid="molecule-carousel"]').exists()).toBe(true)
-    expect(wrapper.find('[data-testid="carousel-track"]').exists()).toBe(true)
-    expect(wrapper.text()).toContain('molecule-carousel')
+    expect(root).toBeDefined()
+    expect(track).toBeDefined()
+    expect(document.body.contains(root)).toBe(true)
+    expect(screen.getByText('molecule-carousel')).toBeDefined()
   })
 
-  it('advances indices and shifts track styles linearly when clicking next action controls', async () => {
-    const wrapper = mount(MoleculeCarousel, {
-      props: getProps(Default.args),
-    })
+  it('advances indices and shifts track styles linearly when clicking next action controls', () => {
+    render(React.createElement(MoleculeCarousel, getProps(Default.args)))
 
-    await wrapper.vm.$nextTick()
+    const nextBtn = screen.getByTestId('next-btn')
+    const track = screen.getByTestId('carousel-track')
 
-    const nextBtn = wrapper.find('[data-testid="next-btn"]')
-    const track = wrapper.find('[data-testid="carousel-track"]')
+    expect(track.style.transform).toBe('translateX(-0%)')
 
-    expect(track.attributes('style')).toContain('transform: translateX(-0%);')
-
-    await nextBtn.trigger('click')
-    await wrapper.vm.$nextTick()
-    expect(track.attributes('style')).toContain('transform: translateX(-100%);')
+    fireEvent.click(nextBtn)
+    expect(track.style.transform).toBe('translateX(-100%)')
   })
 
   it('automatically rolls slide items forward when autoPlay timers trigger', async () => {
-    const wrapper = mount(MoleculeCarousel, {
-      props: getProps({
-        ...Default.args,
-        autoPlay: true,
-        interval: 2000,
-      }),
+    render(React.createElement(MoleculeCarousel, getProps({
+      ...Default.args,
+      autoPlay: true,
+      interval: 2000,
+    })))
+
+    const track = screen.getByTestId('carousel-track')
+    expect(track.style.transform).toBe('translateX(-0%)')
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(2000)
     })
-
-    await wrapper.vm.$nextTick()
-    const track = wrapper.find('[data-testid="carousel-track"]')
-    expect(track.attributes('style')).toContain('transform: translateX(-0%);')
-
-    await vi.advanceTimersByTimeAsync(2000)
-    await wrapper.vm.$nextTick()
-    expect(track.attributes('style')).toContain('transform: translateX(-100%);')
+    expect(track.style.transform).toBe('translateX(-100%)')
   })
 
-  it('hides transition navigation triggers and indicator blocks if track item counts equal 1', async () => {
-    const wrapper = mount(MoleculeCarousel, {
-      props: getProps(SingleSlideState.args),
-    })
+  it('hides transition navigation triggers and indicator blocks if track item counts equal 1', () => {
+    render(React.createElement(MoleculeCarousel, getProps(SingleSlideState.args)))
 
-    await wrapper.vm.$nextTick()
-
-    expect(wrapper.find('[data-testid="prev-btn"]').exists()).toBe(false)
-    expect(wrapper.find('[data-testid="next-btn"]').exists()).toBe(false)
-    expect(wrapper.find('[data-testid="carousel-indicators"]').exists()).toBe(false)
+    expect(screen.queryByTestId('prev-btn')).toBeNull()
+    expect(screen.queryByTestId('next-btn')).toBeNull()
+    expect(screen.queryByTestId('carousel-indicators')).toBeNull()
   })
 })

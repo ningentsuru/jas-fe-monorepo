@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import AtomNavLink from './AtomNavLink'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import AtomNavLink, { type AtomNavLinkProps } from './AtomNavLink'
 
 const meta: Meta<typeof AtomNavLink> = {
   title: 'Components/AtomNavLink',
@@ -17,7 +17,7 @@ const meta: Meta<typeof AtomNavLink> = {
 }
 
 export default meta
-type Story = StoryObj<typeof AtomNavLink>
+type Story = StoryObj<AtomNavLinkProps>
 
 export const Default: Story = {
   args: {
@@ -65,17 +65,4 @@ export const WithTrailingSlot: Story = {
     ...Default.args,
     label: 'Notifications',
   },
-  render: (args) => ({
-    components: { AtomNavLink },
-    setup() {
-      return { args }
-    },
-    template: `
-      <AtomNavLink v-bind="args">
-        <template #trailing>
-          <span class="bg-red-500 text-white rounded-full px-2 py-0.5 text-xs">5</span>
-        </template>
-      </AtomNavLink>
-    `,
-  }),
 }

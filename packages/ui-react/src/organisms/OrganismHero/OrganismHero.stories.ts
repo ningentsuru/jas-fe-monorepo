@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { OrganismHero } from './OrganismHero'
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import OrganismHero, { type OrganismHeroProps } from './OrganismHero'
 
 const meta: Meta<typeof OrganismHero> = {
   title: 'Components/OrganismHero',
@@ -34,7 +34,7 @@ const meta: Meta<typeof OrganismHero> = {
 }
 
 export default meta
-type Story = StoryObj<typeof OrganismHero>
+type Story = StoryObj<OrganismHeroProps>
 
 export const Default: Story = {}
 
