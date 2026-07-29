@@ -1,0 +1,11 @@
+{
+  "extends": "@tsconfig/node24/tsconfig.json",
+  "include": ["vite.config.*", "eslint.config.*"],
+  "compilerOptions": {
+    "composite": true,
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "types": ["node"],
+    "emitDeclarationOnly": true
+  }
+}

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AtomButton } from '@repo/ui'
+import { AtomButton } from '@repo/ui-vue'
 import resume from '@/data/resume.json'
 import { useDateFormat } from '@/composables/useDateFormat'
 

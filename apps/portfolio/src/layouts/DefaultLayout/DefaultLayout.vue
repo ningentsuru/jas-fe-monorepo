@@ -7,7 +7,7 @@ import {
   MoleculeThemeToggle,
   AtomWordSwap,
   AtomButton,
-} from '@repo/ui'
+} from '@repo/ui-vue'
 import { useAppTheme } from '@/composables/useAppTheme'
 import { NAVIGATIONS } from '@/constants'
 import type { Themes, NavItem } from '@/types'

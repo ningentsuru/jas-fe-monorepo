@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { OrganismHero } from '@repo/ui'
+import { OrganismHero } from '@repo/ui-vue'
 </script>
 
 <template>

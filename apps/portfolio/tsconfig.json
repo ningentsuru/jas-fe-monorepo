@@ -1,10 +1,18 @@
 {
   "files": [],
   "references": [
-    { "path": "./tsconfig.node.json" },
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.vitest.json" },
-    { "path": "../../packages/ui" }
+    {
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.vitest.json"
+    },
+    {
+      "path": "../../packages/ui-vue"
+    }
   ],
   "compilerOptions": {
     "ignoreDeprecations": "6.0"

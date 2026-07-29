@@ -2,19 +2,30 @@
   "extends": "@repo/typescript-config/vue.json",
   "compilerOptions": {
     "composite": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
     "moduleResolution": "bundler",
-    "types": ["node", "vite/client"],
+    "types": [
+      "node",
+      "vite/client"
+    ],
     "paths": {
-      "@/*": ["./src/*"],
-      "@repo/ui": ["../../packages/ui/src/index.ts"]
+      "@/*": [
+        "./src/*"
+      ],
+      "@repo/ui-vue": [
+        "../../packages/ui-vue/src/index.ts"
+      ]
     }
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "../../packages/ui/src/**/*.ts",
-    "../../packages/ui/src/**/*.tsx"
+    "../../packages/ui-vue/src/**/*.ts",
+    "../../packages/ui-vue/src/**/*.tsx"
   ]
 }

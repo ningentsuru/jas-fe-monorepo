@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { MoleculeCarousel, AtomKeyboard } from '@repo/ui'
+import { MoleculeCarousel, AtomKeyboard } from '@repo/ui-vue'
 
 export interface CarouselItem {
   id: string | number
