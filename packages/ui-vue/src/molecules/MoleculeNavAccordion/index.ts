@@ -1,1 +1,1 @@
-export { default } from './MoleculeNavAccordion'
+export { default } from './MoleculeNavAccordion.vue'

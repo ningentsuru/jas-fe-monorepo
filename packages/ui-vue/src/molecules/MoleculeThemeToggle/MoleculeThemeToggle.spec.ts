@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { MoleculeThemeToggle } from './MoleculeThemeToggle'
+import MoleculeThemeToggle from './MoleculeThemeToggle.vue'
 import { globalLongPressHandlers } from '../../setup'
 import meta, { Default, DarkModeActive, CustomForestTheme } from './MoleculeThemeToggle.stories'
 

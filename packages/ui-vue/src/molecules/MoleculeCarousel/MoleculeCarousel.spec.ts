@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
-import MoleculeCarousel from './MoleculeCarousel'
+import MoleculeCarousel from './MoleculeCarousel.vue'
 import meta, { Default, SingleSlideState } from './MoleculeCarousel.stories'
 
 type MoleculeCarouselProps = InstanceType<typeof MoleculeCarousel>['$props']

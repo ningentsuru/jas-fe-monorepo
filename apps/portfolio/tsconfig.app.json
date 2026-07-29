@@ -26,6 +26,7 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "../../packages/ui-vue/src/**/*.ts",
-    "../../packages/ui-vue/src/**/*.tsx"
+    "../../packages/ui-vue/src/**/*.tsx",
+    "../../packages/ui-vue/src/**/*.vue"
   ]
 }

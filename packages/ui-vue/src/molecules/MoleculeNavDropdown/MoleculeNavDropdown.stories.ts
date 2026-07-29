@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { MoleculeNavDropdown } from './MoleculeNavDropdown'
+import MoleculeNavDropdown from './MoleculeNavDropdown.vue'
 
 const mockItemWithChildren = {
   label: 'Products',

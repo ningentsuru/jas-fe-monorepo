@@ -1,1 +1,1 @@
-export { default } from './MoleculeTooltip'
+export { default } from './MoleculeTooltip.vue'

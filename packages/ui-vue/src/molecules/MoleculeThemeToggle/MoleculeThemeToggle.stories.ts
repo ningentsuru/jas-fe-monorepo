@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { ref, watch } from 'vue'
-import { MoleculeThemeToggle, type ThemeType } from './MoleculeThemeToggle'
+import MoleculeThemeToggle from './MoleculeThemeToggle.vue'
+
+export type ThemeType = 'light' | 'dark' | 'forest' | 'midnight' | 'ocean' | 'sunset' | 'high-contrast'
 
 const meta: Meta<typeof MoleculeThemeToggle> = {
   title: 'Components/MoleculeThemeToggle',
@@ -23,13 +25,13 @@ const meta: Meta<typeof MoleculeThemeToggle> = {
   render: (args) => ({
     components: { MoleculeThemeToggle },
     setup() {
-      const localTheme = ref<ThemeType>(args.currentTheme ?? 'light')
+      const localTheme = ref<ThemeType>((args.currentTheme as ThemeType) ?? 'light')
       const localToggled = ref<boolean>(args.isToggled ?? false)
 
       watch(
         () => args.currentTheme,
         (newTheme) => {
-          if (newTheme) localTheme.value = newTheme
+          if (newTheme) localTheme.value = newTheme as ThemeType
         },
       )
       watch(

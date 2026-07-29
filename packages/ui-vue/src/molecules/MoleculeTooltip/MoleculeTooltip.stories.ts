@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { MoleculeTooltip } from './MoleculeTooltip'
+import MoleculeTooltip from './MoleculeTooltip.vue'
 
 const meta: Meta<typeof MoleculeTooltip> = {
   title: 'Components/MoleculeTooltip',

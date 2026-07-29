@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
-import MoleculeModal from './MoleculeModal'
+import MoleculeModal from './MoleculeModal.vue'
 import meta, { Default, WithoutCloseButton } from './MoleculeModal.stories'
 
 type MoleculeModalProps = InstanceType<typeof MoleculeModal>['$props']

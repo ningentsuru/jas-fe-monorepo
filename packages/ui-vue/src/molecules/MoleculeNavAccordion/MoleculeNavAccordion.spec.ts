@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { MoleculeNavAccordion } from './MoleculeNavAccordion'
+import MoleculeNavAccordion from './MoleculeNavAccordion.vue'
 import meta, {
   Default,
   ExpandedDropdown,
@@ -32,7 +32,12 @@ describe('MoleculeNavAccordion', () => {
     })
 
     expect(wrapper.props('isOpen')).toBe(true)
-    expect(wrapper.props('item').label).toBe('Engineering Space')
+
+    const itemProp = wrapper.props('item')
+    expect(itemProp).toBeDefined()
+    if (!itemProp) throw new Error('Props item should be defined')
+
+    expect(itemProp.label).toBe('Engineering Space')
   })
 
   it('renders sub-item list mapping nodes correctly when children are present', () => {
@@ -75,7 +80,10 @@ describe('MoleculeNavAccordion', () => {
     })
 
     const rootLink = wrapper.findAllComponents({ name: 'AtomNavLink' }).at(0)
-    await rootLink?.trigger('click')
+    expect(rootLink).toBeDefined()
+    if (!rootLink) throw new Error('Root target link element missing')
+
+    await rootLink.trigger('click')
 
     expect(wrapper.emitted('toggle')).toBeTruthy()
     expect(wrapper.emitted('navigate')).toBeFalsy()
@@ -87,7 +95,10 @@ describe('MoleculeNavAccordion', () => {
     })
 
     const rootLink = wrapper.findAllComponents({ name: 'AtomNavLink' }).at(0)
-    await rootLink?.trigger('click')
+    expect(rootLink).toBeDefined()
+    if (!rootLink) throw new Error('Root target link element missing')
+
+    await rootLink.trigger('click')
 
     expect(wrapper.emitted('navigate')).toBeTruthy()
     expect(wrapper.emitted('toggle')).toBeFalsy()

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { MoleculeNavAccordion } from './MoleculeNavAccordion'
+import MoleculeNavAccordion from './MoleculeNavAccordion.vue'
 
 const mockItemWithChildren = {
   label: 'Engineering Space',

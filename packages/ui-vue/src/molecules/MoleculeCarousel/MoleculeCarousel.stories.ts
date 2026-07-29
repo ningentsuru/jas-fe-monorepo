@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import MoleculeCarousel from './MoleculeCarousel'
+import MoleculeCarousel from './MoleculeCarousel.vue'
 
 const mockCarouselSlides = [
   {
