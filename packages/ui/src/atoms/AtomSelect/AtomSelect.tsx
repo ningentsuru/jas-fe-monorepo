@@ -61,7 +61,7 @@ export default defineComponent({
     },
   },
   emits: {
-    'update:modelValue': () => true,
+    'update:modelValue': (_value: string | number) => true,
     change: (event: Event) => event instanceof Event,
   },
   setup(props, { emit, attrs }) {

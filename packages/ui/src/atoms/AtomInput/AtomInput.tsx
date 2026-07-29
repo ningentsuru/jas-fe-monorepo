@@ -54,9 +54,7 @@ export default defineComponent({
       default: undefined,
     },
   },
-  emits: {
-    'update:modelValue': () => true,
-  },
+  emits: ['update:modelValue'],
   setup(props, { emit, slots, attrs }) {
     const inputClass = computed(() => {
       if (typeof props.size === 'number') {
