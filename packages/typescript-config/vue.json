@@ -1,7 +1,7 @@
 {
   "extends": "./base.json",
   "compilerOptions": {
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     "jsxImportSource": "vue",
     "lib": ["esnext", "dom", "dom.iterable"],
     "useDefineForClassFields": true
