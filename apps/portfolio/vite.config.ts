@@ -16,7 +16,7 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
       '@repo/ui-vue': resolve(fileURLToPath(new URL('./', import.meta.url)), '../../packages/ui-vue/src'),
     },
-    extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json', '.vue'],
+    extensions: ['.mjs', '.js', '.mts', '.ts', '.json', '.vue'],
   },
   server: {
     host: '0.0.0.0',
