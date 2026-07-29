@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import AtomKeyboard from './AtomKeyboard'
+import AtomKeyboard from './AtomKeyboard.vue'
 
 const meta: Meta<typeof AtomKeyboard> = {
   title: 'Components/AtomKeyboard',

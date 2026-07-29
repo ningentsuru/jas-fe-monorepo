@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import AtomKeyboard from './AtomKeyboard'
+import AtomKeyboard from './AtomKeyboard.vue'
 import meta, { Default } from './AtomKeyboard.stories'
 
 type AtomKeyboardProps = InstanceType<typeof AtomKeyboard>['$props']

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import AtomSelect from './AtomSelect'
+import AtomSelect from './AtomSelect.vue'
 import meta, { Default, ValidationError, CustomNumericSize } from './AtomSelect.stories'
 
 type AtomSelectProps = InstanceType<typeof AtomSelect>['$props']

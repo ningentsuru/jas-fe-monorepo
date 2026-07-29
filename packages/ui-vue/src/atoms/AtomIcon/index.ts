@@ -1,1 +1,1 @@
-export { default } from './AtomIcon'
+export { default } from './AtomIcon.vue'

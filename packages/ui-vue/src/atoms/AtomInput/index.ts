@@ -1,1 +1,1 @@
-export { default } from './AtomInput'
+export { default } from './AtomInput.vue'

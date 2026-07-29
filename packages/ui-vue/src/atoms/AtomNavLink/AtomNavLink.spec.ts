@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import AtomNavLink from './AtomNavLink'
-import AtomButton from '../AtomButton/AtomButton'
+import AtomNavLink from './AtomNavLink.vue'
+import AtomButton from '../AtomButton/AtomButton.vue'
 import meta, {
   Default,
   ActiveLink,

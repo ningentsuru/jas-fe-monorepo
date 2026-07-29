@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import AtomToggle from './AtomToggle'
+import AtomToggle from './AtomToggle.vue'
 import { globalLongPressHandlers } from '../../setup'
 import meta, { Default, ToggledActive, CustomNumericSize } from './AtomToggle.stories'
 

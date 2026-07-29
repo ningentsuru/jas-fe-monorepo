@@ -1,1 +1,1 @@
-export { default } from './AtomNavLink'
+export { default } from './AtomNavLink.vue'

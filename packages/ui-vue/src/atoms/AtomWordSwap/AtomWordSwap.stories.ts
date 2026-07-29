@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import AtomWordSwap from './AtomWordSwap'
+import AtomWordSwap from './AtomWordSwap.vue'
 
 const meta: Meta<typeof AtomWordSwap> = {
   title: 'Components/AtomWordSwap',

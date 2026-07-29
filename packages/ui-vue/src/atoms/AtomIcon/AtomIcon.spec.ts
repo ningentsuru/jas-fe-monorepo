@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { Smile } from '@lucide/vue'
-import AtomIcon from './AtomIcon'
+import AtomIcon from './AtomIcon.vue'
 import meta, { Default, TextFallbackState, CustomNumericSize } from './AtomIcon.stories'
 
 type AtomIconProps = InstanceType<typeof AtomIcon>['$props']

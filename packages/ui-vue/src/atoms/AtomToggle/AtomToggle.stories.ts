@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { Atom } from '@lucide/vue'
-import AtomToggle from './AtomToggle'
+import AtomToggle from './AtomToggle.vue'
 
 const meta: Meta<typeof AtomToggle> = {
   title: 'Components/AtomToggle',

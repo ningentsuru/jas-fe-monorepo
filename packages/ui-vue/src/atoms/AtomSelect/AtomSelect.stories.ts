@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import AtomSelect from './AtomSelect'
+import AtomSelect from './AtomSelect.vue'
 
 const sampleOptions = [
   { value: 'vue', label: 'Vue.js Framework' },

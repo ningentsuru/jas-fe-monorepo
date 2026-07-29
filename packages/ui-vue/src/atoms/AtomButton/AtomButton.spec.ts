@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import AtomButton from './AtomButton'
+import AtomButton from './AtomButton.vue'
 import meta, { Default, Disabled, ExternalLink } from './AtomButton.stories'
 
 type AtomButtonProps = InstanceType<typeof AtomButton>['$props']

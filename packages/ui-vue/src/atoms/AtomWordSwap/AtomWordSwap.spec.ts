@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
-import AtomWordSwap from './AtomWordSwap'
+import AtomWordSwap from './AtomWordSwap.vue'
 import meta, { Default, FastFlipTransition, SingleWordFallback } from './AtomWordSwap.stories'
 
 type AtomWordSwapProps = InstanceType<typeof AtomWordSwap>['$props']

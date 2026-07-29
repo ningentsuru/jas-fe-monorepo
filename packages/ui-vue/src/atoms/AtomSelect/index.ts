@@ -1,1 +1,1 @@
-export { default } from './AtomSelect'
+export { default } from './AtomSelect.vue'

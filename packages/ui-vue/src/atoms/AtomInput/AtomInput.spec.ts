@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import AtomInput from './AtomInput'
+import AtomInput from './AtomInput.vue'
 import meta, { Default, ErrorState, CustomNumericSize } from './AtomInput.stories'
 
 type AtomInputProps = InstanceType<typeof AtomInput>['$props']

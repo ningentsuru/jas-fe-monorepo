@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { Smile } from '@lucide/vue'
-import AtomIcon from './AtomIcon'
+import AtomIcon from './AtomIcon.vue'
 
 const meta: Meta<typeof AtomIcon> = {
   title: 'Components/AtomIcon',

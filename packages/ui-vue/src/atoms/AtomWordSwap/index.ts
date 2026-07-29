@@ -1,1 +1,1 @@
-export { default } from './AtomWordSwap'
+export { default } from './AtomWordSwap.vue'
