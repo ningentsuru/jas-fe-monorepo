@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
-import MoleculeModal from './MoleculeModal.vue'
+import MoleculeModal from './MoleculeModal'
 import meta, { Default, WithoutCloseButton } from './MoleculeModal.stories'
 
 type MoleculeModalProps = InstanceType<typeof MoleculeModal>['$props']
@@ -35,7 +35,7 @@ describe('MoleculeModal', () => {
     const showSpy = vi.spyOn(HTMLDialogElement.prototype, 'showModal')
 
     mount(MoleculeModal, {
-      props: getProps(Default.args), 
+      props: getProps(Default.args),
     })
 
     await vi.dynamicImportSettled()

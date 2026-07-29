@@ -1,1 +1,1 @@
-export { default } from './MoleculeModal.vue'
+export { default } from './MoleculeModal'

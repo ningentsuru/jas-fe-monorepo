@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import MoleculeNavAccordion from './MoleculeNavAccordion.vue'
+import { MoleculeNavAccordion } from './MoleculeNavAccordion'
 import meta, {
   Default,
   ExpandedDropdown,

@@ -1,1 +1,1 @@
-export { default } from './MoleculeNavDropdown.vue'
+export { default } from './MoleculeNavDropdown'

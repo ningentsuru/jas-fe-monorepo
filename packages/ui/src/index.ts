@@ -1,4 +1,3 @@
-// @ts-expect-error: Shared global style asset bundle handles downstream variable injections
 import './style.css'
 
 // Atoms
@@ -11,6 +10,7 @@ export { default as AtomSelect } from './atoms/AtomSelect'
 export { default as AtomToggle } from './atoms/AtomToggle'
 export { default as AtomWordSwap } from './atoms/AtomWordSwap'
 export { default as AtomKeyboard } from './atoms/AtomKeyboard'
+export { default as AtomTest } from './atoms/AtomTest'
 // plop:inject-atoms-component-do-not-removed
 
 // Molecules

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
-import MoleculeThemeToggle from './MoleculeThemeToggle.vue'
+import { MoleculeThemeToggle } from './MoleculeThemeToggle'
 import { globalLongPressHandlers } from '../../setup'
 import meta, { Default, DarkModeActive, CustomForestTheme } from './MoleculeThemeToggle.stories'
 
@@ -53,11 +53,7 @@ describe('MoleculeThemeToggle', () => {
   it('mounts and displays modal theme lists after triggering long-toggle hooks', async () => {
     const wrapper = mount(MoleculeThemeToggle, {
       props: getProps(Default.args),
-      global: {
-        stubs: {
-          Teleport: true,
-        },
-      },
+      attachTo: document.body,
     })
 
     if (globalLongPressHandlers.onLongToggle) {
@@ -66,8 +62,12 @@ describe('MoleculeThemeToggle', () => {
 
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.findComponent({ name: 'MoleculeModal' }).exists()).toBe(true)
+    const modalElement = document.body.querySelector('[data-testid="molecule-modal"]')
+
+    expect(modalElement).not.toBeNull()
     expect(wrapper.emitted('longToggle')).toBeTruthy()
+
+    wrapper.unmount()
   })
 
   it('changes primary display icon layout choices dynamically depending on current active themes', async () => {

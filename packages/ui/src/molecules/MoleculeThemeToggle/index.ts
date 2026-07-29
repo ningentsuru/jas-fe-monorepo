@@ -1,1 +1,1 @@
-export { default } from './MoleculeThemeToggle.vue'
+export { default } from './MoleculeThemeToggle'

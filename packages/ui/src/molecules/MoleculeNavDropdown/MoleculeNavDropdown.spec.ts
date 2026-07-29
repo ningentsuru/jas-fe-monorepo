@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import MoleculeNavDropdown from './MoleculeNavDropdown.vue'
+import { MoleculeNavDropdown } from './MoleculeNavDropdown'
 import meta, { Default, OpenedDropdown, SingleLinkNoDropdown } from './MoleculeNavDropdown.stories'
 
 type MoleculeNavDropdownProps = InstanceType<typeof MoleculeNavDropdown>['$props']

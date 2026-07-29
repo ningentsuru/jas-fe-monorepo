@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { ref, watch } from 'vue' 
-import MoleculeModal from './MoleculeModal.vue'
+import { ref, watch } from 'vue'
+import { MoleculeModal } from './MoleculeModal'
 
 const meta: Meta<typeof MoleculeModal> = {
   title: 'Components/MoleculeModal',
