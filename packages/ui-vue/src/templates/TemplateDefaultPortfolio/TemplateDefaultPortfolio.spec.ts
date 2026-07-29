@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { h } from 'vue'
-import { TemplateDefaultPortfolio } from './TemplateDefaultPortfolio'
+import TemplateDefaultPortfolio from './TemplateDefaultPortfolio.vue'
 
 describe('TemplateDefaultPortfolio', () => {
   it('renders root container layout structure and nested slots cleanly', () => {

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { OrganismFooter } from './OrganismFooter'
+import OrganismFooter from './OrganismFooter.vue'
 
 const meta: Meta<typeof OrganismFooter> = {
   title: 'Components/OrganismFooter',

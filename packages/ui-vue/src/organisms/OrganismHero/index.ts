@@ -1,1 +1,1 @@
-export { default } from './OrganismHero'
+export { default } from './OrganismHero.vue'

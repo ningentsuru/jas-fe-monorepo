@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { h } from 'vue'
-import { OrganismHeader } from './OrganismHeader'
+import OrganismHeader from './OrganismHeader.vue'
 import meta, { Default, EmptyNavigationShell } from './OrganismHeader.stories'
 
 type OrganismHeaderProps = InstanceType<typeof OrganismHeader>['$props']

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { h } from 'vue'
-import { OrganismFooter } from './OrganismFooter'
+import OrganismFooter from './OrganismFooter.vue'
 import meta, { Default, AlternativeTitle } from './OrganismFooter.stories'
 
 type OrganismFooterProps = InstanceType<typeof OrganismFooter>['$props']

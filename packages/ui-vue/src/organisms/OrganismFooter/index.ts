@@ -1,1 +1,1 @@
-export { default } from './OrganismFooter'
+export { default } from './OrganismFooter.vue'

@@ -23,10 +23,10 @@
   },
   "include": [
     "src/**/*.ts",
-    "src/**/*.tsx",
+    "src/**/*.d.ts",
     "src/**/*.vue",
     "../../packages/ui-vue/src/**/*.ts",
-    "../../packages/ui-vue/src/**/*.tsx",
+    "../../packages/ui-vue/src/**/*.d.ts",
     "../../packages/ui-vue/src/**/*.vue"
   ]
 }

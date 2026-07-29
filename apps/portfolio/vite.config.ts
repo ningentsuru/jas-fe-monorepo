@@ -4,12 +4,10 @@ import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import { resolve } from 'path'
 import tailwindcss from '@tailwindcss/vite'
-import vueJsx from '@vitejs/plugin-vue-jsx'
 
 export default defineConfig({
   plugins: [
     vue(),
-    vueJsx(),
     vueDevTools(),
     tailwindcss()
   ],

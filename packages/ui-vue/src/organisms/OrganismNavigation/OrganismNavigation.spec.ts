@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { OrganismNavigation } from './OrganismNavigation'
+import OrganismNavigation from './OrganismNavigation.vue'
 import meta, { Default } from './OrganismNavigation.stories'
 
 type OrganismNavigationProps = InstanceType<typeof OrganismNavigation>['$props']
@@ -68,28 +68,34 @@ describe('OrganismNavigation', () => {
     expect(dropdowns.length).toBe(4)
   })
 
-  it('toggles mobile drawer overlay visibility attributes smoothly on menu button interaction triggers', async () => {
+  it('toggles mobile drawer overlay visibility state on open and close triggers', async () => {
     const wrapper = mount(OrganismNavigation, {
       props: getProps(Default.args),
       global: {
-        stubs: { MoleculeNavDropdown: true, MoleculeNavAccordion: true, AtomButton: true },
+        stubs: {
+          MoleculeNavDropdown: true,
+          MoleculeNavAccordion: true,
+          AtomButton: true,
+          transition: { template: '<slot />' }
+        },
       },
     })
 
-    expect(wrapper.find('.data-mobile-dialog').exists()).toBe(false)
+    // Expect dialogue structural nodes to not exist initially
+    expect(wrapper.find('[role="dialog"]').exists()).toBe(false)
 
     const openBtn = wrapper.find('[data-testid="mobile-open-btn"]')
     await openBtn.trigger('click')
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('.data-mobile-dialog').exists()).toBe(true)
+    expect(wrapper.find('[role="dialog"]').exists()).toBe(true)
     expect(document.body.style.overflow).toBe('hidden')
 
     const closeBtn = wrapper.find('[data-testid="mobile-close-btn"]')
     await closeBtn.trigger('click')
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('.data-mobile-dialog').exists()).toBe(false)
+    expect(wrapper.find('[role="dialog"]').exists()).toBe(false)
     expect(document.body.style.overflow).toBe('')
   })
 })

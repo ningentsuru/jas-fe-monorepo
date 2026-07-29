@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { OrganismHero } from './OrganismHero'
+import OrganismHero from './OrganismHero.vue'
 import meta, {
   Default,
   LeftAligned,

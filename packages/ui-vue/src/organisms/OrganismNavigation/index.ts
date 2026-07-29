@@ -1,1 +1,1 @@
-export { default } from './OrganismNavigation'
+export { default } from './OrganismNavigation.vue'
