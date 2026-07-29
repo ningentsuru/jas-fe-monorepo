@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import OrganismFooter from './OrganismFooter.vue'
+import { h } from 'vue'
+import { OrganismFooter } from './OrganismFooter'
 import meta, { Default, AlternativeTitle } from './OrganismFooter.stories'
 
 type OrganismFooterProps = InstanceType<typeof OrganismFooter>['$props']
@@ -39,7 +40,7 @@ describe('OrganismFooter', () => {
     const wrapper = mount(OrganismFooter, {
       props: getProps(Default.args),
       slots: {
-        default: '<span class="mock-nav">Footer Nav Elements</span>',
+        default: () => h('span', { class: 'mock-nav' }, 'Footer Nav Elements'),
       },
     })
 

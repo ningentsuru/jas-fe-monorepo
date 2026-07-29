@@ -62,7 +62,6 @@ export const MoleculeTooltip = defineComponent({
       isCalculating.value = true
       isVisible.value = true
 
-      // Out-of-the-box fix: Set position properties instantly for reliable test run lookups
       recalculatePosition()
 
       nextTick(() => {

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import OrganismHeader from './OrganismHeader.vue'
+import { OrganismHeader } from './OrganismHeader'
 
 const mockNavigationData = [
   { label: 'Dashboard', href: '/dashboard' },

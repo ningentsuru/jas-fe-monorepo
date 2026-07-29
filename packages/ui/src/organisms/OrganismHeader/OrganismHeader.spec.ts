@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import OrganismHeader from './OrganismHeader.vue'
+import { h } from 'vue'
+import { OrganismHeader } from './OrganismHeader'
 import meta, { Default, EmptyNavigationShell } from './OrganismHeader.stories'
 
 type OrganismHeaderProps = InstanceType<typeof OrganismHeader>['$props']
@@ -53,7 +54,7 @@ describe('OrganismHeader', () => {
       props: getProps(Default.args),
       global: { stubs: { OrganismNavigation: true } },
       slots: {
-        branding: '<span class="logo-mock">Core Brand Logo</span>',
+        branding: () => h('span', { class: 'logo-mock' }, 'Core Brand Logo'),
       },
     })
 
@@ -67,7 +68,7 @@ describe('OrganismHeader', () => {
       props: getProps(Default.args),
       global: { stubs: { OrganismNavigation: true } },
       slots: {
-        'theme-toggle': '<div class="toggle-mock">Theme Action Button</div>',
+        'theme-toggle': () => h('div', { class: 'toggle-mock' }, 'Theme Action Button'),
       },
     })
 

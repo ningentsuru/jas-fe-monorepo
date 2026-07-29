@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import OrganismHero from './OrganismHero.vue'
+import { OrganismHero } from './OrganismHero'
 import meta, {
   Default,
   LeftAligned,
@@ -21,7 +21,6 @@ describe('OrganismHero', () => {
   it('renders title headings and paragraph body content accurately', () => {
     const wrapper = mount(OrganismHero, {
       props: getProps(Default.args),
-      global: { stubs: { AtomButton: true } },
     })
 
     expect(wrapper.find('[data-testid="organism-hero"]').exists()).toBe(true)
@@ -33,11 +32,9 @@ describe('OrganismHero', () => {
   it('mutates container styling layouts dynamically depending on the alignment parameter', () => {
     const defaultWrapper = mount(OrganismHero, {
       props: getProps(Default.args),
-      global: { stubs: { AtomButton: true } },
     })
     const leftWrapper = mount(OrganismHero, {
       props: getProps(LeftAligned.args),
-      global: { stubs: { AtomButton: true } },
     })
 
     expect(defaultWrapper.classes()).toContain('text-center')
@@ -50,7 +47,6 @@ describe('OrganismHero', () => {
   it('renders the blur overlay layer when an image background is provided', () => {
     const wrapper = mount(OrganismHero, {
       props: getProps(WithImageBackground.args),
-      global: { stubs: { AtomButton: true } },
     })
 
     expect(wrapper.find('video').exists()).toBe(false)
@@ -60,7 +56,6 @@ describe('OrganismHero', () => {
   it('mounts the background video layer and passes the poster attributes securely', () => {
     const wrapper = mount(OrganismHero, {
       props: getProps(WithVideoBackground.args),
-      global: { stubs: { AtomButton: true } },
     })
 
     const videoEl = wrapper.find('video')
@@ -73,20 +68,15 @@ describe('OrganismHero', () => {
   it('pipes anchor properties, targets, and labels straight to nested action button elements', () => {
     const wrapper = mount(OrganismHero, {
       props: getProps(Default.args),
-      global: {
-        stubs: {
-          AtomButton: {
-            template: '<a><slot /></a>',
-          },
-        },
-      },
     })
 
-    const buttons = wrapper.findAllComponents({ name: 'AtomButton' })
-    expect(buttons.length).toBe(2)
+    const buttonTexts = wrapper.findAll('span').filter(el => {
+      return el.text() === 'Explore Core Atoms' || el.text() === 'View GitHub Source'
+    })
 
-    expect(buttons.at(0)?.text()).toBe('Explore Core Atoms')
-    expect(buttons.at(1)?.text()).toBe('View GitHub Source')
+    expect(buttonTexts.length).toBe(2)
+    expect(buttonTexts.at(0)?.text()).toBe('Explore Core Atoms')
+    expect(buttonTexts.at(1)?.text()).toBe('View GitHub Source')
   })
 
   it('omits button structures completely from the layout tree if parameters are empty', () => {
@@ -96,9 +86,12 @@ describe('OrganismHero', () => {
         ctaLabel: '',
         secondaryLabel: '',
       }),
-      global: { stubs: { AtomButton: true } },
     })
 
-    expect(wrapper.findComponent({ name: 'AtomButton' }).exists()).toBe(false)
+    const hasText1 = wrapper.text().includes('Explore Core Atoms')
+    const hasText2 = wrapper.text().includes('View GitHub Source')
+
+    expect(hasText1).toBe(false)
+    expect(hasText2).toBe(false)
   })
 })

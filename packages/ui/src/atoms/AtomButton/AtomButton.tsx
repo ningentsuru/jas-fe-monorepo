@@ -1,4 +1,11 @@
-import { defineComponent, computed, resolveComponent, h, type Component, type PropType } from 'vue'
+import {
+  defineComponent,
+  computed,
+  resolveComponent,
+  type Component,
+  type PropType,
+  type VNodeChild,
+} from 'vue'
 
 export type ButtonTarget = '_blank' | '_self' | '_parent' | '_top'
 
@@ -12,7 +19,15 @@ export interface AtomButtonProps {
   type?: 'button' | 'submit' | 'reset'
 }
 
-export default defineComponent({
+type JsxCallableComponent = Component & {
+  new (...args: unknown[]): {
+    $props: {
+      children?: VNodeChild
+    }
+  }
+}
+
+export const AtomButton = defineComponent({
   name: 'AtomButton',
   props: {
     size: {
@@ -46,7 +61,6 @@ export default defineComponent({
       default: undefined,
     },
   },
-
   emits: {
     click: (event: MouseEvent) => event instanceof MouseEvent,
   },
@@ -54,9 +68,8 @@ export default defineComponent({
     const componentTag = computed(() => {
       if (props.disabled) return 'button'
       if (props.to) {
-        return typeof resolveComponent('RouterLink') === 'string'
-          ? 'router-link'
-          : (resolveComponent('RouterLink') as Component)
+        const resolved = resolveComponent('RouterLink')
+        return typeof resolved === 'string' ? 'router-link' : (resolved as Component)
       }
       if (props.href) return 'a'
       return 'button'
@@ -115,27 +128,29 @@ export default defineComponent({
     })
 
     return () => {
-      const TagComponent = componentTag.value as string | Component
+      const TagComponent = componentTag.value as JsxCallableComponent
 
-      return h(
-        TagComponent,
-        {
-          ...componentProps.value,
-          ...attrs,
-          'data-testid': 'atom-button',
-          class: [
+      return (
+        <TagComponent
+          {...componentProps.value}
+          {...attrs}
+          data-testid="atom-button"
+          class={[
             baseClasses,
             buttonClass.value,
             variantClasses[props.variant],
             'focus-visible:ring-offset-background',
             'hc:border-2 data-[theme=high-contrast]:border-2',
-          ],
-          style: buttonStyle.value,
-          'aria-disabled': props.disabled ? 'true' : undefined,
-          onClick: handleClick,
-        },
-        { default: () => slots.default?.() },
+          ]}
+          style={buttonStyle.value}
+          aria-disabled={props.disabled ? 'true' : undefined}
+          onClick={handleClick}
+        >
+          {slots.default?.()}
+        </TagComponent>
       )
     }
   },
 })
+
+export default AtomButton

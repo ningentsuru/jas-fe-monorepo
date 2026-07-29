@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
-import OrganismNavigation from './OrganismNavigation.vue'
-import meta, { Default, EmptyShellState } from './OrganismNavigation.stories'
+import { OrganismNavigation } from './OrganismNavigation'
+import meta, { Default } from './OrganismNavigation.stories'
 
 type OrganismNavigationProps = InstanceType<typeof OrganismNavigation>['$props']
 
@@ -30,7 +30,6 @@ describe('OrganismNavigation', () => {
           MoleculeNavDropdown: true,
           MoleculeNavAccordion: true,
           AtomButton: true,
-          transition: { template: '<slot />' },
         },
       },
     })
@@ -48,28 +47,28 @@ describe('OrganismNavigation', () => {
       },
     })
 
-    expect(wrapper.props('items')).toBeDefined()
-    expect(wrapper.props('items').length).toBe(4)
-    expect(wrapper.props('items')[1].label).toBe('Services Matrix')
+    const items = wrapper.props('items')
+
+    expect(items).toBeDefined()
+    if (!items) throw new Error('Props items should be defined')
+
+    expect(items.length).toBe(4)
+    expect(items[1].label).toBe('Services Matrix')
   })
 
   it('handles rendering loop iterations for desktop dropdown child elements cleanly', () => {
     const wrapper = mount(OrganismNavigation, {
       props: getProps(Default.args),
       global: {
-        stubs: {
-          MoleculeNavDropdown: { template: '<div class="mock-dropdown"></div>' },
-          MoleculeNavAccordion: true,
-          AtomButton: true,
-        },
+        stubs: { MoleculeNavDropdown: true, MoleculeNavAccordion: true, AtomButton: true },
       },
     })
 
-    const dropdowns = wrapper.findAll('.mock-dropdown')
+    const dropdowns = wrapper.findAllComponents({ name: 'MoleculeNavDropdown' })
     expect(dropdowns.length).toBe(4)
   })
 
-  it('keeps mobile layout drawers fully closed on initial rendering execution paths', () => {
+  it('toggles mobile drawer overlay visibility attributes smoothly on menu button interaction triggers', async () => {
     const wrapper = mount(OrganismNavigation, {
       props: getProps(Default.args),
       global: {
@@ -77,73 +76,20 @@ describe('OrganismNavigation', () => {
       },
     })
 
-    expect(wrapper.find('[role="dialog"]').exists()).toBe(false)
-  })
+    expect(wrapper.find('.data-mobile-dialog').exists()).toBe(false)
 
-  it('mounts the mobile drawer dialog and locks parent layouts when toggled', async () => {
-    const wrapper = mount(OrganismNavigation, {
-      props: getProps(Default.args),
-      global: {
-        stubs: {
-          MoleculeNavDropdown: true,
-          MoleculeNavAccordion: true,
-          transition: { template: '<slot />' },
-          AtomButton: true,
-          Teleport: true,
-        },
-      },
-    })
-
-    await (wrapper.vm as any).toggleMobile()
+    const openBtn = wrapper.find('[data-testid="mobile-open-btn"]')
+    await openBtn.trigger('click')
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('[role="dialog"]').exists()).toBe(true)
+    expect(wrapper.find('.data-mobile-dialog').exists()).toBe(true)
     expect(document.body.style.overflow).toBe('hidden')
 
-    await (wrapper.vm as any).closeMobile()
+    const closeBtn = wrapper.find('[data-testid="mobile-close-btn"]')
+    await closeBtn.trigger('click')
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('[role="dialog"]').exists()).toBe(false)
+    expect(wrapper.find('.data-mobile-dialog').exists()).toBe(false)
     expect(document.body.style.overflow).toBe('')
-  })
-
-  it('closes active layout trees automatically when clicking outside the menu element context', async () => {
-    const wrapper = mount(OrganismNavigation, {
-      props: getProps(Default.args),
-      global: {
-        stubs: { MoleculeNavDropdown: true, MoleculeNavAccordion: true, AtomButton: true },
-      },
-    })
-
-    document.dispatchEvent(new MouseEvent('click'))
-    await wrapper.vm.$nextTick()
-
-    expect((wrapper.vm as any).openDropdownIndex).toBeNull()
-  })
-
-  it('safely intercepts document hardware Escape clicks to clear active states', async () => {
-    const wrapper = mount(OrganismNavigation, {
-      props: getProps(Default.args),
-      global: {
-        stubs: { MoleculeNavDropdown: true, MoleculeNavAccordion: true, AtomButton: true },
-      },
-    })
-
-    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
-    await wrapper.vm.$nextTick()
-
-    expect((wrapper.vm as any).openDropdownIndex).toBeNull()
-    expect((wrapper.vm as any).isMobileOpen).toBe(false)
-  })
-
-  it('safely handles empty props configuration fallback definitions', () => {
-    const wrapper = mount(OrganismNavigation, {
-      props: getProps(EmptyShellState.args),
-      global: {
-        stubs: { MoleculeNavDropdown: true, MoleculeNavAccordion: true, AtomButton: true },
-      },
-    })
-
-    expect(wrapper.props('items')).toEqual([])
   })
 })

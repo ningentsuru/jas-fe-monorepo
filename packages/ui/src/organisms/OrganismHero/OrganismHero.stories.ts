@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import OrganismHero from './OrganismHero.vue'
+import { OrganismHero } from './OrganismHero'
 
 const meta: Meta<typeof OrganismHero> = {
   title: 'Components/OrganismHero',

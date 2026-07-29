@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import OrganismNavigation from './OrganismNavigation.vue'
+import { OrganismNavigation } from './OrganismNavigation'
 
 const mockNavigationTree = [
   { label: 'Home Page', href: '/' },

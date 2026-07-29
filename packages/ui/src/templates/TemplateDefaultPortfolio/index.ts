@@ -1,1 +1,1 @@
-export { default } from './TemplateDefaultPortfolio.vue'
+export { default } from './TemplateDefaultPortfolio'
