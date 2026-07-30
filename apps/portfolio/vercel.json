@@ -3,16 +3,11 @@
   "trailingSlash": false,
   "rewrites": [
     {
-      "source": "/sitemap.xml",
-      "destination": "/sitemap.xml"
+      "handle": "filesystem"
     },
     {
-      "source": "/robots.txt",
-      "destination": "/robots.txt"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/$1/index.html"
+      "source": "/:path*",
+      "destination": "/index.html"
     }
   ]
 }
