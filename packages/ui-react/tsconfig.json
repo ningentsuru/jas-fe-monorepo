@@ -2,18 +2,13 @@
   "extends": "@repo/typescript-config/base.json",
   "compilerOptions": {
     "composite": true,
+    "noEmit": true,
     "outDir": "dist",
     "declaration": true,
     "jsx": "react-jsx",
     "jsxImportSource": "react",
     "moduleResolution": "bundler",
-    "types": [
-      "node"
-    ]
+    "types": ["node"]
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.tsx"
-  ]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx"]
 }

@@ -1,7 +1,6 @@
 import { fileURLToPath, URL } from 'node:url'
 import { resolve } from 'path'
-import { defineConfig } from 'vite'
-import type { UserConfig } from 'vite'
+import { defineConfig, type UserConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import tailwindcss from '@tailwindcss/vite'
@@ -29,8 +28,9 @@ export default defineConfig({
 
     onFinished() {
       generateSitemap({
-        hostname: 'https://vercel.app',
-        exclude: ['/login', '/signup', '/dashboard', '/not-found'],
+        hostname: 'https://jas-fawn.vercel.app/',
+        outDir: resolve(fileURLToPath(new URL('./', import.meta.url)), 'dist'),
+        exclude: ['/not-found', '/login', '/signup', '/:pathMatch(.*)*'],
         robots: [
           {
             userAgent: '*',

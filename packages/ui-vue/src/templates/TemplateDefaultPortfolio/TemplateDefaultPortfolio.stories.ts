@@ -16,7 +16,7 @@ export const Default: Story = {
       return { args }
     },
     template: `
-      <TemplateDefaultPortfolio v-bind="args">
+      <TemplateDefaultPortfolio class="-my-4" v-bind="args">
         <template #header>
           <div class="p-4 bg-muted border-b text-center font-medium">Header Slot Area</div>
         </template>

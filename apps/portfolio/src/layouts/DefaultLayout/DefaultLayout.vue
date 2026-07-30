@@ -46,8 +46,11 @@ useHead({
       '@type': 'Person',
       name: 'Joshua Alexis Natividad Sardido',
       jobTitle: 'Senior Frontend Engineer & Software Architect',
-      url: 'https://vercel.app/about-me',
-      sameAs: ['https://github.com', 'https://linkedin.com'],
+      url: 'https://jas-fawn.vercel.app/about-me',
+      sameAs: [
+        'https://github.com/ningentsuru',
+        'https://www.linkedin.com/in/joshua-alexis-sardido',
+      ],
     }
 
     let payload: Record<string, unknown> | null = null
@@ -65,6 +68,20 @@ useHead({
         headline: route.meta.seo?.title,
         description: route.meta.seo?.description,
         dependencies: 'Vue 3, React 19, Turborepo, Tailwind CSS v4',
+        author: personalEntity,
+        image: ['https://vercel.app'],
+        publisher: {
+          '@type': 'Organization',
+          name: 'Joshua Alexis Natividad Sardido',
+          logo: {
+            '@type': 'ImageObject',
+            url: 'https://jas-fawn.vercel.app/about-this-monorepo',
+          },
+        },
+        mainEntityOfPage: {
+          '@type': 'WebPage',
+          '@id': `https://jas-fawn.vercel.app${route.path}`,
+        },
       }
     } else if (schemaType === 'WebSite') {
       payload = {

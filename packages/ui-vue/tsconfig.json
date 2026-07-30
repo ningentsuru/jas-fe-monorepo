@@ -1,22 +1,16 @@
 {
   "extends": "@repo/typescript-config/vue.json",
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.vue"
-  ],
   "compilerOptions": {
     "composite": true,
+    "noEmit": true,
     "outDir": "dist",
     "declaration": true,
-    "types": [
-      "node",
-      "vite/client"
-    ]
+    "types": ["node", "vite/client"]
   },
   "references": [
     {
       "path": "./tsconfig.node.json"
     }
-  ]
+  ],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue"]
 }
