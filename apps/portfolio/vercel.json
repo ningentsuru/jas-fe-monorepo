@@ -1,13 +1,3 @@
 {
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "rewrites": [
-    {
-      "handle": "filesystem"
-    },
-    {
-      "source": "/:path*",
-      "destination": "/index.html"
-    }
-  ]
+  "rewrites": [{ "source": "/:path*", "destination": "/index.html" }]
 }
