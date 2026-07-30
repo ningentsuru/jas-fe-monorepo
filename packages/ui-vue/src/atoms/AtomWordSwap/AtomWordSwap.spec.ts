@@ -85,6 +85,6 @@ describe('AtomWordSwap', () => {
     await wrapper.vm.$nextTick()
     const element = wrapper.element as HTMLElement
 
-    expect(element.style.minWidth).toBe('10.5ch')
+    expect(element.style.minWidth).toBe('10ch')
   })
 })

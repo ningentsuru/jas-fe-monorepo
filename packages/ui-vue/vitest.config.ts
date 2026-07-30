@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [vue(), tailwindcss()],
   test: {
     environment: 'happy-dom',
-    exclude: [...configDefaults.exclude, 'e2e/**'],
+    exclude: [...configDefaults.exclude, 'e2e/**', 'node_modules/**', 'dist/**'],
     root: fileURLToPath(new URL('./', import.meta.url)),
     setupFiles: [fileURLToPath(new URL('./src/setup.ts', import.meta.url))],
     alias: {

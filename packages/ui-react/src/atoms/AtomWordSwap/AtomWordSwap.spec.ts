@@ -74,6 +74,6 @@ describe('AtomWordSwap', () => {
     render(React.createElement(AtomWordSwap, getProps(Default.args)))
 
     const container = screen.getByTestId('atom-word-swap')
-    expect(container.style.minWidth).toBe('10.5ch')
+    expect(container.style.minWidth).toBe('10ch')
   })
 })
