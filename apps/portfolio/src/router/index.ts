@@ -19,32 +19,88 @@ const routes: Array<RouteRecordRaw> = [
     path: ROUTES.HOME_VIEW.path,
     name: ROUTES.HOME_VIEW.name,
     component: () => import('@/views/HomeView'),
+    meta: {
+      layout: 'DefaultLayout',
+      seo: {
+        title: 'Joshua Alexis Natividad Sardido | Frontend Architect Portfolio',
+        description:
+          'Explore the high-performance software engineering architecture workspace specializing in Vue 3, React, and Turborepo solutions.',
+        type: 'website',
+        schemaType: 'WebSite',
+      },
+    },
   },
   {
     path: ROUTES.HIS_CV_VIEW.path,
     name: ROUTES.HIS_CV_VIEW.name,
     component: () => import('@/views/HisCvView'),
+    meta: {
+      layout: 'DefaultLayout',
+      seo: {
+        title: 'Curriculum Vitae | Joshua Alexis Natividad Sardido',
+        description:
+          'Professional engineering track record, core framework skills, and executive software project leading history.',
+        type: 'profile',
+      },
+    },
   },
   {
     path: ROUTES.ABOUTE_ME_VIEW.path,
     name: ROUTES.ABOUTE_ME_VIEW.name,
     component: () => import('@/views/AboutMeView'),
+    meta: {
+      layout: 'DefaultLayout',
+      seo: {
+        title: 'About Me | Senior Frontend Engineer Portfolio',
+        description:
+          'Explore the technical profile, engineering history, and modern web application insights of an expert Frontend Architect.',
+        type: 'profile',
+        schemaType: 'ProfilePage',
+      },
+    },
   },
   {
     path: ROUTES.ABOUT_THIS_MONOREPO_VIEW.path,
     name: ROUTES.ABOUT_THIS_MONOREPO_VIEW.name,
     component: () => import('@/views/AboutThisMonorepoView'),
+    meta: {
+      layout: 'DefaultLayout',
+      seo: {
+        title: 'Monorepo Architecture Deep Dive | Vue 3 & React Portfolio',
+        description:
+          'An in-depth technical analysis of a highly optimized dual-framework workspace running Vite and Feature-Sliced Design.',
+        type: 'article',
+        schemaType: 'TechArticle',
+      },
+    },
   },
   {
     path: ROUTES.ACTIVITY_VIEW.path,
     name: ROUTES.ACTIVITY_VIEW.name,
     component: () => import('@/views/ActivityView'),
+    meta: {
+      layout: 'DefaultLayout',
+      seo: {
+        title: 'Activity Telemetry & Rewards Log | Portfolio Hub',
+        description: 'Live transaction tracking logs and reward metrics processing dashboard.',
+        type: 'website',
+      },
+    },
   },
   // plop:inject-routes-component-do-not-removed
   {
     path: ROUTES.NOT_FOUND_VIEW.path,
     name: ROUTES.NOT_FOUND_VIEW.name,
     component: () => import('@/views/NotFoundView'),
+    meta: {
+      layout: 'DefaultLayout',
+      seo: {
+        title: '404 - Page Not Found | Portfolio Hub',
+        description:
+          'The requested route space does not exist or has been relocated within the workspace map.',
+        type: 'website',
+      },
+    },
   },
 ]
 
@@ -58,11 +114,13 @@ const isAuthenticated = () => {
 }
 
 router.beforeEach((to) => {
-  if (to.meta.requiresAuth && !isAuthenticated()) {
+  const authed = isAuthenticated()
+
+  if (to.meta.requiresAuth && !authed) {
     return { name: 'login', query: { redirect: to.fullPath } }
   }
 
-  if ((to.name === 'login' || to.name === 'signup') && isAuthenticated()) {
+  if ((to.name === 'login' || to.name === 'signup') && authed) {
     return { name: 'dashboard' }
   }
 

@@ -16,74 +16,75 @@ import type { Themes, NavItem } from '@/types'
 
 const route = useRoute()
 const { isDark, theme, toggleTheme, setTheme } = useAppTheme()
-
 const navItems = NAVIGATIONS as unknown as NavItem[]
-
-const seoConfig = computed(() => route.meta.seo)
-
-const personalEntity = {
-  '@type': 'Person',
-  name: 'Joshua Alexis Natividad Sardido',
-  jobTitle: 'Senior Frontend Engineer & Software Architect',
-  url: 'https://vercel.app',
-  sameAs: ['https://github.com', 'https://linkedin.com'],
-}
-
-const schemaPayload = computed(() => {
-  const config = seoConfig.value
-  if (!config?.schemaType) return null
-
-  if (config.schemaType === 'ProfilePage') {
-    return {
-      '@context': 'https://schema.org',
-      '@type': 'ProfilePage',
-      mainEntity: personalEntity,
-    }
-  }
-
-  if (config.schemaType === 'TechArticle') {
-    return {
-      '@context': 'https://schema.org',
-      '@type': 'TechArticle',
-      headline: config.title,
-      description: config.description,
-      author: personalEntity,
-      dependencies: 'Vue 3, React 19, Turborepo, Tailwind CSS v4',
-    }
-  }
-
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: config.title,
-    url: 'https://vercel.app',
-  }
-})
-
-useHead({
-  title: () => seoConfig.value?.title || 'Joshua Alexis Natividad Sardido | Portfolio Hub',
-  meta: () => [
-    {
-      name: 'description',
-      content:
-        seoConfig.value?.description ||
-        'Explore the technical profile, engineering history, and web application solutions of an expert Frontend Architect.',
-    },
-    { property: 'og:title', content: seoConfig.value?.title || 'Joshua Alexis Natividad Sardido' },
-    { property: 'og:description', content: seoConfig.value?.description || 'Portfolio Hub' },
-    { property: 'og:type', content: seoConfig.value?.type || 'website' },
-    { property: 'og:url', content: `https://vercel.app${route.path}` },
-  ],
-  script: () => {
-    const payload = schemaPayload.value
-    return payload ? [{ type: 'application/ld+json', innerHTML: JSON.stringify(payload) }] : []
-  },
-})
 
 const getTheme = computed(() => {
   const t = theme.value as string
   if (t === 'auto') return (isDark.value ? 'dark' : 'light') as Themes
   return t as Themes
+})
+
+useHead({
+  title: () => route.meta.seo?.title || 'Joshua Alexis Natividad Sardido | Portfolio Hub',
+  meta: () => [
+    {
+      name: 'description',
+      content:
+        route.meta.seo?.description ||
+        'Explore my high-performance software engineering architecture workspace.',
+    },
+    { property: 'og:title', content: route.meta.seo?.title },
+    { property: 'og:description', content: route.meta.seo?.description },
+    { property: 'og:type', content: route.meta.seo?.type || 'website' },
+    { property: 'og:url', content: () => `https://vercel.app${route.path}` },
+  ],
+  script: () => {
+    const schemaType = route.meta.seo?.schemaType
+    if (!schemaType) return []
+
+    const personalEntity = {
+      '@type': 'Person',
+      name: 'Joshua Alexis Natividad Sardido',
+      jobTitle: 'Senior Frontend Engineer & Software Architect',
+      url: 'https://vercel.app/about-me',
+      sameAs: ['https://github.com', 'https://linkedin.com'],
+    }
+
+    let payload: Record<string, unknown> | null = null
+
+    if (schemaType === 'ProfilePage') {
+      payload = {
+        '@context': 'https://schema.org',
+        '@type': 'ProfilePage',
+        mainEntity: personalEntity,
+      }
+    } else if (schemaType === 'TechArticle') {
+      payload = {
+        '@context': 'https://schema.org',
+        '@type': 'TechArticle',
+        headline: route.meta.seo?.title,
+        description: route.meta.seo?.description,
+        dependencies: 'Vue 3, React 19, Turborepo, Tailwind CSS v4',
+      }
+    } else if (schemaType === 'WebSite') {
+      payload = {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: route.meta.seo?.title,
+        url: 'https://jas-fawn.vercel.app/',
+      }
+    }
+
+    return payload
+      ? [
+          {
+            type: 'application/ld+json',
+            key: 'layout-jsonld-schema',
+            innerHTML: JSON.stringify(payload),
+          },
+        ]
+      : []
+  },
 })
 </script>
 
@@ -96,13 +97,7 @@ const getTheme = computed(() => {
             <h1 class="text-foreground flex items-center justify-center text-lg font-semibold">
               <span class="hidden sm:inline">Your N</span>
               <span class="sm:hidden">N</span>
-              <AtomWordSwap
-                canvas
-                :words="['u', 'e']"
-                :interval="2000"
-                transition="slide-down"
-                class=""
-              />
+              <AtomWordSwap :words="['u', 'e']" :interval="2000" transition="slide-down" />
               <span class="hidden sm:inline">xt Frontend Developer</span>
               <span class="sm:hidden">xt Developer</span>
             </h1>
@@ -124,7 +119,6 @@ const getTheme = computed(() => {
         <template #default>
           <main class="container mx-auto flex h-full min-h-0 flex-1 flex-col px-4 sm:px-6 lg:px-8">
             <slot />
-            <span class="sr-only">default-layout</span>
           </main>
         </template>
         <template #fallback>
