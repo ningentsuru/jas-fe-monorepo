@@ -31,9 +31,9 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: ROUTES.HIS_CV_VIEW.path,
-    name: ROUTES.HIS_CV_VIEW.name,
-    component: () => import('@/views/HisCvView'),
+    path: ROUTES.CV_VIEW.path,
+    name: ROUTES.CV_VIEW.name,
+    component: () => import('@/views/CvView'),
     meta: {
       layout: 'DefaultLayout',
       seo: {

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import HisCvView from './HisCvView.vue'
+import HisCvView from './CvView.vue'
 
 const meta: Meta<typeof HisCvView> = {
   component: HisCvView,

@@ -15,8 +15,8 @@ const formatResumeDate = (dateStr: string) => {
 
 <template>
   <article
-    class="his-cv-view bg-background text-foreground border-border font-display mx-auto my-4 w-full border p-4 transition-colors duration-300 sm:p-12 print:border-transparent"
-    data-testid="his-cv-view"
+    class="cv-view bg-background text-foreground border-border font-display mx-auto my-4 w-full border p-4 transition-colors duration-300 sm:p-12 print:border-transparent"
+    data-testid="cv-view"
   >
     <header class="flex flex-col items-center justify-center text-center">
       <h1 class="text-xl font-bold tracking-tight sm:text-2xl">{{ resume.basics.name }}</h1>
@@ -193,6 +193,6 @@ const formatResumeDate = (dateStr: string) => {
       </ul>
     </section>
 
-    <span class="sr-only">his-cv-view</span>
+    <span class="sr-only">cv-view</span>
   </article>
 </template>

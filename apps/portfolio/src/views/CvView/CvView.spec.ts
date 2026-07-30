@@ -1,8 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import HisCvView from './HisCvView.vue'
-import { Default } from './HisCvView.stories'
-
+import HisCvView from './CvView.vue'
+import { Default } from './CvView.stories'
 
 describe('HisCvView', () => {
   it('renders properly using Storybook args', () => {
@@ -10,6 +9,6 @@ describe('HisCvView', () => {
       props: Default.args,
     })
 
-    expect(wrapper.text()).toContain('his-cv-view')
+    expect(wrapper.text()).toContain('cv-view')
   })
 })

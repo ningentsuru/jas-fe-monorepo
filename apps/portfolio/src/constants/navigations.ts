@@ -7,5 +7,5 @@ export const NAVIGATIONS = [
     ],
   },
   { label: 'Activity', href: '/activity' },
-  { label: 'His CV', href: '/his-cv' },
+  { label: 'CV', href: '/cv' },
 ] as const
