@@ -1,24 +1,43 @@
 import { fileURLToPath, URL } from 'node:url'
+import { resolve } from 'path'
 import { defineConfig } from 'vite'
+import type { UserConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
-import { resolve } from 'path'
 import tailwindcss from '@tailwindcss/vite'
+import generateSitemap from 'vite-ssg-sitemap'
 
 export default defineConfig({
-  plugins: [
-    vue(),
-    vueDevTools(),
-    tailwindcss()
-  ],
+  plugins: [vue(), vueDevTools(), tailwindcss()],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
-      '@repo/ui-vue': resolve(fileURLToPath(new URL('./', import.meta.url)), '../../packages/ui-vue/src'),
+      '@repo/ui-vue': resolve(
+        fileURLToPath(new URL('./', import.meta.url)),
+        '../../packages/ui-vue/src',
+      ),
     },
     extensions: ['.mjs', '.js', '.mts', '.ts', '.json', '.vue'],
   },
   server: {
     host: '0.0.0.0',
   },
-})
+
+  ssgOptions: {
+    script: 'async',
+    formatting: 'minify',
+
+    onFinished() {
+      generateSitemap({
+        hostname: 'https://vercel.app',
+        exclude: ['/login', '/signup', '/dashboard', '/not-found'],
+        robots: [
+          {
+            userAgent: '*',
+            allow: '/',
+          },
+        ],
+      })
+    },
+  },
+} as UserConfig)
