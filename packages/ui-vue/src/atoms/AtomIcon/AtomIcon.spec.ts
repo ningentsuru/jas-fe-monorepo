@@ -2,15 +2,20 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { Smile } from '@lucide/vue'
 import AtomIcon from './AtomIcon.vue'
-import meta, { Default, TextFallbackState, CustomNumericSize } from './AtomIcon.stories'
+import meta, {
+  Default,
+  LocalSvgAssetPath,
+  TextFallbackState,
+  CustomNumericSize,
+} from './AtomIcon.stories'
 
 type AtomIconProps = InstanceType<typeof AtomIcon>['$props']
 
-const getProps = (storyArgs: typeof Default.args): AtomIconProps => {
+const getProps = (storyArgs?: Record<string, unknown>): AtomIconProps => {
   return {
     ...meta.args,
     ...storyArgs,
-  } as unknown as AtomIconProps
+  } as AtomIconProps
 }
 
 describe('AtomIcon', () => {
@@ -23,6 +28,22 @@ describe('AtomIcon', () => {
 
     expect(wrapper.find('[data-testid="atom-icon"]').exists()).toBe(true)
     expect(wrapper.findComponent(Smile).exists()).toBe(true)
+    expect(wrapper.find('img').exists()).toBe(false)
+  })
+
+  it('renders a local string SVG path inside an img tag layout smoothly', async () => {
+    const wrapper = mount(AtomIcon, {
+      props: getProps(LocalSvgAssetPath.args),
+    })
+
+    await wrapper.vm.$nextTick()
+
+    const imgNode = wrapper.find('img')
+    expect(imgNode.exists()).toBe(true)
+    expect(imgNode.attributes('src')).toBe('/src/assets/images/svgs/vue.svg')
+    expect(imgNode.classes()).toContain('w-8')
+    expect(imgNode.classes()).toContain('h-8')
+    expect(wrapper.findComponent(Smile).exists()).toBe(false)
   })
 
   it('falls back seamlessly to rendering text spans if component object is missing', async () => {
@@ -34,6 +55,7 @@ describe('AtomIcon', () => {
 
     expect(wrapper.text()).toContain('Fallback Text')
     expect(wrapper.findComponent(Smile).exists()).toBe(false)
+    expect(wrapper.find('img').exists()).toBe(false)
   })
 
   it('safely pipes pixel sizing attributes as custom inline CSS variables when numbers match', async () => {
@@ -45,5 +67,8 @@ describe('AtomIcon', () => {
 
     const domElement = wrapper.element as HTMLElement
     expect(domElement.style.getPropertyValue('--icon-size')).toBe('48px')
+
+    const iconElement = wrapper.find('svg, img')
+    expect(iconElement.classes()).toContain('w-[var(--icon-size)]')
   })
 })

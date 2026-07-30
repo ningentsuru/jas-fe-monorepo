@@ -23,6 +23,14 @@ type Story = StoryObj<typeof AtomIcon>
 
 export const Default: Story = {}
 
+export const LocalSvgAssetPath: Story = {
+  args: {
+    icon: '/src/assets/images/svgs/vue.svg',
+    name: 'Local Vue Framework Logo Link',
+    size: 'lg',
+  },
+}
+
 export const TextFallbackState: Story = {
   args: {
     icon: undefined,

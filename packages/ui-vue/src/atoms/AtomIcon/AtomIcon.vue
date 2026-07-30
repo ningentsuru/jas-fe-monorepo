@@ -4,9 +4,8 @@ import type { Component } from 'vue'
 
 interface Props {
   name?: string
-  icon?: Component
+  icon?: Component | string
   size?: 'sm' | 'md' | 'lg' | 'xl' | number
-  class?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -16,20 +15,20 @@ const props = withDefaults(defineProps<Props>(), {
 
 const iconClass = computed(() => {
   const baseClasses = 'text-[var(--color-foreground)] transition-colors'
-  const customSizeClass = props.class || ''
 
   if (typeof props.size === 'number') {
-    return `${baseClasses} w-[var(--icon-size)] h-[var(--icon-size)] ${customSizeClass}`
+    return `${baseClasses} w-[var(--icon-size)] h-[var(--icon-size)]`
   }
 
-  const sizeMap: Record<string, string> = {
+  const sizeMap: Record<'sm' | 'md' | 'lg' | 'xl', string> = {
     sm: 'w-4 h-4',
     md: 'w-6 h-6',
     lg: 'w-8 h-8',
     xl: 'w-12 h-12',
   }
 
-  return `${baseClasses} ${sizeMap[props.size] || sizeMap.md} ${customSizeClass}`
+  const resolvedSize = typeof props.size === 'string' ? props.size : 'md'
+  return `${baseClasses} ${sizeMap[resolvedSize as keyof typeof sizeMap] || sizeMap.md}`
 })
 
 const iconStyle = computed(() => {
@@ -46,9 +45,17 @@ const iconStyle = computed(() => {
     data-testid="atom-icon"
     :style="iconStyle"
   >
-    <component v-if="icon" :is="icon" :class="iconClass" />
+    <img
+      v-if="typeof icon === 'string'"
+      :src="icon"
+      :class="iconClass"
+      :alt="name || 'icon'"
+      draggable="false"
+    />
 
-    <span v-if="!icon && name" class="text-sm">
+    <component v-else-if="icon" :is="icon" :class="iconClass" />
+
+    <span v-else-if="name" class="text-sm font-medium tracking-wide">
       {{ name }}
     </span>
 
