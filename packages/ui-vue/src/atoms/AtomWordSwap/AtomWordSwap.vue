@@ -21,7 +21,7 @@ let isUnmounted = false
 const maxWidth = computed(() => {
   if (!props.words.length) return '0ch'
   const longest = props.words.reduce((a, b) => (a.length > b.length ? a : b))
-  return `${longest.length + 0.5}ch`
+  return `${longest.length}ch`
 })
 
 function swapWord() {
@@ -50,7 +50,7 @@ onUnmounted(() => {
 
 <template>
   <span
-    class="atom-word-swap text-foreground font-display relative inline-block text-center font-medium transition-all duration-300 select-none"
+    class="atom-word-swap text-foreground font-display relative inline-block text-center transition-all duration-300 select-none"
     :style="{ minWidth: maxWidth, height: '1.2em' }"
     data-testid="atom-word-swap"
   >

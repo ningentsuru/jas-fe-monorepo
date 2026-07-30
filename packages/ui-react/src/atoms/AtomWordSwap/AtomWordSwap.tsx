@@ -1,13 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 
 export type WordSwapTransition =
-  | 'fade'
-  | 'slide-up'
-  | 'slide-down'
-  | 'scale-up'
-  | 'scale-down'
-  | 'blur'
-  | 'flip'
+  'fade' | 'slide-up' | 'slide-down' | 'scale-up' | 'scale-down' | 'blur' | 'flip'
 
 export interface AtomWordSwapProps {
   words?: string[]
@@ -18,14 +12,14 @@ export interface AtomWordSwapProps {
 export const AtomWordSwap = ({
   words = ['Hello', 'World'],
   interval = 2000,
-  transition = 'fade'
+  transition = 'fade',
 }: AtomWordSwapProps) => {
   const [currentIndex, setCurrentIndex] = useState(0)
 
   const maxWidth = useMemo(() => {
     if (!words || words.length === 0) return '0ch'
     const longest = words.reduce((a, b) => (a.length > b.length ? a : b), '')
-    return `${longest.length + 0.5}ch`
+    return `${longest.length}ch`
   }, [words])
 
   useEffect(() => {
@@ -40,7 +34,7 @@ export const AtomWordSwap = ({
 
   return (
     <span
-      className="atom-word-swap text-foreground font-display relative inline-block text-center font-medium transition-all duration-300 select-none"
+      className="atom-word-swap text-foreground font-display relative inline-block text-center transition-all duration-300 select-none"
       style={{ minWidth: maxWidth, height: '1.2em' }}
       data-testid="atom-word-swap"
     >

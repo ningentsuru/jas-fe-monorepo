@@ -25,7 +25,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: ROUTES.ABOUTE_ME_VIEW.path,
     name: ROUTES.ABOUTE_ME_VIEW.name,
-    component: () => import('@/views/AbouteMeView'),
+    component: () => import('@/views/AboutMeView'),
   },
   {
     path: ROUTES.ABOUT_THIS_MONOREPO_VIEW.path,

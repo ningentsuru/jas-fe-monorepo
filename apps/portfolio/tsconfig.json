@@ -13,8 +13,5 @@
     {
       "path": "../../packages/ui-vue"
     }
-  ],
-  "compilerOptions": {
-    "ignoreDeprecations": "6.0"
-  }
+  ]
 }

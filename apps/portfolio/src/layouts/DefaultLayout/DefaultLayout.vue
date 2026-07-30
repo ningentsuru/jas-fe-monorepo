@@ -32,12 +32,7 @@ const getTheme = computed(() => {
             <h1 class="text-foreground flex items-center justify-center text-lg font-semibold">
               <span class="hidden sm:inline">Your N</span>
               <span class="sm:hidden">N</span>
-              <AtomWordSwap
-                :words="['u', 'e']"
-                :interval="2000"
-                transition="slide-down"
-                class="-mx-1"
-              />
+              <AtomWordSwap :words="['u', 'e']" :interval="2000" transition="slide-down" class="" />
               <span class="hidden sm:inline">xt Frontend Developer</span>
               <span class="sm:hidden">xt Developer</span>
             </h1>

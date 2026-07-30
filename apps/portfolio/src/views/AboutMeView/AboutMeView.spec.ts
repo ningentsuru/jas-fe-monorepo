@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import AbouteMeView from './AbouteMeView.vue'
-import { Default } from './AbouteMeView.stories'
+import AbouteMeView from './AboutMeView.vue'
+import { Default } from './AboutMeView.stories'
 
 
 describe('AbouteMeView', () => {
