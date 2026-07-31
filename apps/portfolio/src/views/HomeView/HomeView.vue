@@ -19,14 +19,6 @@ import { OrganismHero } from '@repo/ui-vue'
       align="center"
     />
 
-    <div class="font-display container mx-auto max-w-2xl px-4 py-12 text-center">
-      <p class="text-foreground mb-2 text-base font-semibold">Work In Progress</p>
-      <p class="text-muted-foreground text-sm leading-relaxed">
-        Coming soon: Module Federation - sharing this design system live across independently
-        deployed Vue and React apps.
-      </p>
-    </div>
-
     <span class="sr-only">home-view</span>
   </div>
 </template>
