@@ -1,4 +1,5 @@
 {
+  "cleanUrls": true,
   "rewrites": [
     {
       "source": "/activity-morse-code",
@@ -10,7 +11,7 @@
     },
     {
       "source": "/:path*",
-      "destination": "/index.html"
+      "destination": "/index"
     }
   ]
 }
