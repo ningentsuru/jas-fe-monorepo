@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { useHead } from '@unhead/vue'
+import { useI18n } from 'vue-i18n'
 import DefaultLayout from '@/layouts/DefaultLayout'
 
 const layoutMap = {
@@ -8,10 +10,17 @@ const layoutMap = {
 } as const
 
 const route = useRoute()
-
 const currentLayout = computed(() => {
   const layoutKey = (route.meta.layout as keyof typeof layoutMap) || 'web'
   return layoutMap[layoutKey] || DefaultLayout
+})
+
+const { locale } = useI18n()
+
+useHead({
+  htmlAttrs: {
+    lang: computed(() => locale.value),
+  },
 })
 </script>
 

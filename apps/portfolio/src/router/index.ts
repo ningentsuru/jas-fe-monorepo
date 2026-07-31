@@ -87,6 +87,11 @@ const routes: Array<RouteRecordRaw> = [
       },
     },
   },
+  {
+    path: ROUTES.MULTI_ZONES_VIEW.path,
+    name: ROUTES.MULTI_ZONES_VIEW.name,
+    component: () => import('@/views/MultiZonesView'),
+  },
   // plop:inject-routes-component-do-not-removed
   {
     path: ROUTES.NOT_FOUND_VIEW.path,

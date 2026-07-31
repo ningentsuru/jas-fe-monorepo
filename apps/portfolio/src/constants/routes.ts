@@ -5,6 +5,7 @@ export const ROUTES = {
   ABOUT_THIS_MONOREPO_VIEW: { name: 'aboutThisMonorepo', path: '/about-this-monorepo' },
   ACTIVITY_VIEW: { name: 'activity', path: '/activity' },
   CV_VIEW: { name: 'cv', path: '/cv' },
+  MULTI_ZONES_VIEW: { name: 'multiZones', path: '/multi-zones' },
   // plop:inject-routes-do-not-removed
   NOT_FOUND_VIEW: { name: 'notFound', path: '/:pathMatch(.*)*' },
 } as const

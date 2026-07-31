@@ -17,7 +17,10 @@ export const NAVIGATIONS = [
   },
   {
     label: 'Multi-Zones',
-    children: [{ label: 'Morse Code', href: '/multi-zones-morse-code' }],
+    children: [
+      { label: 'Overview', href: '/multi-zones' },
+      { label: 'Morse Code', href: '/multi-zones-morse-code' },
+    ],
   },
   { label: 'CV', to: '/cv' },
 ] as const
