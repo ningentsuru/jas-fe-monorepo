@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/:path*", "destination": "/index.html" },
-    { "source": "/activity-morse-code", "destination": "https://jas-next-morse-code.vercel.app/" }
+    { "source": "/activity-morse-code", "destination": "https://jas-next-morse-code.vercel.app/" },
+    { "source": "/:path*", "destination": "/index.html" }
   ]
 }
