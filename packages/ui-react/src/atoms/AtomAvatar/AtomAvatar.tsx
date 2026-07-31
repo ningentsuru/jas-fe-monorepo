@@ -1,3 +1,5 @@
+'use client'
+
 import { useMemo, type CSSProperties } from 'react'
 
 export interface AtomAvatarProps {

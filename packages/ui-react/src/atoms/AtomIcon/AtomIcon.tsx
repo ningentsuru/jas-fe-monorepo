@@ -1,3 +1,5 @@
+'use client'
+
 import { useMemo, type ElementType, type CSSProperties } from 'react'
 
 export interface AtomIconProps {

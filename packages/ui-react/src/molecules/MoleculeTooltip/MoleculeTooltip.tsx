@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect, useRef, useCallback, type ReactNode } from 'react'
 
 export interface MoleculeTooltipProps {

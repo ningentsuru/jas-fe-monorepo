@@ -2,6 +2,7 @@ packages:
   - "apps/*"
   - "packages/*"
 allowBuilds:
+  core-js-pure: true
   esbuild: true
   sharp: true
   unrs-resolver: true
@@ -29,3 +30,4 @@ minimumReleaseAgeExclude:
   - oxlint@1.75.0 || 1.76.0
   - '@lucide/vue@1.27.0'
   - '@types/node@26.1.2'
+  - '@types/react-dom@19.2.4'

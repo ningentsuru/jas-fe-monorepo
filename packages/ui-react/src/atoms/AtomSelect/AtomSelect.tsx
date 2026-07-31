@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useMemo, type ChangeEvent, type MouseEvent, type KeyboardEvent, type CSSProperties, type SelectHTMLAttributes } from 'react'
 import { ChevronRight } from 'lucide-react'
 import { AtomIcon } from '../../'

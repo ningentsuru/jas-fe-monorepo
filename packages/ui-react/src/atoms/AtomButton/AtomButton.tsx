@@ -1,3 +1,5 @@
+'use client'
+
 import { useMemo, type MouseEvent, type ReactNode, type CSSProperties, type HTMLAttributes } from 'react'
 
 export type ButtonTarget = '_blank' | '_self' | '_parent' | '_top'

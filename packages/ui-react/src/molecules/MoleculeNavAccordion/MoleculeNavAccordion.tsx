@@ -1,3 +1,5 @@
+'use client'
+
 import { useMemo, type MouseEvent } from 'react'
 import { ChevronRight } from 'lucide-react'
 import { AtomIcon, AtomNavLink } from '../../'

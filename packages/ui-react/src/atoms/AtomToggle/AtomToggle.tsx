@@ -1,3 +1,5 @@
+'use client'
+
 import { type ElementType, useRef } from 'react'
 import { AtomIcon } from '../../'
 

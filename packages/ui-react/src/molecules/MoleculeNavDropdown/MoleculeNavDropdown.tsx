@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, type MouseEvent } from 'react'
 import { ChevronDown } from 'lucide-react'
 import { AtomButton, AtomIcon, AtomNavLink } from '../../'

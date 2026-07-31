@@ -1,3 +1,5 @@
+'use client'
+
 import { type ReactNode, type MouseEvent } from 'react'
 import { AtomButton } from '../../'
 

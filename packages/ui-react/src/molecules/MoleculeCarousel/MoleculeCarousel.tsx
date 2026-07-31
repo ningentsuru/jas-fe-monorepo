@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useMemo, useEffect, useRef, type KeyboardEvent } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { AtomButton, AtomIcon } from '../../'

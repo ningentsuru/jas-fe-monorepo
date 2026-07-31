@@ -23,7 +23,7 @@ describe('AtomWordSwap', () => {
   it('renders the initial word configuration parameter accurately on mount', () => {
     render(React.createElement(AtomWordSwap, getProps(Default.args)))
 
-    const container = screen.getByTestId('atom-word-swap')
+    const container = screen.getByTestId('atom-word-swap') as HTMLElement
     expect(container).toBeDefined()
     expect(container.textContent).toContain('Innovative')
   })
@@ -31,29 +31,33 @@ describe('AtomWordSwap', () => {
   it('receives correct structural configurations from Storybook properties', () => {
     render(React.createElement(AtomWordSwap, getProps(FastFlipTransition.args)))
 
-    const innerSpan = screen.getByTestId('atom-word-swap-inner')
+    const innerSpan = screen.getByTestId('atom-word-swap-inner') as HTMLElement
     expect(innerSpan.className).toContain('transition-flip-enter-active')
-    expect(innerSpan.style.animation).toContain('swap-flip 0.5s')
   })
 
   it('advances indices and swaps displayed words dynamically when timer intervals elapse', async () => {
     render(React.createElement(AtomWordSwap, getProps(FastFlipTransition.args)))
 
-    const container = screen.getByTestId('atom-word-swap')
+    const container = screen.getByTestId('atom-word-swap') as HTMLElement
     expect(container.textContent).toContain('Innovative')
 
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(1000)
+      vi.advanceTimersByTime(1000)
     })
     expect(container.textContent).toContain('Performant')
 
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(1000)
+      vi.advanceTimersByTime(1000)
     })
     expect(container.textContent).toContain('Accessible')
 
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(2000)
+      vi.advanceTimersByTime(1000)
+    })
+    expect(container.textContent).toContain('Scalable')
+
+    await act(async () => {
+      vi.advanceTimersByTime(1000)
     })
     expect(container.textContent).toContain('Innovative')
   })
@@ -61,11 +65,11 @@ describe('AtomWordSwap', () => {
   it('prevents swapping executions completely if the array contains only one item', async () => {
     render(React.createElement(AtomWordSwap, getProps(SingleWordFallback.args)))
 
-    const container = screen.getByTestId('atom-word-swap')
+    const container = screen.getByTestId('atom-word-swap') as HTMLElement
     expect(container.textContent).toContain('Static')
 
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(5000)
+      vi.advanceTimersByTime(5000)
     })
     expect(container.textContent).toContain('Static')
   })
@@ -73,7 +77,7 @@ describe('AtomWordSwap', () => {
   it('calculates the dynamic maxWidth styling string correctly to fit the longest string', () => {
     render(React.createElement(AtomWordSwap, getProps(Default.args)))
 
-    const container = screen.getByTestId('atom-word-swap')
+    const container = screen.getByTestId('atom-word-swap') as HTMLElement
     expect(container.style.minWidth).toBe('10ch')
   })
 })

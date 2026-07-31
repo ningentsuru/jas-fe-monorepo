@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect, type ReactNode, type MouseEvent } from 'react'
 import { Menu, X } from 'lucide-react'
 import { AtomButton, MoleculeNavDropdown, MoleculeNavAccordion } from '../../'

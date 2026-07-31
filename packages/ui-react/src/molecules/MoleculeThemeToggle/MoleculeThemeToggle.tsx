@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useMemo, useEffect, type ElementType, type FormEvent } from 'react'
 import { MoleculeModal, AtomToggle, AtomSelect, AtomButton } from '../../'
 import { Sun, Moon, Palette, LoaderPinwheel } from 'lucide-react'

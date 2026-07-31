@@ -1,3 +1,5 @@
+'use client'
+
 import { useMemo, type ReactNode, type ChangeEvent, type CSSProperties, type InputHTMLAttributes } from 'react'
 
 export type InputType = 'text' | 'password' | 'email' | 'number' | 'search' | 'tel' | 'url'

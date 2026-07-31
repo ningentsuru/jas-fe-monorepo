@@ -10,6 +10,7 @@ export { default as AtomNavLink } from './atoms/AtomNavLink'
 export { default as AtomSelect } from './atoms/AtomSelect'
 export { default as AtomToggle } from './atoms/AtomToggle'
 export { default as AtomWordSwap } from './atoms/AtomWordSwap'
+export { default as AtomMorseKey } from './atoms/AtomMorseKey'
 // plop:inject-atoms-component-do-not-removed
 
 // Molecules
@@ -31,3 +32,6 @@ export { default as OrganismNavigation } from './organisms/OrganismNavigation'
 // Templates
 export { default as TemplateDefaultPortfolio } from './templates/TemplateDefaultPortfolio'
 // plop:inject-templates-component-do-not-removed
+
+// Shared Utilities Matrix
+export { audioMorsePlayer } from './utils/audioMorsePlayer'
