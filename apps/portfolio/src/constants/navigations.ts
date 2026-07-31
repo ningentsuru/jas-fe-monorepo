@@ -1,17 +1,23 @@
 export const NAVIGATIONS = [
   {
     label: 'About',
+    to: '/about-me',
     children: [
-      { label: 'Me', href: '/about-me' },
-      { label: 'This Monorepo', href: '/about-this-monorepo' },
+      { label: 'Me', to: '/about-me' },
+      { label: 'This Monorepo', to: '/about-this-monorepo' },
     ],
   },
   {
     label: 'Activity',
+    to: '/activity',
     children: [
-      { label: 'Activity', href: '/activity' },
-      { label: 'Morse Code (Multi-Zones)', href: '/activity-morse-code' },
+      { label: 'Overview', to: '/activity' },
+      { label: 'Simulation', to: '/' },
     ],
   },
-  { label: 'CV', href: '/cv' },
+  {
+    label: 'Multi-Zones',
+    children: [{ label: 'Morse Code', href: '/multi-zones-morse-code' }],
+  },
+  { label: 'CV', to: '/cv' },
 ] as const

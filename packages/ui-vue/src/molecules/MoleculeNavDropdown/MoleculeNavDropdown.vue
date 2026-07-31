@@ -6,6 +6,7 @@ import { AtomButton, AtomIcon, AtomNavLink } from '../../'
 interface NavItem {
   label: string
   href?: string
+  to?: string
   children?: NavItem[]
 }
 
@@ -35,7 +36,7 @@ const isHovered = ref(false)
     <AtomButton
       variant="ghost"
       size="sm"
-      :to="item.children ? undefined : item.href"
+      :to="item.children && !(item.href || item.to) ? undefined : item.to"
       @click.stop="item.children ? emit('toggle', index) : null"
       @mouseenter="isHovered = true"
       @mouseleave="isHovered = false"
@@ -70,7 +71,8 @@ const isHovered = ref(false)
             v-for="child in item.children"
             :key="child.label"
             :label="child.label"
-            :to="child.href"
+            :to="child.to ? child.to : undefined"
+            :href="child.href ? child.href : undefined"
             variant="ghost"
             size="sm"
             class="px-4 py-2"
