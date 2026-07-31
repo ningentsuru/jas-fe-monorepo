@@ -1,4 +1,5 @@
 {
+  "cleanUrls": true,
   "rewrites": [
     {
       "source": "/activity-morse-code",
@@ -9,8 +10,8 @@
       "destination": "https://jas-next-morse-code.vercel.app:path*"
     },
     {
-      "source": "/_next/:path*",
-      "destination": "https://jas-next-morse-code.vercel.app_next/:path*"
+      "source": "/_next/static/:path*",
+      "destination": "https://jas-next-morse-code.vercel.app_next/static/:path*"
     },
     {
       "source": "/:path*",
