@@ -1,4 +1,3 @@
-// apps/next-morse-code/src/features/FeatureTelegraphDashboard/FeatureTelegraphDashboard.tsx
 'use client'
 
 import * as React from 'react'

@@ -12,7 +12,7 @@ export const NAVIGATIONS = [
     to: '/activity',
     children: [
       { label: 'Overview', to: '/activity' },
-      { label: 'Simulation', to: '/' },
+      { label: 'Simulation', to: '/simulation' },
     ],
   },
   {

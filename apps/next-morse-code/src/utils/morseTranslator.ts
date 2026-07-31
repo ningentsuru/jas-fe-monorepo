@@ -1,8 +1,5 @@
-// apps/next-morse-code/src/features/utils/morseTranslator.ts
-
 /** Strictly typed lookup map matching Morse strings to standard alphanumeric characters */
 export const MORSE_DICTIONARY: Record<string, string> = {
-  // Letters
   '.-': 'A',
   '-...': 'B',
   '-.-.': 'C',
@@ -29,7 +26,6 @@ export const MORSE_DICTIONARY: Record<string, string> = {
   '-..-': 'X',
   '-.--': 'Y',
   '--..': 'Z',
-  // Numbers
   '-----': '0',
   '.----': '1',
   '..---': '2',
@@ -49,5 +45,5 @@ export const MORSE_DICTIONARY: Record<string, string> = {
 export const translateMorseSequence = (sequence: string[]): string => {
   if (sequence.length === 0) return ''
   const joinStr = sequence.join('')
-  return MORSE_DICTIONARY[joinStr] || '?' // Fallback identifier marker for invalid signals
+  return MORSE_DICTIONARY[joinStr] || '?'
 }

@@ -1,0 +1,18 @@
+# Jas Portfolio & Monorepo
+
+> A personal portfolio and interactive activity hub built on a Vue 3 + Nuxt.js + Next.js monorepo architecture.
+
+## About
+- [Me](https://jas-fawn.vercel.app/about-me): Personal background and introduction.
+- [This Monorepo](https://jas-fawn.vercel.app/about-this-monorepo): Technical architecture and stack details.
+
+## Activities
+- [Overview](https://jas-fawn.vercel.app/activity): List of interactive projects.
+- [Simulation](https://jas-fawn.vercel.app/simulation): Main interactive simulation tool.
+
+## Multi-Zones
+- [Overview](https://jas-fawn.vercel.app/multi-zones): Explanation of the multi-zone deployment strategy.
+- [Morse Code](https://jas-fawn.vercel.app/multi-zones-morse-code): Interactive Morse Code tool (Next.js zone).
+
+## Professional
+- [CV](https://jas-fawn.vercel.app/cv): Curriculum Vitae and resume.

@@ -1,4 +1,3 @@
-// apps/next-morse-code/vitest.setup.ts
 import '@testing-library/jest-dom'
 import { vi } from 'vitest'
 
@@ -12,7 +11,6 @@ if (!global.PointerEvent) {
   } as unknown as typeof PointerEvent
 }
 
-// Fixed: Define an explicit type mapping for the happy-dom window fallback mock
 interface MockedAudioWindow extends Window {
   AudioContext: unknown;
 }
