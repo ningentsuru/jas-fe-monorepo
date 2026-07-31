@@ -3,11 +3,11 @@
   "rewrites": [
     {
       "source": "/activity-morse-code",
-      "destination": "https://jas-next-morse-code.vercel.app/activity-morse-code"
+      "destination": "https://jas-next-morse-code.vercel.app/"
     },
     {
       "source": "/activity-morse-code/:path*",
-      "destination": "https://jas-next-morse-code.vercel.app/activity-morse-code/:path*"
+      "destination": "https://jas-next-morse-code.vercel.app/:path*"
     },
     {
       "source": "/:path*",
