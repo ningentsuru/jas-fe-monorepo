@@ -7,6 +7,7 @@ import { AtomButton, AtomIcon, AtomNavLink } from '../../'
 export interface NavItem {
   label: string
   href?: string
+  to?: string
   children?: NavItem[]
 }
 
@@ -37,7 +38,7 @@ export const MoleculeNavDropdown = ({
       <AtomButton
         variant="ghost"
         size="sm"
-        to={item.children ? undefined : item.href}
+        to={item.children && !(item.href || item.to) ? undefined : item.to}
         onClick={(e: MouseEvent<HTMLElement>) => {
           e.stopPropagation()
           if (item.children) {
@@ -75,7 +76,8 @@ export const MoleculeNavDropdown = ({
                 <AtomNavLink
                   key={child.label}
                   label={child.label}
-                  to={child.href}
+                  to={child.to ? child.to : undefined}
+                  href={child.href ? child.href : undefined}
                   variant="ghost"
                   size="sm"
                   onClick={() => onNavigate?.()}

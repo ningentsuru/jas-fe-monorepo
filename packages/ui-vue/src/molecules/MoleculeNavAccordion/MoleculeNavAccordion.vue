@@ -6,6 +6,7 @@ import { AtomIcon, AtomNavLink } from '../../'
 interface NavItem {
   label: string
   href?: string
+  to?: string
   children?: NavItem[]
 }
 
@@ -39,7 +40,7 @@ function handleLinkClick(event: MouseEvent) {
   <div class="molecule-nav-accordion font-display w-full" data-testid="molecule-nav-accordion">
     <AtomNavLink
       :label="item.label"
-      :to="item.children ? undefined : item.href"
+      :to="item.children && !(item.href || item.to) ? undefined : item.to"
       variant="ghost"
       size="md"
       class="hover:bg-muted/60 w-full items-center justify-between rounded-md text-left font-medium transition-colors"
@@ -72,7 +73,8 @@ function handleLinkClick(event: MouseEvent) {
             v-for="child in item.children"
             :key="child.label"
             :label="child.label"
-            :to="child.href"
+            :to="child.to ? child.to : undefined"
+            :href="child.href ? child.href : undefined"
             variant="link"
             size="sm"
             @click="emit('navigate')"
