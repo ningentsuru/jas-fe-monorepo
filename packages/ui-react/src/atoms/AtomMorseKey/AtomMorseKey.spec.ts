@@ -31,7 +31,7 @@ describe('AtomMorseKey', () => {
   })
 
   it('triggers onDot callback accurately if pointer is released before timeout', async () => {
-    const props = getProps({ signalDelay: 250 })
+    const props = getProps({ signalDelay: 100 })
     render(React.createElement(AtomMorseKey, props))
 
     const keyElement = screen.getByTestId('atom-morse-key') as HTMLElement

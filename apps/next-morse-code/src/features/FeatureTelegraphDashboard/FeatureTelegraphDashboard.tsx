@@ -13,10 +13,8 @@ export const FeatureTelegraphDashboard = () => {
   const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
   const wordBreakTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  // Target word for interactive practice tracking
   const targetWord = 'SOS'
 
-  // Clean shutdown sequence
   const handleSystemDisable = React.useCallback(() => {
     setIsSystemOn(false)
     audioMorsePlayer.stopDummySilence()
@@ -25,7 +23,6 @@ export const FeatureTelegraphDashboard = () => {
     setSignalBuffer([])
   }, [])
 
-  // 15-second structural inactivity countdown guard
   const resetInactivityTimer = React.useCallback(() => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current)
     timeoutRef.current = setTimeout(() => {
@@ -33,7 +30,6 @@ export const FeatureTelegraphDashboard = () => {
     }, 15000)
   }, [handleSystemDisable])
 
-  // Master power toggle action
   const handleToggleSystem = React.useCallback(() => {
     if (isSystemOn) {
       handleSystemDisable()
@@ -68,7 +64,6 @@ export const FeatureTelegraphDashboard = () => {
     resetInactivityTimer()
   }, [resetInactivityTimer])
 
-  // Reactive Multi-Tiered Character & Word Break Decoder Loop
   React.useEffect(() => {
     if (signalBuffer.length === 0) return
 
@@ -89,7 +84,7 @@ export const FeatureTelegraphDashboard = () => {
           return prev + ' '
         })
       }, 1400)
-    }, 700) // 700ms letter break threshold
+    }, 700)
 
     return () => clearTimeout(decodeTimer)
   }, [signalBuffer])
@@ -101,12 +96,10 @@ export const FeatureTelegraphDashboard = () => {
     }
   }, [])
 
-  // Determine alignment with our target phrase assistant metric
   const isMatchSuccessful = translatedText.trim().toUpperCase() === targetWord
 
   return (
     <div className="feature-telegraph-dashboard mt-4 flex flex-col gap-6">
-      {/* 1. Master Power Connection Control */}
       <div className="bg-card border-border flex w-full items-center justify-between rounded-xl border p-4 shadow-xs">
         <div className="flex flex-col text-left">
           <span className="font-sans text-sm font-bold">Power Connection</span>
@@ -124,7 +117,6 @@ export const FeatureTelegraphDashboard = () => {
         </AtomButton>
       </div>
 
-      {/* 2. Interactive Target Word Practice Assistant Panel */}
       <div className="bg-card border-border flex w-full items-center justify-between rounded-xl border p-4 text-center shadow-xs">
         <span className="text-muted-foreground text-xs font-bold tracking-wider uppercase">
           Practice Objective:
@@ -145,14 +137,13 @@ export const FeatureTelegraphDashboard = () => {
         </div>
       </div>
 
-      {/* 3. Output Stream Display Terminal */}
       <div className="bg-card border-border flex w-full flex-col space-y-4 rounded-2xl border p-6 shadow-xs">
         <div className="text-center">
           <h2 className="text-muted-foreground mb-1 text-xs font-bold tracking-widest uppercase">
             Decoded Message Stream
           </h2>
           <div
-            className={`font-display wrap-break-words flex min-h-12 items-center justify-center text-center text-4xl font-black tracking-wide ${
+            className={`font-display flex min-h-12 items-center justify-center text-center text-4xl font-black tracking-wide break-words ${
               isMatchSuccessful ? 'text-success' : 'text-foreground'
             }`}
           >
@@ -178,7 +169,7 @@ export const FeatureTelegraphDashboard = () => {
             variant="link"
             size="sm"
             onClick={resetDashboard}
-            className="text-destructive! text-xs font-bold"
+            className="text-destructive text-xs! font-bold"
             disabled={!(signalBuffer.length > 0 || translatedText.length > 0)}
           >
             Clear Message Display
@@ -186,7 +177,6 @@ export const FeatureTelegraphDashboard = () => {
         </div>
       </div>
 
-      {/* 4. Interactive Physical Key Node */}
       <div className="flex w-full flex-col items-center justify-center space-y-4">
         <AtomMorseKey
           onDot={handleDot}
@@ -194,10 +184,9 @@ export const FeatureTelegraphDashboard = () => {
           onInteraction={handleStrokeRegister}
           disabled={!isSystemOn}
           label="TRANSMIT"
-          signalDelay={250}
+          signalDelay={100}
         />
 
-        {/* Toggle Button for the Code Reference Matrix */}
         <AtomButton
           variant="ghost"
           size="sm"
@@ -207,7 +196,6 @@ export const FeatureTelegraphDashboard = () => {
           {showCheatSheet ? 'Hide Morse Code Cheat Sheet' : 'Show Morse Code Cheat Sheet'}
         </AtomButton>
 
-        {/* 5. Morse Code Table Cheat Sheet Grid */}
         {showCheatSheet && (
           <div className="bg-muted/60 border-border grid max-h-40 w-full grid-cols-4 gap-2 overflow-y-auto rounded-xl border p-4 text-center font-mono text-xs">
             {Object.entries(MORSE_DICTIONARY)
@@ -227,5 +215,3 @@ export const FeatureTelegraphDashboard = () => {
     </div>
   )
 }
-
-export default FeatureTelegraphDashboard
