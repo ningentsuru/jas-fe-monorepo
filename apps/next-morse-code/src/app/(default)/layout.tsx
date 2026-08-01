@@ -1,10 +1,8 @@
-// src/app/layout.tsx
 import { LayoutClient } from './layout-client'
-import { ThemeProvider } from 'next-themes'
 import { NAVIGATIONS } from '@/constants'
 import { NavItem } from '@/types'
 import { Geist, Geist_Mono } from 'next/font/google'
-import '@/app/globals.css' // Loads Inter, tailwind, and your UI styles
+import '@/app/globals.css'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -24,14 +22,14 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    /* Keep your data-theme target exactly intact for @repo/ui-react/style.css */
-    <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem>
-      <LayoutClient 
-        navItems={navItems} 
-        fontClasses={`${geistSans.variable} ${geistMono.variable}`}
-      >
-        {children}
-      </LayoutClient>
-    </ThemeProvider>
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning={true}
+    >
+      <body className="flex min-h-full flex-col" suppressHydrationWarning={true}>
+        <LayoutClient navItems={navItems}>{children}</LayoutClient>
+      </body>
+    </html>
   )
 }

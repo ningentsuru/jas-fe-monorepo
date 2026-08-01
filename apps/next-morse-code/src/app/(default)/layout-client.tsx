@@ -1,3 +1,4 @@
+// src/app/layout-client.tsx
 'use client'
 
 import { Suspense } from 'react'
@@ -17,71 +18,62 @@ import Link from 'next/link'
 interface LayoutClientProps {
   children: React.ReactNode
   navItems: NavItem[]
-  fontClasses: string // Accept server fonts down safely
 }
 
-export function LayoutClient({ children, navItems, fontClasses }: LayoutClientProps) {
+export function LayoutClient({ children, navItems }: LayoutClientProps) {
   const { theme, toggleTheme, isDark, setTheme, isMounted } = useAppTheme()
 
   return (
-    <html
-      lang="en"
-      className={`${fontClasses} h-full antialiased`}
-      suppressHydrationWarning={true} /* Works perfectly inside 'use client' frameworks! */
+    <TemplateDefaultPortfolio
+      data-testid="default-layout"
+      header={
+        <OrganismHeader
+          navItems={navItems}
+          branding={
+            <Link href="/">
+              <AtomButton>
+                <h1 className="text-foreground flex items-center justify-center text-lg font-semibold">
+                  <span className="hidden sm:inline">Your N</span>
+                  <span className="sm:hidden">N</span>
+                  <AtomWordSwap words={['u', 'e']} interval={2000} transition="slide-down" />
+                  <span className="hidden sm:inline">xt Frontend Developer</span>
+                  <span className="sm:hidden">xt Developer</span>
+                </h1>
+              </AtomButton>
+            </Link>
+          }
+          themeToggle={
+            isMounted ? (
+              <MoleculeThemeToggle
+                isToggled={isDark}
+                currentTheme={theme as Themes}
+                onToggle={toggleTheme}
+                onSetTheme={(t) => setTheme(t as Themes)}
+              />
+            ) : (
+              <div className="h-10 w-10" aria-hidden="true" />
+            )
+          }
+        />
+      }
+      footer={
+        <OrganismFooter title="This is footer">
+          <div>Note: By holding the theme toggle you can choose different themes.</div>
+          <div>Todo: Add contact me component here.</div>
+        </OrganismFooter>
+      }
     >
-      <body className="flex min-h-full flex-col">
-        <TemplateDefaultPortfolio
-          data-testid="default-layout"
-          header={
-            <OrganismHeader
-              navItems={navItems}
-              branding={
-                <Link href="/">
-                  <AtomButton>
-                    <h1 className="text-foreground flex items-center justify-center text-lg font-semibold">
-                      <span className="hidden sm:inline">Your N</span>
-                      <span className="sm:hidden">N</span>
-                      <AtomWordSwap words={['u', 'e']} interval={2000} transition="slide-down" />
-                      <span className="hidden sm:inline">xt Frontend Developer</span>
-                      <span className="sm:hidden">xt Developer</span>
-                    </h1>
-                  </AtomButton>
-                </Link>
-              }
-              themeToggle={
-                isMounted ? (
-                  <MoleculeThemeToggle
-                    isToggled={isDark}
-                    currentTheme={theme as Themes}
-                    onToggle={toggleTheme}
-                    onSetTheme={(t) => setTheme(t as Themes)}
-                  />
-                ) : (
-                  <div className="h-10 w-10" aria-hidden="true" />
-                )
-              }
-            />
-          }
-          footer={
-            <OrganismFooter title="This is footer">
-              <div>Note: By holding the theme toggle you can choose different themes.</div>
-              <div>Todo: Add contact me component here.</div>
-            </OrganismFooter>
-          }
-        >
-          <Suspense
-            fallback={
-              <main className="flex h-screen w-screen items-center justify-center">
-                Loading data...
-              </main>
-            }
-          >
-            <main className="container mx-auto flex h-full min-h-0 flex-1 flex-col px-4 sm:px-6 lg:px-8">
-              {children}
-            </main>
-          </Suspense>
-        </TemplateDefaultPortfolio>
-      </body>
-    </html>
+      <Suspense
+        fallback={
+          <main className="flex h-screen w-screen items-center justify-center">
+            Loading data...
+          </main>
+        }
+      >
+        <main className="container mx-auto flex h-full min-h-0 flex-1 flex-col px-4 sm:px-6 lg:px-8">
+          {children}
+        </main>
+      </Suspense>
+    </TemplateDefaultPortfolio>
   )
 }

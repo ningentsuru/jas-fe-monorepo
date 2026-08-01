@@ -1,32 +1,55 @@
-// hooks/useAppTheme.ts
 'use client'
 
-import { useTheme } from 'next-themes'
-import { useMemo, useSyncExternalStore } from 'react'
+import { useMemo, useCallback, useSyncExternalStore } from 'react'
 import type { Themes } from '@/types'
 
-// Simple empty snapshot functions to detect server vs browser state
-const subscribe = () => () => {}
-const getSnapshot = () => true
-const getServerSnapshot = () => false
+const subscribe = (callback: () => void) => {
+  if (typeof window === 'undefined') return () => {}
+
+  window.addEventListener('storage', callback)
+  window.addEventListener('local-theme-change', callback)
+
+  return () => {
+    window.removeEventListener('storage', callback)
+    window.removeEventListener('local-theme-change', callback)
+  }
+}
+
+const getSnapshot = () => {
+  if (typeof window === 'undefined') return 'light'
+  return localStorage.getItem('app-theme') || 'light'
+}
+const getServerSnapshot = () => 'light'
+
+const mountGetSnapshot = () => true
+const mountGetServerSnapshot = () => false
 
 export function useAppTheme() {
-  const { theme, setTheme, resolvedTheme } = useTheme()
+  const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 
-  // Safely evaluates to true on client and false on server with ZERO useEffects
-  const isMounted = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
+  const isMounted = useSyncExternalStore(subscribe, mountGetSnapshot, mountGetServerSnapshot)
 
-  const toggleTheme = () => {
-    setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')
-  }
+  const setTheme = useCallback((newTheme: Themes) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('app-theme', newTheme)
+      document.documentElement.setAttribute('data-theme', newTheme)
 
-  const isDark = useMemo(() => resolvedTheme === 'dark', [resolvedTheme])
+      window.dispatchEvent(new Event('local-theme-change'))
+    }
+  }, [])
+
+  const toggleTheme = useCallback(() => {
+    const nextTheme = theme === 'dark' ? 'light' : 'dark'
+    setTheme(nextTheme as Themes)
+  }, [theme, setTheme])
+
+  const isDark = useMemo(() => theme === 'dark', [theme])
 
   return {
     theme,
     toggleTheme,
     isDark,
-    setTheme: (newTheme: Themes) => setTheme(newTheme),
+    setTheme,
     isMounted,
   }
 }
