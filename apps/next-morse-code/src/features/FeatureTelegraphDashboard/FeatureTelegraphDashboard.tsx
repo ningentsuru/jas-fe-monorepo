@@ -215,3 +215,5 @@ export const FeatureTelegraphDashboard = () => {
     </div>
   )
 }
+
+export default FeatureTelegraphDashboard
