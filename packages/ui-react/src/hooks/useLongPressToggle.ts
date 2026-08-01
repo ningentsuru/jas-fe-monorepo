@@ -20,12 +20,10 @@ export interface LongPressEventHandlers {
 export function useLongPressToggle(options: LongPressOptions = {}): LongPressEventHandlers {
   const delay = options.delay ?? 1000
 
-  // Track mutable state in refs to avoid triggering re-renders during interactions
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const isLongPressedRef = useRef<boolean>(false)
   const optionsRef = useRef<LongPressOptions>(options)
 
-  // Keep options updated without re-running the hooks matrix
   optionsRef.current = options
 
   const start = useCallback(() => {

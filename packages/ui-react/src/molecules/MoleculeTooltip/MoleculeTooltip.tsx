@@ -1,12 +1,18 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback, type ReactNode } from 'react'
+import React, { useState, useRef, useEffect, useCallback, useId } from 'react'
 
 export interface MoleculeTooltipProps {
   title?: string
   position?: 'top' | 'bottom' | 'left' | 'right'
   delay?: number
-  children?: ReactNode
+  children?: React.ReactNode
+  content?: React.ReactNode
+}
+
+interface Coords {
+  top: number
+  left: number
 }
 
 interface ArrowCoords {
@@ -16,7 +22,6 @@ interface ArrowCoords {
   right: string
   transform: string
   borders: string
-  [key: string]: string
 }
 
 export const MoleculeTooltip = ({
@@ -24,14 +29,14 @@ export const MoleculeTooltip = ({
   position = 'top',
   delay = 200,
   children,
+  content,
 }: MoleculeTooltipProps) => {
-  const [isVisible, setIsVisible] = useState<boolean>(false)
-  const [isCalculating, setIsCalculating] = useState<boolean>(false)
+  const [isVisible, setIsVisible] = useState(false)
+  const [isCalculating, setIsCalculating] = useState(false)
 
-  const triggerRef = useRef<HTMLDivElement>(null)
-  const tooltipRef = useRef<HTMLDivElement>(null)
+  const tooltipId = useId()
 
-  const [coords, setCoords] = useState({ top: 0, left: 0 })
+  const [coords, setCoords] = useState<Coords>({ top: 0, left: 0 })
   const [arrowCoords, setArrowCoords] = useState<ArrowCoords>({
     top: '',
     left: '',
@@ -41,15 +46,101 @@ export const MoleculeTooltip = ({
     borders: '',
   })
 
+  const triggerRef = useRef<HTMLDivElement>(null)
+  const tooltipRef = useRef<HTMLDivElement>(null)
+
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const rafIdRef = useRef<number | null>(null)
   const resizeObserverRef = useRef<ResizeObserver | null>(null)
+  const rafIdRef = useRef<number | null>(null)
+
+  const recalculatePosition = useCallback(() => {
+    if (!triggerRef.current || !tooltipRef.current) return
+
+    const trigger = triggerRef.current.getBoundingClientRect()
+    const tooltipWidth = tooltipRef.current.offsetWidth
+    const tooltipHeight = tooltipRef.current.offsetHeight
+
+    const pad = 12
+    const gap = 8
+    const vw = window.innerWidth
+    const vh = window.innerHeight
+
+    let actualPos = position
+
+    if (actualPos === 'left' || actualPos === 'right') {
+      const fitsLeft = trigger.left - tooltipWidth - gap >= pad
+      const fitsRight = trigger.right + tooltipWidth + gap <= vw - pad
+
+      if (actualPos === 'left' && !fitsLeft) {
+        actualPos = fitsRight
+          ? 'right'
+          : trigger.top - tooltipHeight - gap >= pad
+            ? 'top'
+            : 'bottom'
+      } else if (actualPos === 'right' && !fitsRight) {
+        actualPos = fitsLeft ? 'left' : trigger.top - tooltipHeight - gap >= pad ? 'top' : 'bottom'
+      }
+    }
+
+    if (actualPos === 'top' && trigger.top - tooltipHeight - gap < pad) {
+      actualPos = 'bottom'
+    } else if (actualPos === 'bottom' && trigger.bottom + tooltipHeight + gap > vh - pad) {
+      actualPos = 'top'
+    }
+
+    let idealLeft = 0
+    let idealTop = 0
+
+    if (actualPos === 'top' || actualPos === 'bottom') {
+      idealLeft = trigger.left + (trigger.width - tooltipWidth) / 2
+      idealTop = actualPos === 'top' ? trigger.top - tooltipHeight - gap : trigger.bottom + gap
+    } else {
+      idealLeft = actualPos === 'left' ? trigger.left - tooltipWidth - gap : trigger.right + gap
+      idealTop = trigger.top + (trigger.height - tooltipHeight) / 2
+    }
+
+    if (idealLeft < pad) idealLeft = pad
+    if (idealLeft + tooltipWidth > vw - pad) idealLeft = vw - tooltipWidth - pad
+
+    if (idealTop < pad) idealTop = pad
+    if (idealTop + tooltipHeight > vh - pad) idealTop = vh - tooltipHeight - pad
+
+    setCoords({
+      left: idealLeft - trigger.left,
+      top: idealTop - trigger.top,
+    })
+
+    const triggerCenterH = trigger.left + trigger.width / 2
+    const triggerCenterV = trigger.top + trigger.height / 2
+
+    const arrow: ArrowCoords = {
+      top: '',
+      left: '',
+      bottom: '',
+      right: '',
+      transform: 'rotate(45deg)',
+      borders: '',
+    }
+
+    if (actualPos === 'top' || actualPos === 'bottom') {
+      arrow[actualPos === 'top' ? 'bottom' : 'top'] = '-4px'
+      const arrowLeft = triggerCenterH - idealLeft - 4
+      arrow.left = `${Math.max(8, Math.min(tooltipWidth - 16, arrowLeft))}px`
+      arrow.borders = actualPos === 'top' ? 'border-r border-b' : 'border-l border-t'
+    } else {
+      arrow[actualPos === 'left' ? 'right' : 'left'] = '-4px'
+      const arrowTop = triggerCenterV - idealTop - 4
+      arrow.top = `${Math.max(8, Math.min(tooltipHeight - 16, arrowTop))}px`
+      arrow.borders = actualPos === 'left' ? 'border-r border-t' : 'border-l border-b'
+    }
+
+    setArrowCoords(arrow)
+  }, [position])
 
   const destroyListeners = useCallback(() => {
-    if (typeof window !== 'undefined') {
-      window.removeEventListener('resize', recalculatePosition)
-      window.removeEventListener('scroll', recalculatePosition)
-    }
+    window.removeEventListener('resize', recalculatePosition)
+    window.removeEventListener('scroll', recalculatePosition)
+
     if (resizeObserverRef.current) {
       resizeObserverRef.current.disconnect()
       resizeObserverRef.current = null
@@ -58,102 +149,15 @@ export const MoleculeTooltip = ({
       cancelAnimationFrame(rafIdRef.current)
       rafIdRef.current = null
     }
-  }, [])
-
-  const recalculatePosition = useCallback(() => {
-    if (!triggerRef.current || !tooltipRef.current) return
-
-    const trigger = triggerRef.current.getBoundingClientRect()
-    const tooltipWidth = tooltipRef.current.offsetWidth || 120
-    const tooltipHeight = tooltipRef.current.offsetHeight || 40
-
-    const pad = 12
-    const gap = 8
-    const vw = typeof window !== 'undefined' ? window.innerWidth : 1024
-    const vh = typeof window !== 'undefined' ? window.innerHeight : 768
-
-    let newTop = 0
-    let newLeft = 0
-    let actualPosition = position
-
-    if (position === 'top' && trigger.top - tooltipHeight - gap < pad) {
-      actualPosition = 'bottom'
-    } else if (position === 'bottom' && trigger.bottom + tooltipHeight + gap > vh - pad) {
-      actualPosition = 'top'
-    } else if (position === 'left' && trigger.left - tooltipWidth - gap < pad) {
-      actualPosition = 'right'
-    } else if (position === 'right' && trigger.right + tooltipWidth + gap > vw - pad) {
-      actualPosition = 'left'
-    }
-
-    const scrollY = typeof window !== 'undefined' ? window.scrollY : 0
-    const scrollX = typeof window !== 'undefined' ? window.scrollX : 0
-
-    switch (actualPosition) {
-      case 'top':
-        newTop = trigger.top + scrollY - tooltipHeight - gap
-        newLeft = trigger.left + scrollX + trigger.width / 2 - tooltipWidth / 2
-        setArrowCoords({
-          top: '100%',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          borders: 'border-t-card border-x-transparent border-b-transparent',
-          bottom: '',
-          right: '',
-        })
-        break
-      case 'bottom':
-        newTop = trigger.bottom + scrollY + gap
-        newLeft = trigger.left + scrollX + trigger.width / 2 - tooltipWidth / 2
-        setArrowCoords({
-          bottom: '100%',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          borders: 'border-b-card border-x-transparent border-t-transparent',
-          top: '',
-          right: '',
-        })
-        break
-      case 'left':
-        newTop = trigger.top + scrollY + trigger.height / 2 - tooltipHeight / 2
-        newLeft = trigger.left + scrollX - tooltipWidth - gap
-        setArrowCoords({
-          top: '50%',
-          left: '100%',
-          transform: 'translateY(-50%)',
-          borders: 'border-l-card border-y-transparent border-r-transparent',
-          bottom: '',
-          right: '',
-        })
-        break
-      case 'right':
-        newTop = trigger.top + scrollY + trigger.height / 2 - tooltipHeight / 2
-        newLeft = trigger.right + scrollX + gap
-        setArrowCoords({
-          top: '50%',
-          right: '100%',
-          transform: 'translateY(-50%)',
-          borders: 'border-r-card border-y-transparent border-l-transparent',
-          bottom: '',
-          left: '',
-        })
-        break
-    }
-
-    if (newLeft < pad) newLeft = pad
-    if (newLeft + tooltipWidth > vw - pad) newLeft = vw - pad - tooltipWidth
-
-    setCoords({ top: newTop, left: newLeft })
-  }, [position])
+  }, [recalculatePosition])
 
   const setupListeners = useCallback(() => {
     destroyListeners()
 
-    if (typeof window === 'undefined') return
     window.addEventListener('resize', recalculatePosition)
     window.addEventListener('scroll', recalculatePosition, { passive: true })
 
-    if (tooltipRef.current && typeof ResizeObserver !== 'undefined') {
+    if (tooltipRef.current) {
       resizeObserverRef.current = new ResizeObserver(() => {
         if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current)
         rafIdRef.current = requestAnimationFrame(() => {
@@ -164,79 +168,136 @@ export const MoleculeTooltip = ({
     }
   }, [recalculatePosition, destroyListeners])
 
-  const showTooltip = () => {
+  const show = useCallback(() => {
     if (timerRef.current) clearTimeout(timerRef.current)
+
     setIsCalculating(true)
     setIsVisible(true)
-    setTimeout(() => {
+  }, [])
+
+  useEffect(() => {
+    if (isVisible && isCalculating) {
       recalculatePosition()
       setIsCalculating(false)
       setupListeners()
-    }, 0)
-  }
+    }
+  }, [isVisible, isCalculating, recalculatePosition, setupListeners])
 
-  const hideTooltip = () => {
+  const hide = useCallback(() => {
     destroyListeners()
+
     if (timerRef.current) clearTimeout(timerRef.current)
     timerRef.current = setTimeout(() => {
       setIsVisible(false)
     }, delay)
-  }
+  }, [delay, destroyListeners])
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (e.key === 'Escape') {
+        if (isVisible) {
+          e.stopPropagation()
+          hide()
+        }
+        return
+      }
+
+      if (e.key === 'Enter' || e.key === ' ') {
+        const activeEl = document.activeElement
+        const isInteractiveElement =
+          activeEl &&
+          (activeEl.tagName === 'BUTTON' ||
+            activeEl.tagName === 'INPUT' ||
+            activeEl.tagName === 'SELECT' ||
+            activeEl.tagName === 'TEXTAREA' ||
+            activeEl.getAttribute('role') === 'button')
+
+        if (isInteractiveElement && activeEl !== triggerRef.current?.firstElementChild) {
+          return
+        }
+
+        e.preventDefault()
+        if (isVisible) {
+          hide()
+        } else {
+          show()
+        }
+      }
+    },
+    [isVisible, show, hide],
+  )
 
   useEffect(() => {
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current)
-      destroyListeners()
+      window.removeEventListener('resize', recalculatePosition)
+      window.removeEventListener('scroll', recalculatePosition)
+      if (resizeObserverRef.current) resizeObserverRef.current.disconnect()
+      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current)
     }
-  }, [destroyListeners])
+  }, [recalculatePosition])
 
   return (
-    <>
-      <div
-        ref={triggerRef}
-        className="molecule-tooltip-trigger inline-block"
-        onMouseEnter={showTooltip}
-        onMouseLeave={hideTooltip}
-        onFocus={showTooltip}
-        onBlur={hideTooltip}
-        aria-describedby={isVisible ? 'tooltip-content' : undefined}
-        data-testid="molecule-tooltip-trigger"
-      >
-        {children}
-      </div>
+    <div
+      ref={triggerRef}
+      className="molecule-tooltip relative inline-block"
+      data-testid="molecule-tooltip"
+      onMouseEnter={show}
+      onMouseLeave={hide}
+      onFocus={show}
+      onBlur={hide}
+      onKeyDown={handleKeyDown}
+    >
+      {children || (
+        <span
+          className="border-foreground focus-visible:ring-ring cursor-help rounded border-b border-dotted px-0.5 outline-hidden transition-all focus-visible:ring-2 focus-visible:ring-offset-2"
+          tabIndex={0}
+          role="button"
+          aria-describedby={isVisible ? tooltipId : undefined}
+          onClick={() => setIsVisible((prev) => !prev)}
+        >
+          {title}
+        </span>
+      )}
 
       {isVisible && (
         <div
+          id={tooltipId}
           ref={tooltipRef}
-          id="tooltip-content"
           role="tooltip"
-          className={[
-            'molecule-tooltip bg-card text-card-foreground border-border hc:border-2 absolute z-[100] max-w-xs rounded-md border px-3 py-1.5 text-sm font-medium shadow-md transition-opacity duration-200 ease-in-out data-[theme=high-contrast]:border-2',
-            isCalculating ? 'opacity-0' : 'opacity-100',
-          ].join(' ')}
-          style={{
-            top: `${coords.top}px`,
-            left: `${coords.left}px`,
-            pointerEvents: 'none',
-          }}
-          data-testid="tooltip-content"
+          style={
+            isCalculating
+              ? { top: '-9999px', left: '-9999px', visibility: 'hidden' }
+              : { top: `${coords.top}px`, left: `${coords.left}px` }
+          }
+          className={`border-border bg-card text-foreground absolute z-50 w-max max-w-xs transform rounded-md border p-3 shadow-lg transition duration-150 ${
+            isCalculating ? 'scale-95 opacity-0' : 'scale-100 opacity-100 ease-out'
+          }`}
+          onMouseEnter={show}
+          onMouseLeave={hide}
         >
-          {title}
-          <div
-            className={['absolute h-0 w-0 border-[6px]', arrowCoords.borders].join(' ')}
-            style={{
-              top: arrowCoords.top,
-              bottom: arrowCoords.bottom,
-              left: arrowCoords.left,
-              right: arrowCoords.right,
-              transform: arrowCoords.transform,
-            }}
-            aria-hidden="true"
-            data-testid="tooltip-arrow"
-          />
+          {title && (
+            <p className="text-muted-foreground mb-1 text-xs font-semibold tracking-wider uppercase">
+              {title}
+            </p>
+          )}
+          <div className="text-sm">{content || title}</div>
+
+          {!isCalculating && (
+            <div
+              style={{
+                top: arrowCoords.top,
+                left: arrowCoords.left,
+                bottom: arrowCoords.bottom,
+                right: arrowCoords.right,
+                transform: arrowCoords.transform,
+              }}
+              className={`border-border bg-card absolute h-2 w-2 ${arrowCoords.borders}`}
+            />
+          )}
         </div>
       )}
-    </>
+    </div>
   )
 }
 

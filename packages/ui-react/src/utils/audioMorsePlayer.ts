@@ -1,11 +1,8 @@
-// packages/ui-react/src/utils/audioMorsePlayer.ts
-
 let audioCtx: AudioContext | null = null
 let oscillator: OscillatorNode | null = null
 let gainNode: GainNode | null = null
 let signalStartTime = 0
 
-// --- Background Awake Stream Primitives ---
 let silentOscillator: OscillatorNode | null = null
 let silentGainNode: GainNode | null = null
 
@@ -31,10 +28,6 @@ export const audioMorsePlayer = {
     }
   },
 
-  /**
-   * Forces the browser to awake the hardware stream by playing an un-throttled sub-bass wave loop.
-   * This forces the browser speaker tab icon to appear and keeps the sound context unblocked.
-   */
   startDummySilence: (): void => {
     try {
       if (!audioCtx) {
@@ -58,11 +51,9 @@ export const audioMorsePlayer = {
       silentOscillator = audioCtx.createOscillator()
       silentGainNode = audioCtx.createGain()
 
-      // 15Hz is below human hearing thresholds but recognized by browsers as valid active content
       silentOscillator.type = 'sine'
       silentOscillator.frequency.value = 15
 
-      // Infinitesimal gain fraction forces hardware channels open without creating audible noise
       silentGainNode.gain.setValueAtTime(0.001, audioCtx.currentTime)
 
       silentOscillator.connect(silentGainNode)
@@ -73,9 +64,6 @@ export const audioMorsePlayer = {
     }
   },
 
-  /**
-   * Destroys background listeners completely when system untoggles or timeouts.
-   */
   stopDummySilence: (): void => {
     try {
       if (silentOscillator) {
@@ -106,9 +94,7 @@ export const audioMorsePlayer = {
       if (oscillator) {
         try {
           oscillator.stop()
-        } catch {
-          /* noop */
-        }
+        } catch {}
         oscillator.disconnect()
       }
 

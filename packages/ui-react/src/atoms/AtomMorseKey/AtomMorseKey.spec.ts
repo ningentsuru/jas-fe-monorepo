@@ -36,7 +36,6 @@ describe('AtomMorseKey', () => {
 
     const keyElement = screen.getByTestId('atom-morse-key') as HTMLElement
 
-    // Simulate standard tap under 250ms threshold
     fireEvent.pointerDown(keyElement)
     await act(async () => {
       vi.advanceTimersByTime(100)
@@ -53,7 +52,6 @@ describe('AtomMorseKey', () => {
 
     const keyElement = screen.getByTestId('atom-morse-key') as HTMLElement
 
-    // Simulate sustained long hold past 250ms threshold
     fireEvent.pointerDown(keyElement)
     await act(async () => {
       vi.advanceTimersByTime(300)
