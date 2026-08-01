@@ -13,7 +13,6 @@ import {
 } from '@repo/ui-react'
 import { NavItem } from '@/types'
 import type { Themes } from '@/types'
-import Link from 'next/link'
 
 interface LayoutClientProps {
   children: React.ReactNode
@@ -30,17 +29,15 @@ export function LayoutClient({ children, navItems }: LayoutClientProps) {
         <OrganismHeader
           navItems={navItems}
           branding={
-            <Link href="/">
-              <AtomButton>
-                <h1 className="text-foreground flex items-center justify-center text-lg font-semibold">
-                  <span className="hidden sm:inline">Your N</span>
-                  <span className="sm:hidden">N</span>
-                  <AtomWordSwap words={['u', 'e']} interval={2000} transition="slide-down" />
-                  <span className="hidden sm:inline">xt Frontend Developer</span>
-                  <span className="sm:hidden">xt Developer</span>
-                </h1>
-              </AtomButton>
-            </Link>
+            <AtomButton href="/" className="shrink-0 p-0!">
+              <h1 className="text-foreground flex items-center justify-center text-lg font-semibold">
+                <span className="hidden sm:inline">Your N</span>
+                <span className="sm:hidden">N</span>
+                <AtomWordSwap words={['u', 'e']} interval={2000} transition="slide-down" />
+                <span className="hidden sm:inline">xt Frontend Developer</span>
+                <span className="sm:hidden">xt Developer</span>
+              </h1>
+            </AtomButton>
           }
           themeToggle={
             isMounted ? (
