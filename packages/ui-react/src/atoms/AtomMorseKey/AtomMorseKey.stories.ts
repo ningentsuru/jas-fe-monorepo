@@ -1,4 +1,3 @@
-// packages/ui-react/src/atoms/AtomMorseKey/AtomMorseKey.stories.tsx
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import AtomMorseKey, { type AtomMorseKeyProps } from './AtomMorseKey'
 

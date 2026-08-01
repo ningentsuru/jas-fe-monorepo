@@ -1,11 +1,13 @@
 packages:
   - "apps/*"
   - "packages/*"
+
 allowBuilds:
   core-js-pure: true
   esbuild: true
   sharp: true
   unrs-resolver: true
+
 minimumReleaseAgeExclude:
   - '@oxlint/binding-android-arm-eabi@1.75.0 || 1.76.0'
   - '@oxlint/binding-android-arm64@1.75.0 || 1.76.0'
@@ -31,3 +33,8 @@ minimumReleaseAgeExclude:
   - '@lucide/vue@1.27.0'
   - '@types/node@26.1.2'
   - '@types/react-dom@19.2.4'
+
+overrides:
+  sharp: "^0.35.3"
+  postcss: "^8.5.23"
+  brace-expansion: "^1.1.17"

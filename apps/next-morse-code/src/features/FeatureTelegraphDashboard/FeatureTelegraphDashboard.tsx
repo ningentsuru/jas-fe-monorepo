@@ -105,7 +105,7 @@ export const FeatureTelegraphDashboard = () => {
   const isMatchSuccessful = translatedText.trim().toUpperCase() === targetWord
 
   return (
-    <div className="flex w-full max-w-xl flex-col items-center justify-center space-y-6 px-4 py-2">
+    <div className="feature-telegraph-dashboard mt-4 flex flex-col gap-6">
       {/* 1. Master Power Connection Control */}
       <div className="bg-card border-border flex w-full items-center justify-between rounded-xl border p-4 shadow-xs">
         <div className="flex flex-col text-left">

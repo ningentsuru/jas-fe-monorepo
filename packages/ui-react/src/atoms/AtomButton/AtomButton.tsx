@@ -1,12 +1,7 @@
 'use client'
 
-import {
-  useMemo,
-  type MouseEvent,
-  type ReactNode,
-  type CSSProperties,
-  type HTMLAttributes,
-} from 'react'
+import React, { useMemo } from 'react'
+import type { MouseEvent, ReactNode, CSSProperties, ComponentPropsWithoutRef } from 'react'
 
 export type ButtonTarget = '_blank' | '_self' | '_parent' | '_top'
 
@@ -24,6 +19,9 @@ export interface AtomButtonProps {
   style?: CSSProperties
 }
 
+type CombinedProps = AtomButtonProps &
+  Omit<ComponentPropsWithoutRef<'button'> & ComponentPropsWithoutRef<'a'>, keyof AtomButtonProps>
+
 export const AtomButton = ({
   size = 'md',
   disabled = false,
@@ -37,8 +35,8 @@ export const AtomButton = ({
   className = '',
   style,
   ...attrs
-}: AtomButtonProps & HTMLAttributes<HTMLElement>) => {
-  const componentTag = useMemo(() => {
+}: CombinedProps) => {
+  const Tag = useMemo(() => {
     if (disabled) return 'button'
     if (to || href) return 'a'
     return 'button'
@@ -112,24 +110,8 @@ export const AtomButton = ({
 
   const mergedStyle = { ...buttonStyle, ...style }
 
-  if (componentTag === 'a') {
-    return (
-      <a
-        {...componentProps}
-        {...attrs}
-        data-testid="atom-button"
-        className={finalClass}
-        style={mergedStyle}
-        aria-disabled={disabled ? 'true' : undefined}
-        onClick={handleClick}
-      >
-        {children}
-      </a>
-    )
-  }
-
   return (
-    <button
+    <Tag
       {...componentProps}
       {...attrs}
       data-testid="atom-button"
@@ -139,7 +121,7 @@ export const AtomButton = ({
       onClick={handleClick}
     >
       {children}
-    </button>
+    </Tag>
   )
 }
 

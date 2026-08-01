@@ -1,4 +1,3 @@
-// packages/ui-react/src/atoms/AtomMorseKey/AtomMorseKey.tsx
 'use client'
 
 import * as React from 'react'
@@ -118,5 +117,4 @@ export const AtomMorseKey = ({
   )
 }
 
-// 👈 Essential default fallback mapping to maintain global package.json exports mapping
 export default AtomMorseKey

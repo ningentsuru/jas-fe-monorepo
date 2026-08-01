@@ -57,7 +57,6 @@ describe('MoleculeQuadrantIcon', () => {
     const topLeftElement = slices[0].element as HTMLElement
     const bottomRightElement = slices[3].element as HTMLElement
 
-    // 🥇 Fixed: Reverted back to exact unitless format strings matching your template output!
     expect(topLeftElement.style.clipPath).toBe('inset(0 50% 50% 0)')
     expect(bottomRightElement.style.clipPath).toBe('inset(50% 0 0 50%)')
   })
