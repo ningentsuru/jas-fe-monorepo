@@ -9,7 +9,7 @@ export default mergeConfig(
       environment: 'happy-dom',
       exclude: [...configDefaults.exclude, 'e2e/**', 'node_modules/**', 'dist/**'],
       root: fileURLToPath(new URL('./', import.meta.url)),
-      setupFiles: ['./src/test/setup.ts'],
+      setupFiles: ['./vitest.setup.ts'],
     },
   }),
 )

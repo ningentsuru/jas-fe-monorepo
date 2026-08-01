@@ -6,8 +6,10 @@
     "moduleResolution": "bundler",
     "types": ["node", "vite/client"],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@repo/ui-vue": ["../../packages/ui-vue/src/index.ts"],
+      "@repo/ui-vue/*": ["../../packages/ui-vue/src/*"],
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue"]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue", "vitest.setup.ts"]
 }

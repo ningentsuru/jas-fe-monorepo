@@ -1,4 +1,10 @@
 {
-  "extends": "@tsconfig/node24/tsconfig.json",
-  "include": ["./**/*"]
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "include": ["**/*"]
 }
