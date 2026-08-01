@@ -84,7 +84,7 @@ export const FeatureTelegraphDashboard = () => {
           return prev + ' '
         })
       }, 1400)
-    }, 700)
+    }, 400)
 
     return () => clearTimeout(decodeTimer)
   }, [signalBuffer])
