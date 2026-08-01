@@ -17,16 +17,23 @@ const subscribe = (callback: () => void) => {
 
 const getSnapshot = () => {
   if (typeof window === 'undefined') return 'light'
-  return localStorage.getItem('app-theme') || 'light'
+
+  const saved = localStorage.getItem('app-theme') || 'light'
+
+  if (document.documentElement.getAttribute('data-theme') !== saved) {
+    document.documentElement.setAttribute('data-theme', saved)
+  }
+
+  return saved
 }
+
 const getServerSnapshot = () => 'light'
 
 const mountGetSnapshot = () => true
 const mountGetServerSnapshot = () => false
 
 export function useAppTheme() {
-  const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
-
+  const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot) as Themes
   const isMounted = useSyncExternalStore(subscribe, mountGetSnapshot, mountGetServerSnapshot)
 
   const setTheme = useCallback((newTheme: Themes) => {
@@ -43,12 +50,10 @@ export function useAppTheme() {
     setTheme(nextTheme as Themes)
   }, [theme, setTheme])
 
-  const isDark = useMemo(() => theme === 'dark', [theme])
-
   return {
     theme,
     toggleTheme,
-    isDark,
+    isDark: useMemo(() => theme === 'dark', [theme]),
     setTheme,
     isMounted,
   }
