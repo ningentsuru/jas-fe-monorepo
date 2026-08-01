@@ -6,15 +6,33 @@ import meta, { Default, OpenedDropdown, SingleLinkNoDropdown } from './MoleculeN
 
 vi.mock('../../', () => ({
   AtomIcon: ({ className, size }: { className?: string; size: string }) =>
-    React.createElement('span', { 'data-testid': 'mock-icon', 'data-size': size, className }, 'icon'),
-  AtomButton: ({ children, onClick, className, to }: { children: React.ReactNode; onClick?: (e: any) => void; className?: string; to?: string }) =>
-    React.createElement('button', { type: 'button', onClick, className, 'data-testid': 'mock-button', 'data-to': to }, children),
+    React.createElement(
+      'span',
+      { 'data-testid': 'mock-icon', 'data-size': size, className },
+      'icon',
+    ),
+  AtomButton: ({
+    children,
+    onClick,
+    className,
+    to,
+  }: {
+    children: React.ReactNode
+    onClick?: (e: any) => void
+    className?: string
+    to?: string
+  }) =>
+    React.createElement(
+      'button',
+      { type: 'button', onClick, className, 'data-testid': 'mock-button', 'data-to': to },
+      children,
+    ),
   AtomNavLink: ({ label, to, onClick }: { label: string; to?: string; onClick?: () => void }) =>
     React.createElement(
       'button',
       { type: 'button', onClick, 'data-testid': 'mock-nav-link', 'data-to': to },
-      React.createElement('span', null, label)
-    )
+      React.createElement('span', null, label),
+    ),
 }))
 
 const getProps = (storyArgs?: Partial<MoleculeNavDropdownProps>): MoleculeNavDropdownProps => {
@@ -64,10 +82,13 @@ describe('MoleculeNavDropdown', () => {
   it('bubbles structural toggle notifications upward including parameters on click actions', () => {
     const handleToggle = vi.fn()
     render(
-      React.createElement(MoleculeNavDropdown, getProps({
-        ...Default.args,
-        onToggle: handleToggle,
-      }))
+      React.createElement(
+        MoleculeNavDropdown,
+        getProps({
+          ...Default.args,
+          onToggle: handleToggle,
+        }),
+      ),
     )
 
     const button = screen.getByTestId('mock-button')
@@ -80,10 +101,13 @@ describe('MoleculeNavDropdown', () => {
   it('skips toggle updates entirely if triggering a simple non-dropdown parameter link', () => {
     const handleToggle = vi.fn()
     render(
-      React.createElement(MoleculeNavDropdown, getProps({
-        ...SingleLinkNoDropdown.args,
-        onToggle: handleToggle,
-      }))
+      React.createElement(
+        MoleculeNavDropdown,
+        getProps({
+          ...SingleLinkNoDropdown.args,
+          onToggle: handleToggle,
+        }),
+      ),
     )
 
     const button = screen.getByTestId('mock-button')
@@ -95,10 +119,13 @@ describe('MoleculeNavDropdown', () => {
   it('bubbles navigate actions when clicking individual dropdown nested option links', () => {
     const handleNavigate = vi.fn()
     render(
-      React.createElement(MoleculeNavDropdown, getProps({
-        ...OpenedDropdown.args,
-        onNavigate: handleNavigate,
-      }))
+      React.createElement(
+        MoleculeNavDropdown,
+        getProps({
+          ...OpenedDropdown.args,
+          onNavigate: handleNavigate,
+        }),
+      ),
     )
 
     const childLink = screen.getAllByTestId('mock-nav-link')[0]

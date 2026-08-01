@@ -23,7 +23,7 @@ export const MoleculeNavDropdown = ({
   index,
   isOpen = false,
   onToggle,
-  onNavigate
+  onNavigate,
 }: MoleculeNavDropdownProps) => {
   const [isHovered, setIsHovered] = useState(false)
 
@@ -46,9 +46,7 @@ export const MoleculeNavDropdown = ({
         }}
         className="inline-flex cursor-pointer items-center gap-1 px-3 py-2 font-medium hover:bg-transparent"
       >
-        <span className="text-foreground hover:text-primary transition-colors">
-          {item.label}
-        </span>
+        <span className="text-foreground hover:text-primary transition-colors">{item.label}</span>
         {item.children && (
           <AtomIcon
             icon={ChevronDown}

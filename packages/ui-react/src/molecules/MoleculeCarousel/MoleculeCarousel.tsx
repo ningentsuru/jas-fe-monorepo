@@ -25,12 +25,15 @@ export const MoleculeCarousel = ({
   autoPlay = false,
   interval = 4000,
   loop = true,
-  onChange
+  onChange,
 }: MoleculeCarouselProps) => {
   const [activeIndex, setActiveIndex] = useState(0)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  const canNext = useMemo(() => loop || activeIndex < items.length - 1, [loop, activeIndex, items.length])
+  const canNext = useMemo(
+    () => loop || activeIndex < items.length - 1,
+    [loop, activeIndex, items.length],
+  )
   const canPrev = useMemo(() => loop || activeIndex > 0, [loop, activeIndex])
 
   function next() {

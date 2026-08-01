@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import TemplateDefaultPortfolio, { type TemplateDefaultPortfolioProps } from './TemplateDefaultPortfolio'
+import TemplateDefaultPortfolio, {
+  type TemplateDefaultPortfolioProps,
+} from './TemplateDefaultPortfolio'
 
 const meta: Meta<typeof TemplateDefaultPortfolio> = {
   title: 'Components/TemplateDefaultPortfolio',

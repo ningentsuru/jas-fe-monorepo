@@ -16,7 +16,7 @@ export const AtomToggle = ({
   isToggled = false,
   size = 'sm',
   onToggle,
-  onLongToggle
+  onLongToggle,
 }: AtomToggleProps) => {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const isLongPressRef = useRef<boolean>(false)

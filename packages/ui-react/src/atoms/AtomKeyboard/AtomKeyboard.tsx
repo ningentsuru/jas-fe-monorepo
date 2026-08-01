@@ -2,9 +2,7 @@ export interface AtomKeyboardProps {
   character?: string
 }
 
-export const AtomKeyboard = ({
-  character = ''
-}: AtomKeyboardProps) => {
+export const AtomKeyboard = ({ character = '' }: AtomKeyboardProps) => {
   return (
     <kbd
       className="atom-keyboard bg-card border-border text-foreground rounded border px-1 font-mono shadow-sm"

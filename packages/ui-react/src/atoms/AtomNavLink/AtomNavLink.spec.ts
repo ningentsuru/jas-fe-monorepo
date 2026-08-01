@@ -60,7 +60,11 @@ describe('AtomNavLink', () => {
   })
 
   it('renders injected markup content via the named trailing slot structure', () => {
-    const trailingNode = React.createElement('span', { className: 'badge-mock', 'data-testid': 'badge-mock' }, 'Icon')
+    const trailingNode = React.createElement(
+      'span',
+      { className: 'badge-mock', 'data-testid': 'badge-mock' },
+      'Icon',
+    )
     const props = { ...getProps(Default.args), trailing: trailingNode }
     render(React.createElement(AtomNavLink, props))
 

@@ -1,6 +1,14 @@
 'use client'
 
-import { useState, useMemo, type ChangeEvent, type MouseEvent, type KeyboardEvent, type CSSProperties, type SelectHTMLAttributes } from 'react'
+import {
+  useState,
+  useMemo,
+  type ChangeEvent,
+  type MouseEvent,
+  type KeyboardEvent,
+  type CSSProperties,
+  type SelectHTMLAttributes,
+} from 'react'
 import { ChevronRight } from 'lucide-react'
 import { AtomIcon } from '../../'
 
@@ -43,7 +51,8 @@ export const AtomSelect = ({
   className = '',
   style,
   ...attrs
-}: AtomSelectProps & Omit<SelectHTMLAttributes<HTMLSelectElement>, 'size' | 'value' | 'onChange'>) => {
+}: AtomSelectProps &
+  Omit<SelectHTMLAttributes<HTMLSelectElement>, 'size' | 'value' | 'onChange'>) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
   function closeDropdown() {
@@ -121,8 +130,10 @@ export const AtomSelect = ({
           error
             ? 'border-destructive focus-visible:border-destructive focus-visible:ring-destructive/50'
             : 'hover:bg-muted/40',
-          className
-        ].filter(Boolean).join(' ')}
+          className,
+        ]
+          .filter(Boolean)
+          .join(' ')}
       >
         <option value="" disabled hidden className="bg-card text-card-foreground">
           {placeholder}

@@ -3,7 +3,6 @@ import { mount } from '@vue/test-utils'
 import DefaultLayout from './DefaultLayout.vue'
 import { Default } from './DefaultLayout.stories'
 
-
 describe('DefaultLayout', () => {
   it('renders properly using Storybook args', () => {
     const wrapper = mount(DefaultLayout, {

@@ -8,11 +8,7 @@ export interface AtomAvatarProps {
   round?: boolean
 }
 
-export const AtomAvatar = ({
-  username = '',
-  size = 'md',
-  round = true
-}: AtomAvatarProps) => {
+export const AtomAvatar = ({ username = '', size = 'md', round = true }: AtomAvatarProps) => {
   const avatarInitials = useMemo(() => {
     return username.trim().slice(0, 2).toUpperCase() || '??'
   }, [username])
@@ -43,7 +39,9 @@ export const AtomAvatar = ({
         sizeClass,
         round ? 'rounded-full' : 'rounded-md',
         'hc:border-2 data-[theme=high-contrast]:border-2',
-      ].filter(Boolean).join(' ')}
+      ]
+        .filter(Boolean)
+        .join(' ')}
       style={avatarStyle}
       data-testid="atom-avatar"
     >

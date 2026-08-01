@@ -12,7 +12,7 @@ if (!global.PointerEvent) {
 }
 
 interface MockedAudioWindow extends Window {
-  AudioContext: unknown;
+  AudioContext: unknown
 }
 
 if (typeof window !== 'undefined' && !window.AudioContext) {
@@ -24,10 +24,10 @@ if (typeof window !== 'undefined' && !window.AudioContext) {
     start: vi.fn(),
     stop: vi.fn(),
     gain: { value: 1, setValueAtTime: vi.fn(), linearRampToValueAtTime: vi.fn() },
-    frequency: { value: 440 }
-  };
+    frequency: { value: 440 },
+  }
 
-  (window as unknown as MockedAudioWindow).AudioContext = class {
+  ;(window as unknown as MockedAudioWindow).AudioContext = class {
     state = 'running'
     currentTime = 0
     createOscillator = () => mockNode

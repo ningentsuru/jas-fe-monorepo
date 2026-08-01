@@ -2,19 +2,28 @@ import React from 'react'
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import OrganismHero, { type OrganismHeroProps } from './OrganismHero'
-import meta, { Default, LeftAligned, WithImageBackground, WithVideoBackground } from './OrganismHero.stories'
+import meta, {
+  Default,
+  LeftAligned,
+  WithImageBackground,
+  WithVideoBackground,
+} from './OrganismHero.stories'
 
 vi.mock('../../', () => ({
   AtomButton: ({ children, to, href, target, variant, size }: any) =>
-    React.createElement('button', {
-      type: 'button',
-      'data-testid': 'mock-button',
-      'data-to': to,
-      'data-href': href,
-      'data-target': target,
-      'data-variant': variant,
-      'data-size': size
-    }, children)
+    React.createElement(
+      'button',
+      {
+        type: 'button',
+        'data-testid': 'mock-button',
+        'data-to': to,
+        'data-href': href,
+        'data-target': target,
+        'data-variant': variant,
+        'data-size': size,
+      },
+      children,
+    ),
 }))
 
 const getProps = (storyArgs?: Partial<OrganismHeroProps>): OrganismHeroProps => {
@@ -90,14 +99,19 @@ describe('OrganismHero', () => {
   })
 
   it('omits button structures completely from the layout tree if parameters are empty', () => {
-    render(React.createElement(OrganismHero, getProps({
-      ...Default.args,
-      ctaLabel: '',
-      secondaryLabel: '',
-    })))
+    render(
+      React.createElement(
+        OrganismHero,
+        getProps({
+          ...Default.args,
+          ctaLabel: '',
+          secondaryLabel: '',
+        }),
+      ),
+    )
 
     expect(screen.queryByTestId('mock-button')).toBeNull()
-    const heroText = screen.getByTestId('organism-hero').textContent;
+    const heroText = screen.getByTestId('organism-hero').textContent
     expect(heroText).not.toContain('Explore Core Atoms')
     expect(heroText).not.toContain('View GitHub Source')
   })

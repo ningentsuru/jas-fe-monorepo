@@ -70,7 +70,7 @@ describe('OrganismHero', () => {
       props: getProps(Default.args),
     })
 
-    const buttonTexts = wrapper.findAll('span').filter(el => {
+    const buttonTexts = wrapper.findAll('span').filter((el) => {
       return el.text() === 'Explore Core Atoms' || el.text() === 'View GitHub Source'
     })
 

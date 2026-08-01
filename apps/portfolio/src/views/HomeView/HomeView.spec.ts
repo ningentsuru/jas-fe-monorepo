@@ -3,7 +3,6 @@ import { mount } from '@vue/test-utils'
 import HomeView from './HomeView.vue'
 import { Default } from './HomeView.stories'
 
-
 describe('HomeView', () => {
   it('renders properly using Storybook args', () => {
     const wrapper = mount(HomeView, {

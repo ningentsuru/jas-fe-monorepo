@@ -11,7 +11,7 @@ export interface TemplateDefaultPortfolioProps {
 export const TemplateDefaultPortfolio = ({
   header,
   footer,
-  children
+  children,
 }: TemplateDefaultPortfolioProps) => {
   return (
     <div

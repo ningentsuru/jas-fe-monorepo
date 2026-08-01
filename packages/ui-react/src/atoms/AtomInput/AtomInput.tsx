@@ -1,6 +1,12 @@
 'use client'
 
-import { useMemo, type ReactNode, type ChangeEvent, type CSSProperties, type InputHTMLAttributes } from 'react'
+import {
+  useMemo,
+  type ReactNode,
+  type ChangeEvent,
+  type CSSProperties,
+  type InputHTMLAttributes,
+} from 'react'
 
 export type InputType = 'text' | 'password' | 'email' | 'number' | 'search' | 'tel' | 'url'
 
@@ -41,7 +47,11 @@ export const AtomInput = ({
   className = '',
   style,
   ...attrs
-}: AtomInputProps & Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'prefix' | 'suffix' | 'value' | 'onChange' | 'type'>) => {
+}: AtomInputProps &
+  Omit<
+    InputHTMLAttributes<HTMLInputElement>,
+    'size' | 'prefix' | 'suffix' | 'value' | 'onChange' | 'type'
+  >) => {
   const inputClass = useMemo(() => {
     if (typeof size === 'number') {
       return 'px-4 text-base h-[var(--input-size)]'
@@ -102,8 +112,10 @@ export const AtomInput = ({
             : 'hover:bg-muted/20',
           hasPrefix ? 'pl-10' : '',
           hasSuffix ? 'pr-10' : '',
-          className
-        ].filter(Boolean).join(' ')}
+          className,
+        ]
+          .filter(Boolean)
+          .join(' ')}
       />
 
       {hasSuffix && (

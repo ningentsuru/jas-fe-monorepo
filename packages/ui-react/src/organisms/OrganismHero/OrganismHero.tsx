@@ -35,7 +35,7 @@ export const OrganismHero = ({
   secondaryTarget = '_blank',
   align = 'center',
   backgroundImage = '',
-  backgroundVideo = ''
+  backgroundVideo = '',
 }: OrganismHeroProps) => {
   const alignClasses = {
     left: 'text-left justify-start items-center',
@@ -52,7 +52,9 @@ export const OrganismHero = ({
       className={[
         'organism-hero relative flex min-h-150 w-full overflow-hidden',
         alignClasses[align],
-      ].filter(Boolean).join(' ')}
+      ]
+        .filter(Boolean)
+        .join(' ')}
       data-testid="organism-hero"
     >
       {backgroundVideo && (
@@ -77,7 +79,10 @@ export const OrganismHero = ({
       )}
 
       <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 sm:px-6 lg:px-8">
-        <h1 className="text-foreground text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl" data-testid="hero-title">
+        <h1
+          className="text-foreground text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl"
+          data-testid="hero-title"
+        >
           {title}
         </h1>
 
@@ -87,7 +92,9 @@ export const OrganismHero = ({
             className={[
               'text-muted-foreground mx-auto max-w-2xl text-lg',
               align !== 'center' && 'mx-0',
-            ].filter(Boolean).join(' ')}
+            ]
+              .filter(Boolean)
+              .join(' ')}
           >
             {subtitle}
           </p>
@@ -99,16 +106,12 @@ export const OrganismHero = ({
               'flex flex-wrap justify-center gap-4',
               align === 'left' && 'justify-start',
               align === 'right' && 'justify-end',
-            ].filter(Boolean).join(' ')}
+            ]
+              .filter(Boolean)
+              .join(' ')}
           >
             {ctaLabel && (
-              <AtomButton
-                to={ctaTo}
-                href={ctaHref}
-                target={ctaTarget}
-                variant="primary"
-                size="lg"
-              >
+              <AtomButton to={ctaTo} href={ctaHref} target={ctaTarget} variant="primary" size="lg">
                 <span>{ctaLabel}</span>
               </AtomButton>
             )}

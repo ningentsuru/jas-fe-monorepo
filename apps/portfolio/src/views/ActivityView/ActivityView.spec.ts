@@ -3,7 +3,6 @@ import { mount } from '@vue/test-utils'
 import ActivityView from './ActivityView.vue'
 import { Default } from './ActivityView.stories'
 
-
 describe('ActivityView', () => {
   it('renders properly using Storybook args', () => {
     const wrapper = mount(ActivityView, {

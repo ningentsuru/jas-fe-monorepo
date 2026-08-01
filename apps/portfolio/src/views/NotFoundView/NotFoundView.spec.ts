@@ -3,7 +3,6 @@ import { mount } from '@vue/test-utils'
 import NotFoundView from './NotFoundView.vue'
 import { Default } from './NotFoundView.stories'
 
-
 describe('NotFoundView', () => {
   it('renders properly using Storybook args', () => {
     const wrapper = mount(NotFoundView, {

@@ -20,7 +20,8 @@ const meta: Meta<typeof OrganismHero> = {
   },
   args: {
     title: 'The Next Generation Monorepo Framework',
-    subtitle: 'Build fluid, micro-frontend experiences optimized natively for Tailwind v4 theme variations.',
+    subtitle:
+      'Build fluid, micro-frontend experiences optimized natively for Tailwind v4 theme variations.',
     ctaLabel: 'Explore Core Atoms',
     ctaHref: '#explore',
     ctaTarget: '_self',

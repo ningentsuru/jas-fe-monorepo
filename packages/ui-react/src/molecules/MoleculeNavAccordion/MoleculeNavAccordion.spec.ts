@@ -2,18 +2,42 @@ import React from 'react'
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import MoleculeNavAccordion, { type MoleculeNavAccordionProps } from './MoleculeNavAccordion'
-import meta, { Default, ExpandedDropdown, SingleLinkNoChildren } from './MoleculeNavAccordion.stories'
+import meta, {
+  Default,
+  ExpandedDropdown,
+  SingleLinkNoChildren,
+} from './MoleculeNavAccordion.stories'
 
 vi.mock('../../', () => ({
   AtomIcon: ({ className, size }: { className?: string; size: string }) =>
-    React.createElement('span', { 'data-testid': 'mock-icon', 'data-size': size, className }, 'icon'),
-  AtomNavLink: ({ label, to, onClick, trailing }: { label: string; to?: string; onClick?: (e: any) => void; trailing?: React.ReactNode }) =>
+    React.createElement(
+      'span',
+      { 'data-testid': 'mock-icon', 'data-size': size, className },
+      'icon',
+    ),
+  AtomNavLink: ({
+    label,
+    to,
+    onClick,
+    trailing,
+  }: {
+    label: string
+    to?: string
+    onClick?: (e: any) => void
+    trailing?: React.ReactNode
+  }) =>
     React.createElement(
       'button',
-      { type: 'button', onClick, 'data-testid': 'mock-nav-link', 'data-label': label, 'data-to': to },
+      {
+        type: 'button',
+        onClick,
+        'data-testid': 'mock-nav-link',
+        'data-label': label,
+        'data-to': to,
+      },
       React.createElement('span', null, label),
-      trailing
-    )
+      trailing,
+    ),
 }))
 
 const getProps = (storyArgs?: Partial<MoleculeNavAccordionProps>): MoleculeNavAccordionProps => {
@@ -73,11 +97,14 @@ describe('MoleculeNavAccordion', () => {
     const handleNavigate = vi.fn()
 
     render(
-      React.createElement(MoleculeNavAccordion, getProps({
-        ...Default.args,
-        onToggle: handleToggle,
-        onNavigate: handleNavigate,
-      }))
+      React.createElement(
+        MoleculeNavAccordion,
+        getProps({
+          ...Default.args,
+          onToggle: handleToggle,
+          onNavigate: handleNavigate,
+        }),
+      ),
     )
 
     const rootLink = screen.getAllByTestId('mock-nav-link')[0]
@@ -92,11 +119,14 @@ describe('MoleculeNavAccordion', () => {
     const handleNavigate = vi.fn()
 
     render(
-      React.createElement(MoleculeNavAccordion, getProps({
-        ...SingleLinkNoChildren.args,
-        onToggle: handleToggle,
-        onNavigate: handleNavigate,
-      }))
+      React.createElement(
+        MoleculeNavAccordion,
+        getProps({
+          ...SingleLinkNoChildren.args,
+          onToggle: handleToggle,
+          onNavigate: handleNavigate,
+        }),
+      ),
     )
 
     const rootLink = screen.getAllByTestId('mock-nav-link')[0]

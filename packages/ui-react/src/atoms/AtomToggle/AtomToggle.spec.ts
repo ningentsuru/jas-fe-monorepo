@@ -6,9 +6,11 @@ import meta, { Default, ToggledActive, CustomNumericSize } from './AtomToggle.st
 
 vi.mock('../../', () => ({
   AtomIcon: ({ icon: Icon, size }: { icon: React.ElementType; size: string | number }) =>
-    React.createElement('div', { 'data-testid': 'atom-icon', 'data-size': size },
-      React.createElement(Icon, { 'data-testid': 'mocked-lucide-icon' })
-    )
+    React.createElement(
+      'div',
+      { 'data-testid': 'atom-icon', 'data-size': size },
+      React.createElement(Icon, { 'data-testid': 'mocked-lucide-icon' }),
+    ),
 }))
 
 const getProps = (storyArgs?: Partial<AtomToggleProps>): AtomToggleProps => {
@@ -58,10 +60,13 @@ describe('AtomToggle', () => {
     const handleLongToggle = vi.fn()
 
     render(
-      React.createElement(AtomToggle, getProps({
-        onToggle: handleToggle,
-        onLongToggle: handleLongToggle,
-      }))
+      React.createElement(
+        AtomToggle,
+        getProps({
+          onToggle: handleToggle,
+          onLongToggle: handleLongToggle,
+        }),
+      ),
     )
 
     const button = screen.getByTestId('atom-toggle')
@@ -79,10 +84,13 @@ describe('AtomToggle', () => {
     const handleLongToggle = vi.fn()
 
     render(
-      React.createElement(AtomToggle, getProps({
-        onToggle: handleToggle,
-        onLongToggle: handleLongToggle,
-      }))
+      React.createElement(
+        AtomToggle,
+        getProps({
+          onToggle: handleToggle,
+          onLongToggle: handleLongToggle,
+        }),
+      ),
     )
 
     const button = screen.getByTestId('atom-toggle')

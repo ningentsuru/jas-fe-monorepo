@@ -8,7 +8,7 @@ vi.mock('../../', () => ({
   AtomButton: ({ children, onClick, 'data-testid': testId }: any) =>
     React.createElement('button', { type: 'button', onClick, 'data-testid': testId }, children),
   AtomIcon: ({ icon: Icon, size }: any) =>
-    React.createElement('span', { 'data-testid': 'mock-icon', 'data-size': size }, 'icon')
+    React.createElement('span', { 'data-testid': 'mock-icon', 'data-size': size }, 'icon'),
 }))
 
 const getProps = (storyArgs?: Partial<MoleculeCarouselProps>): MoleculeCarouselProps => {
@@ -53,11 +53,16 @@ describe('MoleculeCarousel', () => {
   })
 
   it('automatically rolls slide items forward when autoPlay timers trigger', async () => {
-    render(React.createElement(MoleculeCarousel, getProps({
-      ...Default.args,
-      autoPlay: true,
-      interval: 2000,
-    })))
+    render(
+      React.createElement(
+        MoleculeCarousel,
+        getProps({
+          ...Default.args,
+          autoPlay: true,
+          interval: 2000,
+        }),
+      ),
+    )
 
     const track = screen.getByTestId('carousel-track')
     expect(track.style.transform).toBe('translateX(-0%)')

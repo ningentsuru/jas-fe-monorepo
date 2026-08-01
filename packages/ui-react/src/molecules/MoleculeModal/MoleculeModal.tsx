@@ -21,7 +21,7 @@ export const MoleculeModal = ({
   header,
   footer,
   children,
-  className = ''
+  className = '',
 }: MoleculeModalProps) => {
   const dialogRef = useRef<HTMLDialogElement>(null)
 
@@ -61,16 +61,24 @@ export const MoleculeModal = ({
       data-testid="molecule-modal"
       onCancel={handleCancel}
       className={[
-        "molecule-modal border-border bg-card text-card-foreground open:animate-in open:fade-in open:zoom-in-95 open:slide-in-from-bottom-3 backdrop:animate-in backdrop:fade-in hc:border-2 hc:backdrop:bg-black/75 fixed inset-0 m-auto hidden w-full max-w-lg flex-col gap-6 rounded-lg border p-6 shadow-xl transition-[opacity,transform] duration-300 outline-none backdrop:bg-black/40 backdrop:transition-all backdrop:duration-300 open:flex data-[theme=high-contrast]:border-2 data-[theme=high-contrast]:backdrop:bg-black/75",
-        className
-      ].filter(Boolean).join(' ')}
+        'molecule-modal border-border bg-card text-card-foreground open:animate-in open:fade-in open:zoom-in-95 open:slide-in-from-bottom-3 backdrop:animate-in backdrop:fade-in hc:border-2 hc:backdrop:bg-black/75 fixed inset-0 m-auto hidden w-full max-w-lg flex-col gap-6 rounded-lg border p-6 shadow-xl transition-[opacity,transform] duration-300 outline-none backdrop:bg-black/40 backdrop:transition-all backdrop:duration-300 open:flex data-[theme=high-contrast]:border-2 data-[theme=high-contrast]:backdrop:bg-black/75',
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       {(title || header) && (
-        <header data-testid="modal-header" className="border-border flex items-center justify-between border-b pb-3">
+        <header
+          data-testid="modal-header"
+          className="border-border flex items-center justify-between border-b pb-3"
+        >
           {header ? (
             header
           ) : (
-            <h1 data-testid="modal-title" className="font-display text-card-foreground text-xl font-semibold tracking-tight">
+            <h1
+              data-testid="modal-title"
+              className="font-display text-card-foreground text-xl font-semibold tracking-tight"
+            >
               {title}
             </h1>
           )}
@@ -96,7 +104,10 @@ export const MoleculeModal = ({
       </main>
 
       {footer && (
-        <footer data-testid="modal-footer" className="border-border flex flex-col-reverse justify-end gap-3 border-t pt-4 sm:flex-row">
+        <footer
+          data-testid="modal-footer"
+          className="border-border flex flex-col-reverse justify-end gap-3 border-t pt-4 sm:flex-row"
+        >
           {footer}
         </footer>
       )}

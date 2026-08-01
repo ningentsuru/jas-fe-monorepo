@@ -17,21 +17,24 @@ describe('MoleculeTooltip', () => {
     vi.useFakeTimers()
 
     global.ResizeObserver = class {
-      observe() { }
-      unobserve() { }
-      disconnect() { }
+      observe() {}
+      unobserve() {}
+      disconnect() {}
     }
 
     Object.defineProperty(HTMLElement.prototype, 'offsetWidth', { configurable: true, value: 120 })
     Object.defineProperty(HTMLElement.prototype, 'offsetHeight', { configurable: true, value: 40 })
-    HTMLElement.prototype.getBoundingClientRect = vi.fn(() => ({
-      width: 80,
-      height: 24,
-      top: 100,
-      left: 100,
-      bottom: 124,
-      right: 180,
-    } as DOMRect))
+    HTMLElement.prototype.getBoundingClientRect = vi.fn(
+      () =>
+        ({
+          width: 80,
+          height: 24,
+          top: 100,
+          left: 100,
+          bottom: 124,
+          right: 180,
+        }) as DOMRect,
+    )
   })
 
   afterEach(() => {

@@ -19,7 +19,7 @@ export interface OrganismNavigationProps {
 export const OrganismNavigation = ({
   items = [],
   branding,
-  themeToggle
+  themeToggle,
 }: OrganismNavigationProps) => {
   const [isMobileOpen, setIsMobileOpen] = useState(false)
   const [openDropdownIndex, setOpenDropdownIndex] = useState<number | null>(null)
@@ -44,7 +44,7 @@ export const OrganismNavigation = ({
   function toggleAccordion(label: string) {
     setOpenAccordionItems((prev) => ({
       ...prev,
-      [label]: !prev[label]
+      [label]: !prev[label],
     }))
   }
 
@@ -111,7 +111,12 @@ export const OrganismNavigation = ({
       </div>
 
       {isMobileOpen && (
-        <div className="fixed inset-0 z-50 flex md:hidden data-mobile-dialog" role="dialog" aria-modal="true" data-testid="mobile-dialog">
+        <div
+          className="data-mobile-dialog fixed inset-0 z-50 flex md:hidden"
+          role="dialog"
+          aria-modal="true"
+          data-testid="mobile-dialog"
+        >
           <div
             className="fixed inset-0 bg-black/40 backdrop-blur-sm data-[theme=high-contrast]:bg-black/75 data-[theme=high-contrast]:backdrop-blur-none"
             onClick={closeMobile}
@@ -145,9 +150,7 @@ export const OrganismNavigation = ({
                 ))}
               </div>
 
-              <div className="border-border mt-6 border-t pt-6">
-                {themeToggle}
-              </div>
+              <div className="border-border mt-6 border-t pt-6">{themeToggle}</div>
             </div>
           </div>
         </div>

@@ -1,9 +1,13 @@
 import React from 'react'
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import TemplateDefaultPortfolio, { type TemplateDefaultPortfolioProps } from './TemplateDefaultPortfolio'
+import TemplateDefaultPortfolio, {
+  type TemplateDefaultPortfolioProps,
+} from './TemplateDefaultPortfolio'
 
-const getProps = (storyArgs?: Partial<TemplateDefaultPortfolioProps>): TemplateDefaultPortfolioProps => {
+const getProps = (
+  storyArgs?: Partial<TemplateDefaultPortfolioProps>,
+): TemplateDefaultPortfolioProps => {
   return {
     ...storyArgs,
   } as TemplateDefaultPortfolioProps
@@ -11,16 +15,28 @@ const getProps = (storyArgs?: Partial<TemplateDefaultPortfolioProps>): TemplateD
 
 describe('TemplateDefaultPortfolio', () => {
   it('renders root container layout structure and nested slots cleanly', () => {
-    const mockHeader = React.createElement('header', { 'data-testid': 'mock-header' }, 'Mock Header')
-    const mockBody = React.createElement('main', { 'data-testid': 'mock-body' }, 'Mock Content Body')
-    const mockFooter = React.createElement('footer', { 'data-testid': 'mock-footer' }, 'Mock Footer')
+    const mockHeader = React.createElement(
+      'header',
+      { 'data-testid': 'mock-header' },
+      'Mock Header',
+    )
+    const mockBody = React.createElement(
+      'main',
+      { 'data-testid': 'mock-body' },
+      'Mock Content Body',
+    )
+    const mockFooter = React.createElement(
+      'footer',
+      { 'data-testid': 'mock-footer' },
+      'Mock Footer',
+    )
 
     render(
       React.createElement(
         TemplateDefaultPortfolio,
         getProps({ header: mockHeader, footer: mockFooter }),
-        mockBody
-      )
+        mockBody,
+      ),
     )
 
     const root = screen.getByTestId('template-default-portfolio')

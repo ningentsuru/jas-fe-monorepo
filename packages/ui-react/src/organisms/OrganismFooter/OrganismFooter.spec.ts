@@ -34,7 +34,11 @@ describe('OrganismFooter', () => {
   })
 
   it('renders child context template node slots smoothly inside the container layout layer', () => {
-    const childNode = React.createElement('span', { 'data-testid': 'mock-nav' }, 'Footer Nav Elements')
+    const childNode = React.createElement(
+      'span',
+      { 'data-testid': 'mock-nav' },
+      'Footer Nav Elements',
+    )
 
     render(React.createElement(OrganismFooter, getProps(Default.args), childNode))
 

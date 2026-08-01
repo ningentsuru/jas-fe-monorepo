@@ -9,8 +9,12 @@ let capturedNavItems: any = null
 vi.mock('../../', () => ({
   OrganismNavigation: ({ items }: { items: any }) => {
     capturedNavItems = items
-    return React.createElement('nav', { 'data-testid': 'mock-navigation' }, 'Navigation Inner Context')
-  }
+    return React.createElement(
+      'nav',
+      { 'data-testid': 'mock-navigation' },
+      'Navigation Inner Context',
+    )
+  },
 }))
 
 const getProps = (storyArgs?: Partial<OrganismHeaderProps>): OrganismHeaderProps => {
@@ -47,16 +51,21 @@ describe('OrganismHeader', () => {
   })
 
   it('renders branding template slots context details within the header layout accurately', () => {
-    const brandingNode = React.createElement('span', { 'data-testid': 'logo-mock' }, 'Core Brand Logo')
-
-    render(
-      React.createElement(OrganismHeader, getProps(Default.args), null)
+    const brandingNode = React.createElement(
+      'span',
+      { 'data-testid': 'logo-mock' },
+      'Core Brand Logo',
     )
+
+    render(React.createElement(OrganismHeader, getProps(Default.args), null))
     render(
-      React.createElement(OrganismHeader, getProps({
-        ...Default.args,
-        branding: brandingNode
-      }))
+      React.createElement(
+        OrganismHeader,
+        getProps({
+          ...Default.args,
+          branding: brandingNode,
+        }),
+      ),
     )
 
     const brandingEl = screen.getByTestId('logo-mock')
@@ -65,13 +74,20 @@ describe('OrganismHeader', () => {
   })
 
   it('mounts auxiliary items through the named theme-toggle component configuration slots', () => {
-    const toggleNode = React.createElement('div', { 'data-testid': 'toggle-mock' }, 'Theme Action Button')
+    const toggleNode = React.createElement(
+      'div',
+      { 'data-testid': 'toggle-mock' },
+      'Theme Action Button',
+    )
 
     render(
-      React.createElement(OrganismHeader, getProps({
-        ...Default.args,
-        themeToggle: toggleNode
-      }))
+      React.createElement(
+        OrganismHeader,
+        getProps({
+          ...Default.args,
+          themeToggle: toggleNode,
+        }),
+      ),
     )
 
     const container = screen.getByTestId('theme-toggle-container')

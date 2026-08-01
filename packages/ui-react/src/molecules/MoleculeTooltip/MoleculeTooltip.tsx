@@ -23,7 +23,7 @@ export const MoleculeTooltip = ({
   title = '',
   position = 'top',
   delay = 200,
-  children
+  children,
 }: MoleculeTooltipProps) => {
   const [isVisible, setIsVisible] = useState<boolean>(false)
   const [isCalculating, setIsCalculating] = useState<boolean>(false)
@@ -38,7 +38,7 @@ export const MoleculeTooltip = ({
     bottom: '',
     right: '',
     transform: '',
-    borders: ''
+    borders: '',
   })
 
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -99,7 +99,7 @@ export const MoleculeTooltip = ({
           transform: 'translateX(-50%)',
           borders: 'border-t-card border-x-transparent border-b-transparent',
           bottom: '',
-          right: ''
+          right: '',
         })
         break
       case 'bottom':
@@ -111,7 +111,7 @@ export const MoleculeTooltip = ({
           transform: 'translateX(-50%)',
           borders: 'border-b-card border-x-transparent border-t-transparent',
           top: '',
-          right: ''
+          right: '',
         })
         break
       case 'left':
@@ -123,7 +123,7 @@ export const MoleculeTooltip = ({
           transform: 'translateY(-50%)',
           borders: 'border-l-card border-y-transparent border-r-transparent',
           bottom: '',
-          right: ''
+          right: '',
         })
         break
       case 'right':
@@ -135,7 +135,7 @@ export const MoleculeTooltip = ({
           transform: 'translateY(-50%)',
           borders: 'border-r-card border-y-transparent border-l-transparent',
           bottom: '',
-          left: ''
+          left: '',
         })
         break
     }
@@ -212,27 +212,24 @@ export const MoleculeTooltip = ({
           role="tooltip"
           className={[
             'molecule-tooltip bg-card text-card-foreground border-border hc:border-2 absolute z-[100] max-w-xs rounded-md border px-3 py-1.5 text-sm font-medium shadow-md transition-opacity duration-200 ease-in-out data-[theme=high-contrast]:border-2',
-            isCalculating ? 'opacity-0' : 'opacity-100'
+            isCalculating ? 'opacity-0' : 'opacity-100',
           ].join(' ')}
           style={{
             top: `${coords.top}px`,
             left: `${coords.left}px`,
-            pointerEvents: 'none'
+            pointerEvents: 'none',
           }}
           data-testid="tooltip-content"
         >
           {title}
           <div
-            className={[
-              'absolute h-0 w-0 border-[6px]',
-              arrowCoords.borders
-            ].join(' ')}
+            className={['absolute h-0 w-0 border-[6px]', arrowCoords.borders].join(' ')}
             style={{
               top: arrowCoords.top,
               bottom: arrowCoords.bottom,
               left: arrowCoords.left,
               right: arrowCoords.right,
-              transform: arrowCoords.transform
+              transform: arrowCoords.transform,
             }}
             aria-hidden="true"
             data-testid="tooltip-arrow"

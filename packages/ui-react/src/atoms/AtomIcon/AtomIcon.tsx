@@ -13,7 +13,7 @@ export const AtomIcon = ({
   name = '',
   icon: DynamicIcon,
   size = 'md',
-  className = ''
+  className = '',
 }: AtomIconProps) => {
   const iconClass = useMemo(() => {
     const baseClasses = 'text-[var(--color-foreground)] transition-colors'

@@ -3,7 +3,6 @@ import { mount } from '@vue/test-utils'
 import AboutThisMonorepoView from './AboutThisMonorepoView.vue'
 import { Default } from './AboutThisMonorepoView.stories'
 
-
 describe('AboutThisMonorepoView', () => {
   it('renders properly using Storybook args', () => {
     const wrapper = mount(AboutThisMonorepoView, {

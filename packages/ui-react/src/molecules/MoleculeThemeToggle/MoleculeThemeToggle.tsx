@@ -6,13 +6,7 @@ import { Sun, Moon, Palette, LoaderPinwheel } from 'lucide-react'
 import { createPortal } from 'react-dom'
 
 export type ThemeType =
-  | 'light'
-  | 'dark'
-  | 'forest'
-  | 'midnight'
-  | 'ocean'
-  | 'sunset'
-  | 'high-contrast'
+  'light' | 'dark' | 'forest' | 'midnight' | 'ocean' | 'sunset' | 'high-contrast'
 
 export interface MoleculeThemeToggleProps {
   isToggled?: boolean
@@ -31,7 +25,7 @@ export const MoleculeThemeToggle = ({
   icon,
   onToggle,
   onLongToggle,
-  onSetTheme
+  onSetTheme,
 }: MoleculeThemeToggleProps) => {
   const [showModal, setShowModal] = useState(false)
   const [selectedTheme, setSelectedTheme] = useState<string>(currentTheme)
@@ -88,31 +82,36 @@ export const MoleculeThemeToggle = ({
         <span className="sr-only">molecule-theme-toggle</span>
       </div>
 
-      {mounted && createPortal(
-        <MoleculeModal
-          title="Choose more themes!"
-          show={showModal}
-          hideClose
-          onClose={closeModal}
-        >
-          <form data-testid="theme-form" className="flex flex-col justify-between gap-4" onSubmit={handleSubmit}>
-            <AtomSelect
-              value={selectedTheme}
-              onUpdateModelValue={(val) => setSelectedTheme(val as string)}
-              options={optionTheme}
-            />
-            <div className="flex justify-between gap-2">
-              <AtomButton size="md" variant="primary" type="submit">
-                <span>Apply</span>
-              </AtomButton>
-              <AtomButton size="md" variant="destructive" type="button" onClick={closeModal}>
-                <span>Close</span>
-              </AtomButton>
-            </div>
-          </form>
-        </MoleculeModal>,
-        document.body
-      )}
+      {mounted &&
+        createPortal(
+          <MoleculeModal
+            title="Choose more themes!"
+            show={showModal}
+            hideClose
+            onClose={closeModal}
+          >
+            <form
+              data-testid="theme-form"
+              className="flex flex-col justify-between gap-4"
+              onSubmit={handleSubmit}
+            >
+              <AtomSelect
+                value={selectedTheme}
+                onUpdateModelValue={(val) => setSelectedTheme(val as string)}
+                options={optionTheme}
+              />
+              <div className="flex justify-between gap-2">
+                <AtomButton size="md" variant="primary" type="submit">
+                  <span>Apply</span>
+                </AtomButton>
+                <AtomButton size="md" variant="destructive" type="button" onClick={closeModal}>
+                  <span>Close</span>
+                </AtomButton>
+              </div>
+            </form>
+          </MoleculeModal>,
+          document.body,
+        )}
     </div>
   )
 }

@@ -21,7 +21,7 @@ export const MoleculeNavAccordion = ({
   item,
   isOpen,
   onToggle,
-  onNavigate
+  onNavigate,
 }: MoleculeNavAccordionProps) => {
   const menuId = useMemo(() => {
     return `accordion-menu-${item.label.toLowerCase().replace(/\s+/g, '-')}`
@@ -38,7 +38,10 @@ export const MoleculeNavAccordion = ({
   }
 
   return (
-    <div className="molecule-nav-accordion font-display w-full" data-testid="molecule-nav-accordion">
+    <div
+      className="molecule-nav-accordion font-display w-full"
+      data-testid="molecule-nav-accordion"
+    >
       <AtomNavLink
         label={item.label}
         to={item.children ? undefined : item.href}

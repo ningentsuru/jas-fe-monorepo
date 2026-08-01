@@ -48,7 +48,11 @@ describe('AtomInput', () => {
   })
 
   it('renders side slot icon templates cleanly when containers are supplied', () => {
-    const prefixNode = React.createElement('span', { className: 'mock-prefix', 'data-testid': 'mock-prefix' }, 'LINK')
+    const prefixNode = React.createElement(
+      'span',
+      { className: 'mock-prefix', 'data-testid': 'mock-prefix' },
+      'LINK',
+    )
     const props = { ...getProps(Default.args), prefix: prefixNode }
     render(React.createElement(AtomInput, props))
 

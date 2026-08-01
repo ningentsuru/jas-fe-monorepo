@@ -15,11 +15,7 @@ export interface OrganismHeaderProps {
   themeToggle?: ReactNode
 }
 
-export const OrganismHeader = ({
-  navItems = [],
-  branding,
-  themeToggle
-}: OrganismHeaderProps) => {
+export const OrganismHeader = ({ navItems = [], branding, themeToggle }: OrganismHeaderProps) => {
   return (
     <header
       className="border-border bg-card sticky top-0 z-50 h-16 w-full border-b"

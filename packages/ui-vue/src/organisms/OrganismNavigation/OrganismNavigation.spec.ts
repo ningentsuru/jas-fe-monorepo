@@ -76,7 +76,7 @@ describe('OrganismNavigation', () => {
           MoleculeNavDropdown: true,
           MoleculeNavAccordion: true,
           AtomButton: true,
-          transition: { template: '<slot />' }
+          transition: { template: '<slot />' },
         },
       },
     })

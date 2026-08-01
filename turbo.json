@@ -4,15 +4,34 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "env": ["ENABLE_EXPERIMENTAL_COREPACK"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**", "build/**"]
+      "inputs": ["$TURBO_DEFAULT$", ".env*", "tsconfig.json"],
+      "env": ["ENABLE_EXPERIMENTAL_COREPACK", "NODE_ENV"],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        ".nuxt/**",
+        ".output/**",
+        "dist/**",
+        "build/**",
+        "storybook-static/**"
+      ]
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "inputs": ["$TURBO_DEFAULT$"]
     },
     "check-types": {
-      "dependsOn": ["^check-types"]
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", "tsconfig.json", "tsconfig.*.json"]
+    },
+    "test:unit": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", "vitest.config.ts", "vitest.setup.ts"],
+      "outputs": ["coverage/**"]
+    },
+    "test:e2e": {
+      "dependsOn": ["build"],
+      "inputs": ["$TURBO_DEFAULT$", "playwright.config.ts"],
+      "outputs": ["playwright-report/**", "test-results/**"]
     },
     "dev": {
       "cache": false,

@@ -10,8 +10,8 @@
 - **Workspace Config**: Ensure `pnpm-workspace.yaml` includes both folders:
   ```yaml
   packages:
-    - "apps/*"
-    - "packages/*"
+    - 'apps/*'
+    - 'packages/*'
   ```
 
 ### 2. Creating the UI Library (`packages/ui-vue`)
@@ -45,8 +45,8 @@
   - Install `tailwindcss` and `@tailwindcss/vite` in the app too.
   - In `src/style.css`, import the UI styles:
     ```css
-    @import "tailwindcss";
-    @import "@repo/ui-vue/style.css";
+    @import 'tailwindcss';
+    @import '@repo/ui-vue/style.css';
     ```
 - **Usage**: Import components directly: `import { AtomButton } from '@repo/ui-vue'`.
 

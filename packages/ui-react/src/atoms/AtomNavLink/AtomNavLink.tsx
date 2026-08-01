@@ -6,7 +6,7 @@ import { AtomButton } from '../../'
 export interface AtomNavLinkProps {
   label: string
   href?: string
-  to?: string | { path?: string;[key: string]: unknown }
+  to?: string | { path?: string; [key: string]: unknown }
   variant?: 'ghost' | 'link'
   size?: 'sm' | 'md' | 'lg' | 'xl' | number
   active?: boolean
@@ -22,7 +22,7 @@ export const AtomNavLink = ({
   size = 'md',
   active = false,
   onClick,
-  trailing
+  trailing,
 }: AtomNavLinkProps) => {
   function handleClick(event: MouseEvent<HTMLElement>) {
     onClick?.(event)
@@ -39,7 +39,9 @@ export const AtomNavLink = ({
         'w-full items-center justify-between',
         active ? 'text-primary' : 'text-foreground',
         variant === 'link' ? 'px-3 py-2 font-normal' : 'px-3 py-2 font-medium',
-      ].filter(Boolean).join(' ')}
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       <span className="flex-1 text-left">{label}</span>
       {trailing}

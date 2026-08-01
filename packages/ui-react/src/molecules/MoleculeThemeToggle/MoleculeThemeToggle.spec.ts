@@ -6,23 +6,46 @@ import meta, { Default, DarkModeActive, CustomForestTheme } from './MoleculeThem
 
 vi.mock('../../', () => ({
   AtomToggle: ({ icon: Icon, onToggle, onLongToggle }: any) =>
-    React.createElement('button', {
-      type: 'button',
-      'data-testid': 'mock-toggle-btn',
-      'data-icon-name': Icon?.name || Icon?.displayName || 'UnknownIcon',
-      onClick: onToggle,
-      onContextMenu: (e: any) => { e.preventDefault(); onLongToggle(); }
-    }, 'Toggle'),
+    React.createElement(
+      'button',
+      {
+        type: 'button',
+        'data-testid': 'mock-toggle-btn',
+        'data-icon-name': Icon?.name || Icon?.displayName || 'UnknownIcon',
+        onClick: onToggle,
+        onContextMenu: (e: any) => {
+          e.preventDefault()
+          onLongToggle()
+        },
+      },
+      'Toggle',
+    ),
   AtomSelect: ({ value, options, onUpdateModelValue }: any) =>
-    React.createElement('select', {
-      'data-testid': 'mock-select',
-      value,
-      onChange: (e: any) => onUpdateModelValue(e.target.value)
-    }, options.map((opt: any) => React.createElement('option', { key: opt.value, value: opt.value }, opt.label))),
+    React.createElement(
+      'select',
+      {
+        'data-testid': 'mock-select',
+        value,
+        onChange: (e: any) => onUpdateModelValue(e.target.value),
+      },
+      options.map((opt: any) =>
+        React.createElement('option', { key: opt.value, value: opt.value }, opt.label),
+      ),
+    ),
   AtomButton: ({ children, type, onClick }: any) =>
-    React.createElement('button', { type: type || 'button', onClick, 'data-testid': `mock-btn-${type || 'button'}` }, children),
+    React.createElement(
+      'button',
+      { type: type || 'button', onClick, 'data-testid': `mock-btn-${type || 'button'}` },
+      children,
+    ),
   MoleculeModal: ({ children, show, title }: any) =>
-    show ? React.createElement('div', { 'data-testid': 'molecule-modal', 'data-title': title }, children) : null
+    show
+      ? React.createElement(
+          'div',
+          { 'data-testid': 'molecule-modal', 'data-title': title },
+          children,
+        )
+      : null,
 }))
 
 const getProps = (storyArgs?: Partial<MoleculeThemeToggleProps>): MoleculeThemeToggleProps => {
@@ -47,10 +70,15 @@ describe('MoleculeThemeToggle', () => {
 
   it('receives correct structural props passed down from Storybook arguments and toggles appropriately', () => {
     const handleToggle = vi.fn()
-    render(React.createElement(MoleculeThemeToggle, getProps({
-      ...DarkModeActive.args,
-      onToggle: handleToggle
-    })))
+    render(
+      React.createElement(
+        MoleculeThemeToggle,
+        getProps({
+          ...DarkModeActive.args,
+          onToggle: handleToggle,
+        }),
+      ),
+    )
 
     const btn = screen.getByTestId('mock-toggle-btn')
     fireEvent.click(btn)
@@ -59,10 +87,15 @@ describe('MoleculeThemeToggle', () => {
 
   it('bubbles primary click toggle notifications upward when tap actions fire', () => {
     const handleToggle = vi.fn()
-    render(React.createElement(MoleculeThemeToggle, getProps({
-      ...Default.args,
-      onToggle: handleToggle
-    })))
+    render(
+      React.createElement(
+        MoleculeThemeToggle,
+        getProps({
+          ...Default.args,
+          onToggle: handleToggle,
+        }),
+      ),
+    )
 
     const btn = screen.getByTestId('mock-toggle-btn')
     fireEvent.click(btn)
@@ -72,10 +105,15 @@ describe('MoleculeThemeToggle', () => {
 
   it('mounts and displays modal theme lists after triggering long-toggle hooks', () => {
     const handleLongToggle = vi.fn()
-    render(React.createElement(MoleculeThemeToggle, getProps({
-      ...Default.args,
-      onLongToggle: handleLongToggle
-    })))
+    render(
+      React.createElement(
+        MoleculeThemeToggle,
+        getProps({
+          ...Default.args,
+          onLongToggle: handleLongToggle,
+        }),
+      ),
+    )
 
     const btn = screen.getByTestId('mock-toggle-btn')
 

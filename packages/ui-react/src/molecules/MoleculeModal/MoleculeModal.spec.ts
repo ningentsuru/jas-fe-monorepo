@@ -20,9 +20,7 @@ describe('MoleculeModal', () => {
   it('renders modal markup architecture and slot layouts properly', () => {
     const textNode = React.createElement('div', { 'data-testid': 'test-body' }, 'Main Data Context')
 
-    render(
-      React.createElement(MoleculeModal, getProps(Default.args), textNode)
-    )
+    render(React.createElement(MoleculeModal, getProps(Default.args), textNode))
 
     const modal = screen.getByTestId('molecule-modal')
     const title = screen.getByTestId('modal-title')
@@ -66,10 +64,13 @@ describe('MoleculeModal', () => {
     const handleClose = vi.fn()
 
     render(
-      React.createElement(MoleculeModal, getProps({
-        ...Default.args,
-        onClose: handleClose
-      }))
+      React.createElement(
+        MoleculeModal,
+        getProps({
+          ...Default.args,
+          onClose: handleClose,
+        }),
+      ),
     )
 
     const dismissButton = screen.getByTestId('modal-close-button')
@@ -82,10 +83,13 @@ describe('MoleculeModal', () => {
     const handleClose = vi.fn()
 
     render(
-      React.createElement(MoleculeModal, getProps({
-        ...Default.args,
-        onClose: handleClose
-      }))
+      React.createElement(
+        MoleculeModal,
+        getProps({
+          ...Default.args,
+          onClose: handleClose,
+        }),
+      ),
     )
 
     const dialog = screen.getByTestId('molecule-modal')
@@ -96,13 +100,20 @@ describe('MoleculeModal', () => {
   })
 
   it('renders complex injected template structures inside the structural footer slot area', () => {
-    const footerNode = React.createElement('div', { 'data-testid': 'custom-footer' }, 'Aligned Actions')
+    const footerNode = React.createElement(
+      'div',
+      { 'data-testid': 'custom-footer' },
+      'Aligned Actions',
+    )
 
     render(
-      React.createElement(MoleculeModal, getProps({
-        ...Default.args,
-        footer: footerNode
-      }))
+      React.createElement(
+        MoleculeModal,
+        getProps({
+          ...Default.args,
+          footer: footerNode,
+        }),
+      ),
     )
 
     const footerWrapper = screen.getByTestId('modal-footer')

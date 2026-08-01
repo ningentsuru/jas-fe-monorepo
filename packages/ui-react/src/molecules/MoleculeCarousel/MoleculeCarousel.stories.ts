@@ -6,19 +6,22 @@ const mockCarouselSlides = [
     id: 1,
     image: 'https://unsplash.com',
     title: 'Feature-Sliced Design Integration',
-    description: 'Ensure runtime performance stability across distributed package workspace architecture layouts.',
+    description:
+      'Ensure runtime performance stability across distributed package workspace architecture layouts.',
   },
   {
     id: 2,
     image: 'https://unsplash.com',
     title: 'Atomic Component Architectures',
-    description: 'Construct completely encapsulated atoms, molecules, and organism cells built to scale cleanly.',
+    description:
+      'Construct completely encapsulated atoms, molecules, and organism cells built to scale cleanly.',
   },
   {
     id: 3,
     image: 'https://unsplash.com',
     title: 'Tailwind CSS v4 Pipelines',
-    description: 'Accelerate presentation layer processing and theme variable mapping graphs natively inside compiled stylesheets.',
+    description:
+      'Accelerate presentation layer processing and theme variable mapping graphs natively inside compiled stylesheets.',
   },
 ]
 

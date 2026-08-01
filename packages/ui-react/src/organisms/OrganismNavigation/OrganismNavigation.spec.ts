@@ -11,10 +11,18 @@ vi.mock('../../', () => ({
     React.createElement('button', { type: 'button', onClick, 'data-testid': testId }, children),
   MoleculeNavDropdown: ({ item, index, isOpen }: any) => {
     capturedItemsList.push(item)
-    return React.createElement('div', { 'data-testid': 'mock-dropdown', 'data-index': index, 'data-open': isOpen }, item.label)
+    return React.createElement(
+      'div',
+      { 'data-testid': 'mock-dropdown', 'data-index': index, 'data-open': isOpen },
+      item.label,
+    )
   },
   MoleculeNavAccordion: ({ item, isOpen }: any) =>
-    React.createElement('div', { 'data-testid': 'mock-accordion', 'data-open': isOpen }, item.label)
+    React.createElement(
+      'div',
+      { 'data-testid': 'mock-accordion', 'data-open': isOpen },
+      item.label,
+    ),
 }))
 
 const getProps = (storyArgs?: Partial<OrganismNavigationProps>): OrganismNavigationProps => {

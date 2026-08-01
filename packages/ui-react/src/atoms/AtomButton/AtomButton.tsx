@@ -1,6 +1,12 @@
 'use client'
 
-import { useMemo, type MouseEvent, type ReactNode, type CSSProperties, type HTMLAttributes } from 'react'
+import {
+  useMemo,
+  type MouseEvent,
+  type ReactNode,
+  type CSSProperties,
+  type HTMLAttributes,
+} from 'react'
 
 export type ButtonTarget = '_blank' | '_self' | '_parent' | '_top'
 
@@ -8,7 +14,7 @@ export interface AtomButtonProps {
   size?: 'sm' | 'md' | 'lg' | 'xl' | number
   disabled?: boolean
   variant?: 'default' | 'primary' | 'secondary' | 'ghost' | 'link' | 'destructive'
-  to?: string | { path?: string;[key: string]: unknown }
+  to?: string | { path?: string; [key: string]: unknown }
   href?: string
   target?: ButtonTarget
   type?: 'button' | 'submit' | 'reset'
@@ -99,8 +105,10 @@ export const AtomButton = ({
     variantClasses[variant],
     'focus-visible:ring-offset-background',
     'hc:border-2 data-[theme=high-contrast]:border-2',
-    className
-  ].filter(Boolean).join(' ')
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ')
 
   const mergedStyle = { ...buttonStyle, ...style }
 

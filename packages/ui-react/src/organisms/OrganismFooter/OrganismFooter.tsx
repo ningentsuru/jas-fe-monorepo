@@ -7,10 +7,7 @@ export interface OrganismFooterProps {
   children?: ReactNode
 }
 
-export const OrganismFooter = ({
-  title = '',
-  children
-}: OrganismFooterProps) => {
+export const OrganismFooter = ({ title = '', children }: OrganismFooterProps) => {
   const currentYear = useMemo(() => new Date().getFullYear(), [])
 
   return (
@@ -25,14 +22,10 @@ export const OrganismFooter = ({
               {title}
             </h2>
           )}
-          <p className="text-muted-foreground text-sm">
-            &copy; {currentYear} All rights reserved.
-          </p>
+          <p className="text-muted-foreground text-sm">&copy; {currentYear} All rights reserved.</p>
         </div>
 
-        <div className="flex items-center gap-4 text-sm">
-          {children}
-        </div>
+        <div className="flex items-center gap-4 text-sm">{children}</div>
       </div>
       <span className="sr-only">organism-footer</span>
     </footer>
