@@ -45,7 +45,7 @@ export const MoleculeNavAccordion = ({
     >
       <AtomNavLink
         label={item.label}
-        to={item.children && !(item.href || item.to) ? undefined : item.to}
+        to={item.children ? undefined : item.href}
         variant="ghost"
         size="md"
         aria-expanded={item.children ? isOpen : undefined}

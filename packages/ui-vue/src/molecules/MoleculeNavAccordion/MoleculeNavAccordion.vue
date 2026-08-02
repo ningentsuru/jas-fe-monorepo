@@ -40,7 +40,7 @@ function handleLinkClick(event: MouseEvent) {
   <div class="molecule-nav-accordion font-display w-full" data-testid="molecule-nav-accordion">
     <AtomNavLink
       :label="item.label"
-      :to="item.children && !(item.href || item.to) ? undefined : item.to"
+      :to="item.children ? undefined : item.href"
       variant="ghost"
       size="md"
       class="hover:bg-muted/60 w-full items-center justify-between rounded-md text-left font-medium transition-colors"
