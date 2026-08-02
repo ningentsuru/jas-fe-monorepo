@@ -59,7 +59,7 @@ export const TelegraphSpeedControls = ({
   return (
     <MoleculeTooltip
       title="Telegraph Hardware Speeds"
-      position="top"
+      position="right"
       delay={200}
       content={
         <div className="flex w-64 flex-col gap-4 p-1 font-sans text-xs">

@@ -10,6 +10,9 @@
     "test": "vitest",
     "lint": "eslint . --fix"
   },
+  "files": [
+    "src"
+  ],
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "exports": {
