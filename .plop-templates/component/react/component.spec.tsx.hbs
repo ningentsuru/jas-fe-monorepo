@@ -1,0 +1,51 @@
+import React from 'react'
+import { describe, it, expect, vi } from 'vitest'
+import { render, screen } from '@testing-library/react'
+import {{pascalCase name}} from './{{pascalCase name}}'
+import {{#if props.length}}meta, {{/if}}{ Default } from './{{pascalCase name}}.stories'
+
+{{#if props.length}}
+type {{pascalCase name}}Props = React.ComponentProps<typeof {{pascalCase name}}>
+
+const getProps = (storyArgs: typeof Default.args): {{pascalCase name}}Props => {
+  return {
+    ...meta.args,
+    ...storyArgs,
+  } as {{pascalCase name}}Props
+}
+{{/if}}
+
+describe('{{pascalCase name}}', () => {
+  it('renders properly using Storybook args', () => {
+    const props = {{#if props.length}}getProps(Default.args){{else}}Default.args || {}{{/if}}
+    render(<{{pascalCase name}} {...props} />)
+
+    const element = screen.getByTestId('{{ kebabCase name }}')
+    expect(element).toBeDefined()
+  })
+  {{#if props.length}}
+
+  it('receives correct props from Storybook args', () => {
+    // Generate fresh mock overrides for safety tracking functions
+    const mockProps = getProps(Default.args)
+    {{#each props}}
+    {{#if (eq this.propType 'function')}}
+    const {{this.propName}}Spy = vi.fn()
+    mockProps.{{this.propName}} = {{this.propName}}Spy
+    {{/if}}
+    {{/each}}
+
+    render(<{{pascalCase name}} {...mockProps} />)
+    const element = screen.getByTestId('{{ kebabCase name }}')
+
+    {{#each props}}
+    // Verify {{this.propName}} ({{this.propType}})
+    {{#if (eq this.propType 'function')}}
+    expect(mockProps.{{this.propName}}).toBeTypeOf('function')
+    {{else}}
+    expect(mockProps.{{this.propName}}).toEqual({{#if (eq this.propType 'string')}}''{{else if (eq this.propType 'number')}}0{{else if (eq this.propType 'boolean')}}false{{else if (eq this.propType 'object')}}{}{{else if (eq this.propType 'string[]')}}['']{{else if (eq this.propType 'number[]')}}[0]{{else if (eq this.propType 'boolean[]')}}[false]{{else if (eq this.propType 'object[]')}}[{}]{{/if}})
+    {{/if}}
+    {{/each}}
+  })
+  {{/if}}
+})

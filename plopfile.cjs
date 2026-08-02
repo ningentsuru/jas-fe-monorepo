@@ -10,7 +10,7 @@ const toWords = (name) => name.replace(SPLIT_REGEX, '$1 $2').split(' ').filter(B
 const camelCase = (name) =>
   name
     ? toWords(name)
-        .map((w, i) => (i === 0 ? w.toLowerCase() : w[0].toUpperCase() + w.slice(1).toLowerCase()))
+        .map((w, i) => (i === 0 ? w.toLowerCase() : w.toUpperCase() + w.slice(1).toLowerCase()))
         .join('')
     : ''
 
@@ -47,7 +47,7 @@ module.exports = function (plop) {
   )
 
   plop.setGenerator('component', {
-    description: 'Create a Vue component with spec and story',
+    description: 'Create a framework-aware component with spec and story',
     prompts: async (inquirer) => {
       const appsDir = path.join(__dirname, 'apps')
       const packagesDir = path.join(__dirname, 'packages')
@@ -211,31 +211,36 @@ module.exports = function (plop) {
       if (data.category !== 'custom') data.path = `${data.category}${data.componentName}`
       data.name = data.path.split('/').pop()
 
+      // Framework auto-detection step
+      const targetName = data.folder === 'apps' ? data.apps : data.packages
+      const isVueFramework =
+        targetName.includes('vue') ||
+        targetName.includes('nuxt') ||
+        targetName.includes('portfolio')
+      const frameworkDir = isVueFramework ? 'vue' : 'react'
+      const ext = isVueFramework ? 'vue' : 'tsx'
+      const specExt = isVueFramework ? 'spec.ts' : 'spec.tsx'
+
       const baseActions = [
         {
           type: 'add',
-          path: '{{folder}}/{{apps}}{{packages}}/{{path}}/{{pascalCase name}}.vue',
-          templateFile: '.plop-templates/component/component.vue.hbs',
+          path: `{{folder}}/{{apps}}{{packages}}/{{path}}/{{pascalCase name}}.${ext}`,
+          templateFile: `.plop-templates/component/${frameworkDir}/component.${ext}.hbs`,
         },
         {
           type: 'add',
-          path: '{{folder}}/{{apps}}{{packages}}/{{path}}/{{pascalCase name}}.spec.ts',
-          templateFile: '.plop-templates/component/component.spec.ts.hbs',
+          path: `{{folder}}/{{apps}}{{packages}}/{{path}}/{{pascalCase name}}.${specExt}`,
+          templateFile: `.plop-templates/component/${frameworkDir}/component.spec.${isVueFramework ? 'ts' : 'tsx'}.hbs`,
         },
         {
           type: 'add',
-          path: '{{folder}}/{{apps}}{{packages}}/{{path}}/{{pascalCase name}}.stories.ts',
-          templateFile: '.plop-templates/component/component.stories.ts.hbs',
+          path: `{{folder}}/{{apps}}{{packages}}/{{path}}/{{pascalCase name}}.stories.ts`,
+          templateFile: `.plop-templates/component/${frameworkDir}/component.stories.ts.hbs`,
         },
         {
           type: 'add',
-          path: '{{folder}}/{{apps}}{{packages}}/{{path}}/{{pascalCase name}}.tsx',
-          templateFile: '.plop-templates/component/component.tsx.hbs',
-        },
-        {
-          type: 'add',
-          path: '{{folder}}/{{apps}}{{packages}}/{{path}}/index.ts',
-          templateFile: '.plop-templates/component/index.ts.hbs',
+          path: `{{folder}}/{{apps}}{{packages}}/{{path}}/index.ts`,
+          templateFile: `.plop-templates/component/${frameworkDir}/index.ts.hbs`,
         },
       ]
 
@@ -252,7 +257,7 @@ module.exports = function (plop) {
         }
       })
 
-      if (data.path.includes('/views/')) {
+      if (data.path.includes('/views/') && isVueFramework) {
         baseActions.push(
           {
             type: 'modify',
@@ -273,7 +278,6 @@ module.exports = function (plop) {
           },
         )
       }
-
       return baseActions
     },
   })

@@ -182,6 +182,19 @@
     color: var(--color-foreground);
     font-family: var(--font-display);
     transition: background-color 0.3s ease, color 0.3s ease;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -0.01em;
+    line-height: 1.5;
+  }
+
+  /* Force Storybook root canvas elements to mirror your application spacing rules exactly */
+  .sb-show-main {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 

@@ -9,18 +9,21 @@
     "start": "next start",
     "lint": "eslint",
     "test:unit": "vitest run",
+    "test:e2e": "playwright test",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
   "dependencies": {
     "@repo/typescript-config": "workspace:*",
     "@repo/ui-react": "workspace:*",
-    "next-themes": "^0.4.6",
     "next": "16.2.12",
-    "react-dom": "19.2.4",
-    "react": "19.2.4"
+    "next-themes": "^0.4.6",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.0",
+    "@storybook/react-vite": "^10.5.5",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^7.0.0",
     "@testing-library/react": "^16.3.2",
@@ -30,12 +33,11 @@
     "@vitejs/plugin-react": "^6.0.4",
     "eslint": "^9",
     "eslint-config-next": "16.2.12",
+    "eslint-plugin-storybook": "^10.5.5",
     "happy-dom": "^20.11.1",
     "storybook": "^10.5.5",
     "tailwindcss": "^4",
     "typescript": "6.0.3",
-    "vitest": "^4.1.10",
-    "@storybook/react-vite": "^10.5.5",
-    "eslint-plugin-storybook": "^10.5.5"
+    "vitest": "^4.1.10"
   }
 }

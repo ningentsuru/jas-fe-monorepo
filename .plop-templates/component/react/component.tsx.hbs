@@ -1,0 +1,21 @@
+import React from 'react'
+
+{{#if props.length}}
+interface {{pascalCase name}}Props {
+  {{#each props}}
+  {{this.propName}}?: {{#if (eq this.propType 'function')}}() => void{{else}}{{this.propType}}{{/if}}
+  {{/each}}
+}
+{{/if}}
+
+export default function {{pascalCase name}}({
+  {{#each props}}
+  {{this.propName}} = {{#if (eq this.propType 'string')}}''{{else if (eq this.propType 'number')}}0{{else if (eq this.propType 'boolean')}}false{{else if (eq this.propType 'object')}}{}{{else if (eq this.propType 'string[]')}}['']{{else if (eq this.propType 'number[]')}}[0]{{else if (eq this.propType 'boolean[]')}}[false]{{else if (eq this.propType 'object[]')}}[{}]{{else if (eq this.propType 'function')}}() => {} {{/if}},
+  {{/each}}
+}: {{#if props.length}}{{pascalCase name}}Props{{else}}{}{{/if}}) {
+  return (
+    <div className="{{ kebabCase name }}" data-testid="{{ kebabCase name }}">
+      <span className="sr-only">{{ kebabCase name }}</span>
+    </div>
+  )
+}
