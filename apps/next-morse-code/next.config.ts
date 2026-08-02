@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
         source: '/',
         destination: '/multi-zones-morse-code/',
         basePath: false,
-        permanent: false,
+        permanent: true,
       },
     ]
   },
