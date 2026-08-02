@@ -78,7 +78,6 @@ export const FeatureTelegraphDashboard = () => {
 
   return (
     <div className="feature-telegraph-dashboard mt-4 flex flex-col gap-6">
-      {/* 1. Target Word Practice Tracker (Now cleanly placed at the top) */}
       <div className="bg-card border-border flex w-full items-center justify-between rounded-xl border p-4 text-center shadow-xs">
         <span className="text-muted-foreground text-xs font-bold tracking-wider uppercase">
           Practice Objective:
@@ -99,7 +98,6 @@ export const FeatureTelegraphDashboard = () => {
         </div>
       </div>
 
-      {/* 2. Output Terminal Stream Display */}
       <div className="bg-card border-border flex w-full flex-col space-y-4 rounded-2xl border p-6 shadow-xs">
         <div className="text-center">
           <h2 className="text-muted-foreground mb-1 text-xs font-bold tracking-widest uppercase">
@@ -140,7 +138,6 @@ export const FeatureTelegraphDashboard = () => {
         </div>
       </div>
 
-      {/* 3. Interactive Key Workspace Node */}
       <div className="flex w-full flex-col items-center justify-center space-y-4">
         <AtomMorseKey
           onDot={handleDot}
@@ -155,7 +152,6 @@ export const FeatureTelegraphDashboard = () => {
           }}
         />
 
-        {/* Floating Reference Tools Slices */}
         <TelegraphCheatSheet morseDictionary={MORSE_DICTIONARY} />
 
         <TelegraphSpeedControls

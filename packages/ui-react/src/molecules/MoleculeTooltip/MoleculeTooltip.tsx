@@ -8,6 +8,7 @@ export interface MoleculeTooltipProps {
   delay?: number
   children?: React.ReactNode
   content?: React.ReactNode
+  visible?: boolean
 }
 
 interface Coords {
@@ -30,10 +31,13 @@ export const MoleculeTooltip = ({
   delay = 200,
   children,
   content,
+  visible,
 }: MoleculeTooltipProps) => {
-  const [isVisible, setIsVisible] = useState(false)
+  const isControlled = visible !== undefined
+  const [internalVisible, setInternalVisible] = useState(false)
   const [isCalculating, setIsCalculating] = useState(false)
 
+  const isVisible = isControlled ? visible : internalVisible
   const tooltipId = useId()
 
   const [coords, setCoords] = useState<Coords>({ top: 0, left: 0 })
@@ -169,11 +173,18 @@ export const MoleculeTooltip = ({
   }, [recalculatePosition, destroyListeners])
 
   const show = useCallback(() => {
+    if (isControlled) return
     if (timerRef.current) clearTimeout(timerRef.current)
 
     setIsCalculating(true)
-    setIsVisible(true)
-  }, [])
+    setInternalVisible(true)
+  }, [isControlled])
+
+  useEffect(() => {
+    if (isControlled && visible) {
+      setIsCalculating(true)
+    }
+  }, [isControlled, visible])
 
   useEffect(() => {
     if (isVisible && isCalculating) {
@@ -184,16 +195,19 @@ export const MoleculeTooltip = ({
   }, [isVisible, isCalculating, recalculatePosition, setupListeners])
 
   const hide = useCallback(() => {
+    if (isControlled) return
     destroyListeners()
 
     if (timerRef.current) clearTimeout(timerRef.current)
     timerRef.current = setTimeout(() => {
-      setIsVisible(false)
+      setInternalVisible(false)
     }, delay)
-  }, [delay, destroyListeners])
+  }, [isControlled, delay, destroyListeners])
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (isControlled) return
+
       if (e.key === 'Escape') {
         if (isVisible) {
           e.stopPropagation()
@@ -224,7 +238,7 @@ export const MoleculeTooltip = ({
         }
       }
     },
-    [isVisible, show, hide],
+    [isControlled, isVisible, show, hide],
   )
 
   useEffect(() => {
@@ -242,10 +256,10 @@ export const MoleculeTooltip = ({
       ref={triggerRef}
       className="molecule-tooltip relative inline-block"
       data-testid="molecule-tooltip"
-      onMouseEnter={show}
-      onMouseLeave={hide}
-      onFocus={show}
-      onBlur={hide}
+      onMouseEnter={isControlled ? undefined : show}
+      onMouseLeave={isControlled ? undefined : hide}
+      onFocus={isControlled ? undefined : show}
+      onBlur={isControlled ? undefined : hide}
       onKeyDown={handleKeyDown}
     >
       {children || (
@@ -254,7 +268,7 @@ export const MoleculeTooltip = ({
           tabIndex={0}
           role="button"
           aria-describedby={isVisible ? tooltipId : undefined}
-          onClick={() => setIsVisible((prev) => !prev)}
+          onClick={() => !isControlled && setInternalVisible((prev) => !prev)}
         >
           {title}
         </span>
@@ -273,8 +287,8 @@ export const MoleculeTooltip = ({
           className={`border-border bg-card text-foreground absolute z-50 w-max max-w-xs transform rounded-md border p-3 shadow-lg transition duration-150 ${
             isCalculating ? 'scale-95 opacity-0' : 'scale-100 opacity-100 ease-out'
           }`}
-          onMouseEnter={show}
-          onMouseLeave={hide}
+          onMouseEnter={isControlled ? undefined : show}
+          onMouseLeave={isControlled ? undefined : hide}
         >
           {title && (
             <p className="text-muted-foreground mb-1 text-xs font-semibold tracking-wider uppercase">

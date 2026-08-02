@@ -31,7 +31,7 @@ describe('TelegraphCheatSheet Spec', () => {
     render(<TelegraphCheatSheet morseDictionary={mockDictionary} />)
 
     const triggerButton = screen.getByRole('button', {
-      name: /Hover to view Morse Code Cheat Sheet/i,
+      name: /View Morse Code Cheat Sheet Reference Matrix/i,
     })
     expect(triggerButton).toBeInTheDocument()
   })
@@ -39,8 +39,14 @@ describe('TelegraphCheatSheet Spec', () => {
   it('should sort the morse dictionary records alphabetically prior to printing the rows', () => {
     render(<TelegraphCheatSheet morseDictionary={mockDictionary} />)
 
-    const charElements = screen.getAllByText(/:$/)
-    const renderedOrder = charElements.map((el) => el.textContent?.replace(':', ''))
+    const renderedContent = screen.getByTestId('mock-tooltip-content')
+
+    const charElements = renderedContent.querySelectorAll('span')
+
+    const renderedOrder = Array.from(charElements)
+      .map((el) => el.textContent?.trim() || '')
+      .filter((text) => ['A:', 'B:', 'C:'].includes(text))
+      .map((text) => text.replace(':', ''))
 
     expect(renderedOrder).toEqual(['A', 'B', 'C'])
     expect(screen.getByText('.-')).toBeInTheDocument()
