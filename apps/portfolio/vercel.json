@@ -3,7 +3,7 @@
   "rewrites": [
     {
       "source": "/multi-zones-morse-code",
-      "destination": "https://jas-next-morse-code.vercel.app/multi-zones-morse-code"
+      "destination": "https://jas-next-morse-code.vercel.app/multi-zones-morse-code/"
     },
     {
       "source": "/multi-zones-morse-code/:path*",
