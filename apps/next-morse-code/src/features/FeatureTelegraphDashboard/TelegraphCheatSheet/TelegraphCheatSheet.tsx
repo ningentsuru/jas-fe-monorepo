@@ -10,7 +10,7 @@ export const TelegraphCheatSheet = ({ morseDictionary }: TelegraphCheatSheetProp
   return (
     <MoleculeTooltip
       title="Morse Code Reference Matrix"
-      position="bottom"
+      position="left"
       delay={200}
       content={
         <div className="grid max-h-18 w-72 grid-cols-2 gap-2 overflow-y-auto p-1 font-mono text-xs">
