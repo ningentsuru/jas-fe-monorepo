@@ -70,59 +70,41 @@ onBeforeUnmount(() => {
     ref="dialogRef"
     data-testid="molecule-modal"
     @cancel="handleCancel"
-    class="fixed inset-0 z-50 m-auto overflow-visible border-none bg-transparent p-0 outline-none open:flex"
+    class="molecule-modal border-border bg-card text-card-foreground open:animate-in open:fade-in open:zoom-in-95 open:slide-in-from-bottom-3 backdrop:animate-in backdrop:fade-in hc:border-2 hc:backdrop:bg-black/75 fixed inset-0 m-auto hidden w-full max-w-lg flex-col gap-6 rounded-lg border p-6 shadow-xl transition-[opacity,transform] duration-300 outline-none backdrop:bg-black/40 backdrop:transition-all backdrop:duration-300 open:flex data-[theme=high-contrast]:border-2 data-[theme=high-contrast]:backdrop:bg-black/75"
   >
-    <button
-      type="button"
-      tabindex="-1"
-      aria-hidden="true"
-      @click="emit('close')"
-      class="animate-in fade-in fixed inset-0 h-full w-full bg-black/40 backdrop-blur-xs duration-300 outline-none"
-    />
-
-    <div
-      class="border-border bg-card text-card-foreground animate-in fade-in zoom-in-95 slide-in-from-bottom-3 relative m-auto flex w-full max-w-lg flex-col gap-6 rounded-lg border p-6 shadow-xl duration-300 outline-none"
+    <header
+      v-if="title || $slots.header"
+      class="border-border flex items-center justify-between border-b pb-3"
     >
-      <header
-        v-if="title || $slots.header"
-        data-testid="modal-header"
-        class="border-border flex items-center justify-between border-b pb-3"
-      >
-        <slot name="header">
-          <h1
-            data-testid="modal-title"
-            class="font-display text-card-foreground text-xl font-semibold tracking-tight"
-          >
-            {{ title }}
-          </h1>
-        </slot>
+      <slot name="header">
+        <h1 class="font-display text-card-foreground text-xl font-semibold tracking-tight">
+          {{ title }}
+        </h1>
+      </slot>
 
-        <button
-          v-if="!hideClose"
-          type="button"
-          class="text-muted-foreground hover:text-card-foreground focus-visible:ring-ring focus-visible:ring-offset-card cursor-pointer rounded-md p-1 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
-          aria-label="Close modal"
-          @click="emit('close')"
-          data-testid="modal-close-button"
-        >
-          <span aria-hidden="true" class="text-lg font-bold">✕</span>
-        </button>
-      </header>
-
-      <main
-        class="modal-body text-card-foreground/90 max-h-[65vh] flex-1 overflow-y-auto p-1 text-sm leading-relaxed"
+      <button
+        v-if="!hideClose"
+        type="button"
+        class="text-muted-foreground hover:text-card-foreground focus-visible:ring-ring focus-visible:ring-offset-card cursor-pointer rounded-md p-1 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+        aria-label="Close modal"
+        @click="emit('close')"
       >
-        <slot name="default" />
-      </main>
+        <span aria-hidden="true" class="text-lg font-bold">✕</span>
+      </button>
+    </header>
 
-      <footer
-        v-if="$slots.footer"
-        data-testid="modal-footer"
-        class="border-border flex flex-col-reverse justify-end gap-3 border-t pt-4 sm:flex-row"
-      >
-        <slot name="footer" />
-      </footer>
-    </div>
+    <main
+      class="modal-body text-card-foreground/90 max-h-[65vh] flex-1 overflow-y-auto p-1 text-sm leading-relaxed"
+    >
+      <slot name="default" />
+    </main>
+
+    <footer
+      v-if="$slots.footer"
+      class="border-border flex flex-col-reverse justify-end gap-3 border-t pt-4 sm:flex-row"
+    >
+      <slot name="footer" />
+    </footer>
 
     <span class="sr-only">molecule-modal screen anchor active</span>
   </dialog>
