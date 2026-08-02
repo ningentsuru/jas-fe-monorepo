@@ -17,7 +17,6 @@ import { MoleculeCard } from '@repo/ui-vue'
           completely independent web servers running entirely different frontend frameworks.
         </p>
 
-        <!-- --- Architecture Blueprint Diagram --- -->
         <div class="flex flex-col gap-2 pt-2">
           <h4 class="font-display text-primary text-sm font-bold tracking-wider uppercase">
             Monorepo & Multi-Zone Blueprint:
@@ -47,7 +46,6 @@ import { MoleculeCard } from '@repo/ui-vue'
           </pre>
         </div>
 
-        <!-- --- Infrastructure Breakdown Section --- -->
         <div class="flex flex-col gap-4 pt-2">
           <h4 class="font-display text-primary text-sm font-bold tracking-wider uppercase">
             Deep Dive: System Infrastructure Breakdown:
@@ -128,9 +126,7 @@ import { MoleculeCard } from '@repo/ui-vue'
           </div>
         </div>
 
-        <!-- --- Trade-offs Grid Section --- -->
         <div class="border-border/40 grid grid-cols-1 gap-4 border-t pt-4 md:grid-cols-2">
-          <!-- Advantages Cluster -->
           <div class="flex flex-col gap-2">
             <h4 class="font-display text-success text-sm font-bold tracking-wider uppercase">
               💎 Architectural Advantages:
@@ -154,7 +150,6 @@ import { MoleculeCard } from '@repo/ui-vue'
             </ul>
           </div>
 
-          <!-- Blind Spots Cluster -->
           <div class="flex flex-col gap-2">
             <h4 class="font-display text-warning text-sm font-bold tracking-wider uppercase">
               ⚠️ Operational Blind Spots:

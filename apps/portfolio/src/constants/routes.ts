@@ -6,6 +6,7 @@ export const ROUTES = {
   ACTIVITY_VIEW: { name: 'activity', path: '/activity' },
   CV_VIEW: { name: 'cv', path: '/cv' },
   MULTI_ZONES_VIEW: { name: 'multiZones', path: '/multi-zones' },
+  SIMULATION_VIEW: { name: 'simulation', path: '/simulation' },
   // plop:inject-routes-do-not-removed
   NOT_FOUND_VIEW: { name: 'notFound', path: '/:pathMatch(.*)*' },
 } as const

@@ -6,7 +6,6 @@ import { MoleculeCard } from '@repo/ui-vue'
   <div class="about-this-monorepo-view py-8" data-testid="about-this-monorepo-view">
     <MoleculeCard title="This Monorepo">
       <div class="flex flex-col gap-6 text-md leading-relaxed select-none">
-        <!-- --- Intro Summary --- -->
         <p>
           This repository is structured as a cutting-edge, high-performance frontend monorepo
           orchestrated by <strong>Turborepo</strong> and <strong>pnpm workspaces</strong>. It
@@ -14,7 +13,6 @@ import { MoleculeCard } from '@repo/ui-vue'
           single, unified, and highly optimized build pipeline.
         </p>
 
-        <!-- --- Project Architecture Matrix --- -->
         <div class="flex flex-col gap-2">
           <h4 class="font-display text-primary text-sm font-bold tracking-wider uppercase">
             Ecosystem Layout & Workspace Contracts:
@@ -38,7 +36,6 @@ jas-fe-monorepo/
           </pre>
         </div>
 
-        <!-- --- Core Infrastructure Authority Blocks --- -->
         <div class="flex flex-col gap-4 pt-2">
           <h4 class="font-display text-primary text-sm font-bold tracking-wider uppercase">
             Monorepo Pillar Modules Explainer:

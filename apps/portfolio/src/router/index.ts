@@ -92,6 +92,11 @@ const routes: Array<RouteRecordRaw> = [
     name: ROUTES.MULTI_ZONES_VIEW.name,
     component: () => import('@/views/MultiZonesView'),
   },
+  {
+    path: ROUTES.SIMULATION_VIEW.path,
+    name: ROUTES.SIMULATION_VIEW.name,
+    component: () => import('@/views/SimulationView'),
+  },
   // plop:inject-routes-component-do-not-removed
   {
     path: ROUTES.NOT_FOUND_VIEW.path,
