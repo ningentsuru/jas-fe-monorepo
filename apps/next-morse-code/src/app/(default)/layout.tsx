@@ -55,9 +55,7 @@ export default function DefaultLayout({
         />
       }
       footer={
-        <OrganismFooter title="This is footer">
-          <div>Note: By holding the theme toggle you can choose different themes.</div>
-          <div>Todo: Add contact me component here.</div>
+        <OrganismFooter title="Develop by: Joshua Alexis Sardido">
         </OrganismFooter>
       }
     >

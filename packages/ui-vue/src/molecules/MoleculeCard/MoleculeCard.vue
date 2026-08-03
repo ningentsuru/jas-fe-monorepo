@@ -22,7 +22,7 @@ withDefaults(defineProps<Props>(), {
       <slot name="header">
         <h3
           v-if="title"
-          class="font-display text-foreground text-2xl font-bold tracking-tight uppercase"
+          class="font-display text-foreground text-md font-bold tracking-tight uppercase"
         >
           {{ title }}
         </h3>

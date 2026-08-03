@@ -13,6 +13,9 @@ import {
 import { useAppTheme } from '@/composables/useAppTheme'
 import { NAVIGATIONS } from '@/constants'
 import type { Themes, NavItem } from '@/types'
+import GitHubIcon from '@/assets/images/svgs/github-mono.svg'
+import LinkedInIcon from '@/assets/images/svgs/linkedin.svg'
+import AtomIcon from '@repo/ui-vue/atoms/AtomIcon/AtomIcon.vue'
 
 const route = useRoute()
 const { isDark, theme, toggleTheme, setTheme } = useAppTheme()
@@ -145,9 +148,28 @@ useHead({
     </template>
 
     <template #footer>
-      <OrganismFooter title="This is footer">
-        <div>Note: By holding the theme toggle you can choose different themes.</div>
-        <div>Todo: Add contact me component here.</div>
+      <OrganismFooter title="Develop by: Joshua Alexis Sardido">
+        <AtomButton
+          class="p-0!"
+          variant="link"
+          href="https://github.com/ningentsuru"
+          target="_blank"
+        >
+          <AtomIcon class="rounded-full bg-white p-1" name="GitHub" :icon="GitHubIcon" size="md" />
+        </AtomButton>
+        <AtomButton
+          class="p-0!"
+          variant="link"
+          href="https://www.linkedin.com/in/joshua-alexis-sardido"
+          target="_blank"
+        >
+          <AtomIcon
+            class="rounded-full bg-white p-1"
+            name="GitHub"
+            :icon="LinkedInIcon"
+            size="md"
+          />
+        </AtomButton>
       </OrganismFooter>
     </template>
   </TemplateDefaultPortfolio>

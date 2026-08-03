@@ -12,7 +12,7 @@ import { OrganismHero } from '@repo/ui-vue'
       cta-to="/about-this-monorepo"
       cta-target="_self"
       secondary-label="View on GitHub"
-      secondary-href="https://github.com/ningentsuru"
+      secondary-href="https://github.com/ningentsuru/jas-fe-monorepo"
       secondary-target="_blank"
       background-image="/hero-image.webp"
       background-video="/hero-video.mp4"

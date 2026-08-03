@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { MoleculeCard } from '@repo/ui-vue'
+import FeatureSimulatePurchase from '@/features/FeatureSimulatePurchase'
 </script>
 
 <template>
   <div class="simulation-view py-8" data-testid="simulation-view">
-    <MoleculeCard title="Simulate 1"></MoleculeCard>
+    <FeatureSimulatePurchase />
     <span class="sr-only">simulation-view</span>
   </div>
 </template>

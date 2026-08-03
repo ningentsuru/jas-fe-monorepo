@@ -95,8 +95,8 @@ module.exports = function (plop) {
             if (answers.folder === 'apps') {
               return [
                 {
-                  name: '(Features)  : (src/components/features/)',
-                  value: 'src/components/features/',
+                  name: '(Features)  : (src/features/)',
+                  value: 'src/features/',
                 },
                 { name: '(Layouts)   : (src/layouts/)', value: 'src/layouts/' },
                 { name: '(Views)     : (src/views/)', value: 'src/views/' },
