@@ -13,27 +13,26 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'md',
 })
 
+const sizeMap: Record<'sm' | 'md' | 'lg' | 'xl', string> = {
+  sm: 'size-4',
+  md: 'size-6',
+  lg: 'size-8',
+  xl: 'size-12',
+}
+
 const iconClass = computed(() => {
-  const baseClasses = 'text-[var(--color-foreground)] transition-colors'
-
   if (typeof props.size === 'number') {
-    return `${baseClasses} w-[var(--icon-size)] h-[var(--icon-size)]`
+    return 'transition-colors duration-200'
   }
-
-  const sizeMap: Record<'sm' | 'md' | 'lg' | 'xl', string> = {
-    sm: 'w-4 h-4',
-    md: 'w-6 h-6',
-    lg: 'w-8 h-8',
-    xl: 'w-12 h-12',
-  }
-
-  const resolvedSize = typeof props.size === 'string' ? props.size : 'md'
-  return `${baseClasses} ${sizeMap[resolvedSize as keyof typeof sizeMap] || sizeMap.md}`
+  return `transition-colors duration-200 ${sizeMap[props.size] || sizeMap.md}`
 })
 
 const iconStyle = computed(() => {
   if (typeof props.size === 'number') {
-    return { '--icon-size': `${props.size}px` }
+    return {
+      width: `${props.size}px`,
+      height: `${props.size}px`,
+    }
   }
   return {}
 })
@@ -41,19 +40,19 @@ const iconStyle = computed(() => {
 
 <template>
   <div
-    class="atom-icon inline-flex items-center justify-center"
+    class="atom-icon text-foreground inline-flex shrink-0 items-center justify-center"
     data-testid="atom-icon"
-    :style="iconStyle"
   >
     <img
       v-if="typeof icon === 'string'"
       :src="icon"
       :class="iconClass"
+      :style="iconStyle"
       :alt="name || 'icon'"
       draggable="false"
     />
 
-    <component v-else-if="icon" :is="icon" :class="iconClass" />
+    <component v-else-if="icon" :is="icon" :class="iconClass" :style="iconStyle" />
 
     <span v-else-if="name" class="text-sm font-medium tracking-wide">
       {{ name }}

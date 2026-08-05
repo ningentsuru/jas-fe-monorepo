@@ -1,7 +1,15 @@
 <script setup lang="ts">
 import { ref, computed, watch, type Component } from 'vue'
-import { MoleculeModal, AtomToggle, AtomSelect, AtomButton } from '../../'
+import { AtomToggle, AtomSelect, AtomButton } from '../../'
 import { Sun, Moon, Palette, LoaderPinwheel } from '@lucide/vue'
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '#/components/ui/alert-dialog'
 
 interface Props {
   isToggled: boolean
@@ -54,8 +62,7 @@ function closeModal() {
   showModal.value = false
 }
 
-function handleSubmit(event: Event) {
-  event.preventDefault()
+function handleApply() {
   emit('setTheme', selectedTheme.value)
   closeModal()
 }
@@ -69,39 +76,34 @@ watch(
 </script>
 
 <template>
-  <div class="theme-toggle-wrapper font-display">
-    <div class="molecule-theme-toggle" data-testid="molecule-theme-toggle">
-      <AtomToggle
-        :class="[{ 'animate-spin [animation-duration:2s]': showModal === true }]"
-        :icon="getIcon"
-        :is-toggled="isToggled"
-        :size="size"
-        @toggle="emit('toggle')"
-        @long-toggle="modalToggle"
-      />
-      <span class="sr-only">molecule-theme-toggle</span>
-    </div>
+  <div class="molecule-theme-toggle" data-testid="molecule-theme-toggle">
+    <AtomToggle
+      :class="[{ 'animate-spin [animation-duration:2s]': showModal }]"
+      :icon="getIcon"
+      :is-toggled="isToggled"
+      :size="size"
+      @toggle="emit('toggle')"
+      @long-toggle="modalToggle"
+    />
 
-    <Teleport to="body">
-      <MoleculeModal
-        title="Choose more themes!"
-        :show="showModal"
-        hide-close
-        @close="closeModal"
-        class="border-border bg-card text-card-foreground relative z-50 w-full max-w-md rounded-lg border p-6 shadow-xl"
-      >
-        <form class="flex flex-col justify-between gap-4" @submit.prevent="handleSubmit">
-          <AtomSelect v-model="selectedTheme" :options="optionTheme" class="cursor-pointer" />
-          <div class="flex justify-between gap-2">
-            <AtomButton size="md" variant="primary" type="submit">
-              <span>Apply</span>
-            </AtomButton>
-            <AtomButton size="md" variant="destructive" type="button" @click="closeModal">
-              <span>Close</span>
-            </AtomButton>
-          </div>
-        </form>
-      </MoleculeModal>
-    </Teleport>
+    <AlertDialog :open="showModal" @update:open="showModal = $event">
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Choose more themes!</AlertDialogTitle>
+          <AlertDialogDescription class="flex flex-col gap-4 pt-2">
+            <AtomSelect v-model="selectedTheme" :options="optionTheme" class="cursor-pointer" />
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+
+        <AlertDialogFooter class="gap-2">
+          <AtomButton size="md" variant="destructive" type="button" @click="closeModal">
+            Cancel
+          </AtomButton>
+          <AtomButton size="md" variant="primary" type="button" @click="handleApply">
+            Apply Theme
+          </AtomButton>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   </div>
 </template>
