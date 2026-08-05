@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
 import { Hammer, Sparkles, HardHat, Terminal } from '@lucide/vue'
 import { Badge } from '#/components/ui/badge'
 </script>

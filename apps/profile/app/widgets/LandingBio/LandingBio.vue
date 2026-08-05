@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import {
-  AtomSkeleton,
   OrganismProfileHero,
   OrganismSkillDirectory,
   OrganismTimeline,
