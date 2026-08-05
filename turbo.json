@@ -1,11 +1,12 @@
 {
   "$schema": "https://turborepo.dev/schema.json",
   "ui": "tui",
+  "globalEnv": ["NUXT_FORMSPREE_ENDPOINT_ID"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*", "tsconfig.json", "src/**", "app/**", "pages/**"],
-      "env": ["ENABLE_EXPERIMENTAL_COREPACK", "NODE_ENV"],
+      "env": ["ENABLE_EXPERIMENTAL_COREPACK", "NODE_ENV", "NUXT_FORMSPREE_ENDPOINT_ID"],
       "outputs": [
         ".next/**",
         "!.next/cache/**",
