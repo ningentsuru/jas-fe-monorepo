@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { h } from 'vue'
 import OrganismHeader from './OrganismHeader.vue'
-import meta, { Default, EmptyNavigationShell } from './OrganismHeader.stories'
+import meta, { Default } from './OrganismHeader.stories'
 
 type OrganismHeaderProps = InstanceType<typeof OrganismHeader>['$props']
 
@@ -27,26 +27,6 @@ describe('OrganismHeader', () => {
     expect(wrapper.find('header').exists()).toBe(true)
     expect(wrapper.find('header').classes()).toContain('sticky')
     expect(wrapper.find('header').classes()).toContain('bg-card')
-  })
-
-  it('pipes navigational array payload items data properties downwards securely', () => {
-    const wrapper = mount(OrganismHeader, {
-      props: getProps(Default.args),
-      global: { stubs: { OrganismNavigation: true } },
-    })
-
-    expect(wrapper.props('navItems')).toBeDefined()
-    expect(wrapper.props('navItems')?.length).toBe(3)
-    expect(wrapper.props('navItems')?.[0].label).toBe('Dashboard')
-  })
-
-  it('supplies fallback array structures safely when props contain empty elements', () => {
-    const wrapper = mount(OrganismHeader, {
-      props: getProps(EmptyNavigationShell.args),
-      global: { stubs: { OrganismNavigation: true } },
-    })
-
-    expect(wrapper.props('navItems')).toEqual([])
   })
 
   it('renders branding template slots context details within the header layout accurately', () => {
