@@ -1,21 +1,29 @@
 # Joshua Alexis Natividad Sardido
-**Frontend Engineer** | Specialized in Vue.js, Nuxt.js, and TypeScript Systems Architecture.
+
+> Frontend Engineer specializing in Vue.js, Nuxt.js, and TypeScript application systems architecture.
+
+## Information Channels
+- **Production Hub**: [Joshua Alexis Sardido Portfolio](https://jas-fawn.vercel.app)
+- **Specialized Context**: [About Me Information Path](https://jas-fawn.vercel.app/about-me)
+- **Direct Mail Pipeline**: [ja.sardido@outlook.com](mailto:ja.sardido@outlook.com)
+- **Primary Alternate Mail**: [ja.sardido@yahoo.com](mailto:ja.sardido@yahoo.com)
+- **Voice Connection**: [0917-402-8632](tel:09174028632)
 
 ---
 
-## 🛠️ Core Technical Stack
-- **Frameworks & Libraries**: Vue.js 2/3 (Composition API, `<script setup>`), Nuxt.js 2/3/4, Pinia, Vuex, React 19, Next.js 16, Laravel
+## Core Technical Profile
+- **Frameworks & Core**: Vue.js 2/3 (Composition API, `<script setup>`), Nuxt.js 2/3/4, Pinia, Vuex, React 19, Next.js 16, Laravel
 - **Languages**: JavaScript (ES2025), TypeScript, PHP
 - **Build & Styling**: Vite, HTML5, CSS3, TailwindCSS v4.0, SCSS/SASS
-- **Testing & Quality Assurance**: Vitest, Jest, Storybook.js, Accessibility Auditing (WCAG), Performance Auditing (Core Web Vitals)
-- **Cloud, CI/CD & Monitoring**: AWS (S3, ECS, CloudWatch), Docker, TeamCity, Git, Sentry
-- **Integrations & Integrations**: Stripe, GrowthBook, MoEngage, Google Tag Manager
-- **Database Systems**: MySQL (Joins, filtering, query optimization), NoSQL (CRUD, aggregation pipelines, embedding vs. referencing design)
-- **AI-Assisted Workflows**: Claude Code, GitHub Copilot, ChatGPT (Daily workflow integration & advanced code-review practices)
+- **Testing & Quality**: Vitest, Jest, Storybook.js, Accessibility Auditing (WCAG), Performance Auditing (Core Web Vitals)
+- **Cloud & Infrastructure**: AWS (S3, ECS, CloudWatch), Docker, TeamCity, Git, Sentry
+- **Integrations**: Stripe, GrowthBook, MoEngage, Google Tag Manager
+- **Database Architecture**: MySQL (Joins, filtering, query optimization), NoSQL (CRUD, aggregation pipelines, embedding vs. referencing design)
+- **AI-Assisted Operations**: Claude Code, GitHub Copilot, ChatGPT (Daily workflow integration & code-review practices)
 
 ---
 
-## 🏢 Professional Production Impacts & Experience
+## Professional Production Impacts & Experience
 
 ### Mid-Level Frontend Developer | Filta Global
 *Feb 2022 - Jul 2026*
@@ -52,13 +60,13 @@
 
 ---
 
-## 🎓 Academic Credentials & History
+## Academic Credentials & History
 - **Bachelor of Science in Information Technology**
   - **STI Academic Center — Las Piñas** (2015 – 2017)
   - **University of Perpetual Help System DALTA — Las Piñas** (2012 – 2015 | *Transferred*)
 
 ---
 
-## 🌐 Languages & Communication
+## Languages & Communication
 - **Filipino**: Bilingual Proficiency
 - **English**: Professional Working Proficiency
