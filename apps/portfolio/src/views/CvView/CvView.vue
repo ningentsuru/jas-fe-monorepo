@@ -186,7 +186,7 @@ const formatResumeDate = (dateStr: string) => {
         >
           <span class="text-foreground pl-1 select-none" aria-hidden="true">•</span>
           <span class="flex-1">
-            <strong>{{ language.language }}</strong> —
+            <strong>{{ language.language }}</strong> -
             <span class="text-muted-foreground text-xs sm:text-sm">{{ language.fluency }}</span>
           </span>
         </li>

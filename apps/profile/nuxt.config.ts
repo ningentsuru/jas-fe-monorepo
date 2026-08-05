@@ -9,6 +9,7 @@ export default defineNuxtConfig({
     compatibilityVersion: 4,
   },
   compatibilityDate: '2025-07-15',
+
   devtools: { enabled: true },
 
   modules: ['@nuxtjs/color-mode'],
@@ -40,12 +41,16 @@ export default defineNuxtConfig({
   },
 
   components: [
-    { path: '~/widgets', pathPrefix: false },
-    { path: '~/features', pathPrefix: false },
-    { path: '~/entities', pathPrefix: false },
+    { path: '~/widgets', pathPrefix: false, extensions: ['vue'] },
+    { path: '~/features', pathPrefix: false, extensions: ['vue'] },
+    { path: '~/entities', pathPrefix: false, extensions: ['vue'] },
   ],
 
   build: {
     transpile: ['@repo/ui-vue'],
+  },
+
+  runtimeConfig: {
+    formspreeEndpointId: '',
   },
 })

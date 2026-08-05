@@ -9,7 +9,7 @@ import { MoleculeCard } from '@repo/ui-vue'
         <p>
           This repository is structured as a cutting-edge, high-performance frontend monorepo
           orchestrated by <strong>Turborepo</strong> and <strong>pnpm workspaces</strong>. It
-          bridges two entirely distinct engineering ecosystems—React/Next.js and Vue 3/Nuxt—under a
+          bridges two entirely distinct engineering ecosystems-React/Next.js and Vue 3/Nuxt-under a
           single, unified, and highly optimized build pipeline.
         </p>
 
