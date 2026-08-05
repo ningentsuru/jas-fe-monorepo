@@ -7,7 +7,7 @@ const { themeClass } = useAppTheme()
 <template>
   <div
     :class="themeClass"
-    class="bg-background text-foreground min-h-screen transition-colors duration-200"
+    class="bg-background text-foreground min-h-screen transition-colors duration-300"
   >
     <NuxtLayout />
   </div>

@@ -109,7 +109,7 @@ importers:
         version: link:../../packages/ui-vue
       nuxt:
         specifier: ^4.5.1
-        version: 4.5.1(b14752e5bc4e4923cb7e506e2fb01b75)
+        version: 4.5.1(0fbb5a6a8d198b839d11dd16cb062d24)
       vue:
         specifier: ^3.5.40
         version: 3.5.40(typescript@6.0.3)
@@ -258,7 +258,7 @@ importers:
         version: link:../../packages/ui-vue
       nuxt:
         specifier: ^4.5.1
-        version: 4.5.1(0fbb5a6a8d198b839d11dd16cb062d24)
+        version: 4.5.1(b14752e5bc4e4923cb7e506e2fb01b75)
       vue:
         specifier: ^3.5.40
         version: 3.5.40(typescript@6.0.3)
