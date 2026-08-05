@@ -1,0 +1,14 @@
+@import 'tailwindcss';
+@plugin "tailwind-plugin-typed";
+@import '@repo/ui-vue/style.css';
+@import './fonts.css';
+
+:root {
+  --font-sans:
+    'inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+@source '../../**/*.vue';
+@source '../../**/*.ts';
+@source '../../../../../packages/ui-vue/src/**/*.vue';
+@source '../../../../../packages/ui-vue/src/**/*.ts';
