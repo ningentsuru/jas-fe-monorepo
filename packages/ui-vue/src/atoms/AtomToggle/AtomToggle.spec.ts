@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import AtomToggle from './AtomToggle.vue'
-import { vLongPressToggle } from '../../directives/c.js'
+import { vLongPressToggle } from '../../directives/vLongPressOptions'
 import meta, { Default } from './AtomToggle.stories'
 
 type AtomToggleProps = InstanceType<typeof AtomToggle>['$props']
