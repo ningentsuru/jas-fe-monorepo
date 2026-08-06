@@ -10,7 +10,7 @@ useSeoMeta({
   ogDescription:
     'Frontend Engineer specializing in building and modernizing enterprise scale applications with Vue 3, Nuxt 4, and TypeScript.',
   ogType: 'profile',
-  ogUrl: 'https://vercel.app',
+  ogUrl: 'https://jas-fawn.vercel.app',
   ogSiteName: 'Joshua Alexis Sardido Portfolio',
 
   twitterCard: 'summary_large_image',
@@ -26,7 +26,7 @@ useHead({
   link: [
     {
       rel: 'canonical',
-      href: 'https://vercel.app',
+      href: 'https://jas-fawn.vercel.app',
     },
   ],
   script: [
