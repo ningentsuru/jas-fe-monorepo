@@ -2,33 +2,30 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import OrganismFooter from './OrganismFooter.vue'
 
 const meta: Meta<typeof OrganismFooter> = {
-  title: 'Components/OrganismFooter',
+  title: 'Organisms/OrganismFooter',
   component: OrganismFooter,
-  args: {
-    title: 'Core Design System Inc.',
+  tags: ['autodocs'],
+  argTypes: {
+    title: { control: 'text' },
+    isLoading: { control: 'boolean' },
+    isSubmitting: { control: 'boolean' },
+    submitSuccess: { control: 'boolean' },
+    submitError: { control: 'boolean' },
+    onSubmit: { action: 'submit' },
   },
-  render: (args) => ({
-    components: { OrganismFooter },
-    setup() {
-      return { args }
-    },
-    template: `
-      <OrganismFooter v-bind="args">
-        <a href="#" class="hover:text-primary transition-colors">Privacy Policy</a>
-        <a href="#" class="hover:text-primary transition-colors">Terms of Service</a>
-        <a href="#" class="hover:text-primary transition-colors">Contact</a>
-      </OrganismFooter>
-    `,
-  }),
+  args: {
+    title: "Let's Connect",
+    isLoading: false,
+    isSubmitting: false,
+    submitSuccess: false,
+    submitError: false,
+  },
 }
 
 export default meta
 type Story = StoryObj<typeof OrganismFooter>
 
 export const Default: Story = {}
-
-export const AlternativeTitle: Story = {
-  args: {
-    title: 'Monorepo Platform Footer Layer',
-  },
-}
+export const Submitting: Story = { args: { isSubmitting: true } }
+export const Success: Story = { args: { submitSuccess: true } }
+export const ErrorState: Story = { args: { submitError: true } }

@@ -3,12 +3,23 @@ import { Smile } from '@lucide/vue'
 import AtomIcon from './AtomIcon.vue'
 
 const meta: Meta<typeof AtomIcon> = {
-  title: 'Components/AtomIcon',
+  title: 'Atoms/AtomIcon',
   component: AtomIcon,
+  tags: ['autodocs'],
   argTypes: {
     size: {
-      type: { name: 'other', value: 'string | number' },
-      description: 'Accepts preset names or a custom pixel number value',
+      control: 'text',
+      description:
+        'Accepts utility name string presets (sm, md, lg, xl) or exact numeric pixel values',
+    },
+    name: {
+      control: 'text',
+      description: 'The alternative fallback label used when graphical vectors are absent',
+    },
+    icon: {
+      control: false,
+      description:
+        'The target graphic representation (Lucide component class reference or string URI path)',
     },
   },
   args: {

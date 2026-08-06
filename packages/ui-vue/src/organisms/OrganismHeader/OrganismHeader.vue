@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch, onUnmounted } from 'vue'
 import { Loader } from '@lucide/vue'
-import { AtomIcon } from '../../'
+import { AtomIcon } from '#/index'
 
 interface Props {
   isLoading?: boolean
@@ -49,7 +49,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <header class="bg-bacgkround/40 sticky top-0 z-50 flex h-15 p-2 backdrop-blur-xl">
+  <header
+    class="bg-background/40 sticky top-0 z-50 flex h-15 p-2 backdrop-blur-xl transition-colors duration-200"
+    data-testid="organism-header"
+  >
     <nav
       class="border-border bg-muted mx-auto flex flex-1 items-center rounded-full border-2 px-5 py-1 shadow-lg transition-all duration-1000 ease-in-out"
       :class="[
@@ -57,13 +60,18 @@ onUnmounted(() => {
           ? 'max-w-10 justify-center'
           : 'max-w-sm justify-between sm:max-w-lg md:max-w-2xl lg:max-w-4xl xl:max-w-7xl',
       ]"
+      role="navigation"
+      :aria-label="isLoading ? 'Loading system navigation...' : 'Main Application Navigation'"
+      :aria-busy="isLoading"
     >
       <template v-if="showContent">
         <div
           class="flex w-full items-center justify-between transition-opacity duration-1000 ease-in-out"
           :class="[isFullyOpaque ? 'opacity-100' : 'opacity-0']"
+          :aria-hidden="isLoading ? 'true' : undefined"
         >
           <slot name="branding" />
+
           <div class="flex items-center gap-2">
             <slot name="navigation" />
             <slot name="theme-toggle" />
@@ -76,6 +84,8 @@ onUnmounted(() => {
         class="text-muted-foreground animate-spin [animation-duration:2s]"
         :icon="Loader"
         size="md"
+        role="img"
+        aria-label="App resources loading..."
       />
     </nav>
   </header>

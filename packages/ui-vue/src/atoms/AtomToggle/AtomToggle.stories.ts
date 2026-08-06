@@ -3,12 +3,17 @@ import { Atom } from '@lucide/vue'
 import AtomToggle from './AtomToggle.vue'
 
 const meta: Meta<typeof AtomToggle> = {
-  title: 'Components/AtomToggle',
+  title: 'Atoms/AtomToggle',
   component: AtomToggle,
+  tags: ['autodocs'],
   argTypes: {
     size: {
-      type: { name: 'other', value: 'string | number' },
-      description: 'Accepts preset names or a custom pixel number value',
+      control: 'text',
+      description: 'Accepts preset name strings or custom pixel layout numbers',
+    },
+    isToggled: {
+      control: 'boolean',
+      description: 'Controls active visual state appearance',
     },
   },
   args: {

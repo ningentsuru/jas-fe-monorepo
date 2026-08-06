@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { AtomIcon } from '../../'
+import { AtomIcon } from '#/index'
 
 type AtomIconProps = InstanceType<typeof AtomIcon>['$props']
 type AllowedIconType = AtomIconProps['icon']

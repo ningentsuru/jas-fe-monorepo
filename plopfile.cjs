@@ -217,7 +217,6 @@ module.exports = function (plop) {
         targetName.includes('vue') ||
         targetName.includes('nuxt') ||
         targetName.includes('portfolio')
-        targetName.includes('profile')
       const frameworkDir = isVueFramework ? 'vue' : 'react'
       const ext = isVueFramework ? 'vue' : 'tsx'
       const specExt = isVueFramework ? 'spec.ts' : 'spec.tsx'

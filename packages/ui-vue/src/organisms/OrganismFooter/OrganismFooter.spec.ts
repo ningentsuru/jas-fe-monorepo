@@ -1,51 +1,72 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { h } from 'vue'
 import OrganismFooter from './OrganismFooter.vue'
-import meta, { Default, AlternativeTitle } from './OrganismFooter.stories'
+import meta, { Default, Success } from './OrganismFooter.stories'
 
 type OrganismFooterProps = InstanceType<typeof OrganismFooter>['$props']
 
-const getProps = (storyArgs: typeof Default.args): OrganismFooterProps => {
-  return {
-    ...meta.args,
-    ...storyArgs,
-  } as OrganismFooterProps
+const getProps = (storyArgs: Record<string, unknown>): OrganismFooterProps => {
+  return { ...meta.args, ...storyArgs } as unknown as OrganismFooterProps
+}
+
+const globalMountOptions = {
+  global: {
+    stubs: {
+      AtomSkeleton: { template: '<div class="mock-skeleton" />' },
+      Button: {
+        props: ['disabled'],
+        template: '<button :disabled="disabled"><slot /></button>',
+      },
+    },
+  },
 }
 
 describe('OrganismFooter', () => {
-  it('renders root semantic layout structure and title text content properly', () => {
+  it('renders the core contentinfo landmark container without crashing', () => {
     const wrapper = mount(OrganismFooter, {
-      props: getProps(Default.args),
+      props: getProps((Default.args ?? {}) as Record<string, unknown>),
+      ...globalMountOptions,
     })
-
-    const currentYear = new Date().getFullYear().toString()
 
     expect(wrapper.find('[data-testid="organism-footer"]').exists()).toBe(true)
-    expect(wrapper.find('h2').text()).toBe('Core Design System Inc.')
-    expect(wrapper.text()).toContain(currentYear)
-    expect(wrapper.text()).toContain('All rights reserved.')
+    expect(wrapper.find('footer[role="contentinfo"]').exists()).toBe(true)
   })
 
-  it('receives correct configuration title props from Storybook arguments mapping blocks', () => {
+  it('collects internal input data and emits a structured payload object on submission', async () => {
     const wrapper = mount(OrganismFooter, {
-      props: getProps(AlternativeTitle.args),
+      props: getProps((Default.args ?? {}) as Record<string, unknown>),
+      ...globalMountOptions,
     })
 
-    expect(wrapper.props('title')).toEqual('Monorepo Platform Footer Layer')
-    expect(wrapper.find('h2').text()).toBe('Monorepo Platform Footer Layer')
+    const emailInput = wrapper.find('input[type="email"]')
+    const messageTextarea = wrapper.find('textarea')
+
+    await emailInput.setValue('developer@nuxt.com')
+    await messageTextarea.setValue('Let us migrate to Nuxt 4 monorepos!')
+
+    await wrapper.find('form').trigger('submit.prevent')
+
+    // Confirm that the data payload object is cleanly passed to the parent event listener
+    const submitEvents = wrapper.emitted('submit')
+    expect(submitEvents).toBeTruthy()
+    expect(submitEvents?.[0][0]).toEqual({
+      email: 'developer@nuxt.com',
+      message: 'Let us migrate to Nuxt 4 monorepos!',
+    })
   })
 
-  it('renders child context template node slots smoothly inside the container layout layer', () => {
+  it('correctly executes exposed form clearing methods', async () => {
     const wrapper = mount(OrganismFooter, {
-      props: getProps(Default.args),
-      slots: {
-        default: () => h('span', { class: 'mock-nav' }, 'Footer Nav Elements'),
-      },
+      props: getProps((Default.args ?? {}) as Record<string, unknown>),
+      ...globalMountOptions,
     })
 
-    const slottedEl = wrapper.find('.mock-nav')
-    expect(slottedEl.exists()).toBe(true)
-    expect(slottedEl.text()).toBe('Footer Nav Elements')
+    await wrapper.find('input[type="email"]').setValue('clear-me@domain.com')
+
+    // Explicitly run exposed layout interaction methods
+    wrapper.vm.resetForm()
+    await wrapper.vm.$nextTick()
+
+    expect((wrapper.find('input[type="email"]').element as HTMLInputElement).value).toBe('')
   })
 })

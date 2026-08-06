@@ -1,9 +1,19 @@
 <script setup lang="ts">
 import { Sparkles, Phone, MapPin } from '@lucide/vue'
 import { Badge } from '#/components/ui/badge'
-import { AtomSkeleton } from '../../'
+import { AtomSkeleton } from '#/index'
+
+interface ProfileData {
+  statusBadge: string
+  fullName: string
+  headline: string
+  phoneRaw: string
+  phoneFormatted: string
+  location: string
+}
 
 interface Props {
+  profile?: ProfileData
   isLoading?: boolean
 }
 
@@ -14,8 +24,12 @@ withDefaults(defineProps<Props>(), {
 
 <template>
   <section class="space-y-4 text-center md:text-left" data-testid="organism-profile-hero">
-    <template v-if="isLoading">
-      <div class="animate-pulse space-y-4" aria-hidden="true">
+    <template v-if="isLoading || !profile">
+      <div
+        class="animate-pulse space-y-4"
+        role="img"
+        aria-label="Loading profile header details..."
+      >
         <div class="flex justify-center md:justify-start">
           <AtomSkeleton class="h-6 w-64 rounded-full" />
         </div>
@@ -39,39 +53,32 @@ withDefaults(defineProps<Props>(), {
 
     <template v-else>
       <div class="animate-fade-in space-y-4">
-        <Badge
-          variant="outline"
-          class="bg-accent text-accent-foreground inline-flex items-center gap-2 rounded-full border-transparent px-3 py-1 text-xs font-medium"
-        >
-          <Sparkles class="text-primary size-3.5 animate-pulse" />
-          Available for Advanced Architecture Tasks
+        <Badge variant="outline" class="inline-flex items-center gap-2 px-3 py-1">
+          <Sparkles class="size-3.5" aria-hidden="true" />
+          {{ profile.statusBadge }}
         </Badge>
 
         <h1 class="text-foreground text-4xl font-extrabold tracking-tight sm:text-5xl">
-          Joshua Alexis Natividad Sardido
+          {{ profile.fullName }}
         </h1>
+        <p
+          class="text-muted-foreground max-w-xl text-lg leading-relaxed font-medium"
+          v-html="profile.headline"
+        />
 
-        <p class="text-muted-foreground max-w-xl text-lg leading-relaxed font-medium">
-          Frontend Engineer specializing in building and modernizing applications with
-          <span class="text-foreground font-semibold">Vue 3, Nuxt 4, and TypeScript</span>.
-        </p>
-
-        <div
-          class="flex flex-wrap items-center justify-center gap-4 pt-2 text-sm font-medium md:justify-start"
-        >
+        <div class="flex flex-wrap items-center justify-center gap-4 text-sm md:justify-start">
           <a
             href="tel:09174028632"
-            class="text-primary group flex items-center gap-1.5 font-bold hover:underline"
+            class="text-muted-foreground hover:text-primary group flex items-center gap-2.5 font-bold transition-colors"
+            aria-label="`Call Joshua directly at ${profile.phoneFormatted}`"
           >
-            <Phone
-              class="text-muted-foreground group-hover:text-primary size-3.5 transition-colors"
-            />
+            <Phone class="size-4 transition-transform group-hover:scale-105" aria-hidden="true" />
             <span>0917-402-8632</span>
           </a>
-          <span class="text-border hidden sm:inline">|</span>
+          <span class="text-border hidden sm:inline" aria-hidden="true">|</span>
           <div class="text-muted-foreground flex items-center gap-1.5">
-            <MapPin class="size-3.5" />
-            <span>General Trias City, Cavite, PH</span>
+            <MapPin class="size-3.5" aria-hidden="true" />
+            <span>{{ profile.location }}</span>
           </div>
         </div>
       </div>

@@ -2,21 +2,27 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite'
 import { ref, watch } from 'vue'
 import MoleculeThemeToggle from './MoleculeThemeToggle.vue'
 
-export type ThemeType =
-  'light' | 'dark' | 'forest' | 'midnight' | 'ocean' | 'sunset' | 'high-contrast'
+type ThemeValues = 'light' | 'dark' | 'forest' | 'ocean' | 'sunset' | 'high-contrast'
 
 const meta: Meta<typeof MoleculeThemeToggle> = {
-  title: 'Components/MoleculeThemeToggle',
+  title: 'Molecules/MoleculeThemeToggle',
   component: MoleculeThemeToggle,
+  tags: ['autodocs'],
   argTypes: {
     size: {
-      type: { name: 'other', value: 'string | number' },
-      description: 'Accepts preset name strings or custom pixel layout numbers',
+      control: 'select',
+      options: ['sm', 'md', 'lg', 'xl'],
+      description: 'Accepts utility size presets to control the rendering boundaries',
     },
     currentTheme: {
       control: 'select',
       options: ['light', 'dark', 'forest', 'ocean', 'sunset', 'high-contrast'],
+      description: 'The active runtime theme configuration signature',
     },
+    isToggled: {
+      control: 'boolean',
+      description: 'Tracks state parameters for basic binary switches',
+    }
   },
   args: {
     isToggled: false,
@@ -26,13 +32,13 @@ const meta: Meta<typeof MoleculeThemeToggle> = {
   render: (args) => ({
     components: { MoleculeThemeToggle },
     setup() {
-      const localTheme = ref<ThemeType>((args.currentTheme as ThemeType) ?? 'light')
+      const localTheme = ref<ThemeValues>((args.currentTheme as ThemeValues) ?? 'light')
       const localToggled = ref<boolean>(args.isToggled ?? false)
 
       watch(
         () => args.currentTheme,
         (newTheme) => {
-          if (newTheme) localTheme.value = newTheme as ThemeType
+          if (newTheme) localTheme.value = newTheme as ThemeValues
         },
       )
       watch(
@@ -47,7 +53,7 @@ const meta: Meta<typeof MoleculeThemeToggle> = {
         localTheme.value = localToggled.value ? 'dark' : 'light'
       }
 
-      function handleSetTheme(theme: ThemeType) {
+      function handleSetTheme(theme: ThemeValues) {
         localTheme.value = theme
         localToggled.value = theme !== 'light'
       }
@@ -55,7 +61,7 @@ const meta: Meta<typeof MoleculeThemeToggle> = {
       return { args, localTheme, localToggled, handleToggle, handleSetTheme }
     },
     template: `
-      <div class="p-6">
+      <div class="p-6 flex flex-col items-start gap-4">
         <MoleculeThemeToggle
           v-bind="args"
           :current-theme="localTheme"
@@ -63,9 +69,9 @@ const meta: Meta<typeof MoleculeThemeToggle> = {
           @toggle="handleToggle"
           @set-theme="handleSetTheme"
         />
-        <div class="mt-4 text-sm text-muted-foreground">
-          Active Theme State: <span class="font-bold font-mono text-foreground">{{ localTheme }}</span>
-        </div>
+        <p class="text-xs font-semibold text-muted-foreground">
+          Active Canvas Theme State Track: <span class="font-bold font-mono text-foreground uppercase bg-muted px-2 py-0.5 rounded border border-border">{{ localTheme }}</span>
+        </p>
       </div>
     `,
   }),

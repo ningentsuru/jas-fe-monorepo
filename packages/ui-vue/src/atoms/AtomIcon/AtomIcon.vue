@@ -22,9 +22,9 @@ const sizeMap: Record<'sm' | 'md' | 'lg' | 'xl', string> = {
 
 const iconClass = computed(() => {
   if (typeof props.size === 'number') {
-    return 'transition-colors duration-200'
+    return 'transition-colors duration-200 shrink-0'
   }
-  return `transition-colors duration-200 ${sizeMap[props.size] || sizeMap.md}`
+  return `transition-colors duration-200 shrink-0 ${sizeMap[props.size] || sizeMap.md}`
 })
 
 const iconStyle = computed(() => {
@@ -42,13 +42,14 @@ const iconStyle = computed(() => {
   <div
     class="atom-icon text-foreground inline-flex shrink-0 items-center justify-center"
     data-testid="atom-icon"
+    :aria-hidden="icon ? 'true' : undefined"
   >
     <img
       v-if="typeof icon === 'string'"
       :src="icon"
       :class="iconClass"
       :style="iconStyle"
-      :alt="name || 'icon'"
+      :alt="name || 'graphic element'"
       draggable="false"
     />
 
@@ -57,7 +58,5 @@ const iconStyle = computed(() => {
     <span v-else-if="name" class="text-sm font-medium tracking-wide">
       {{ name }}
     </span>
-
-    <span class="sr-only">atom-icon</span>
   </div>
 </template>

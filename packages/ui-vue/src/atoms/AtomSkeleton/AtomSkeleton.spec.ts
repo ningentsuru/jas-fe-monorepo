@@ -1,33 +1,40 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import AtomSkeleton from './AtomSkeleton.vue'
-import meta, { Default } from './AtomSkeleton.stories'
 
-type AtomSkeletonProps = InstanceType<typeof AtomSkeleton>['$props']
-
-const getProps = (storyArgs: typeof Default.args): AtomSkeletonProps => {
-  return {
-    ...meta.args,
-    ...storyArgs,
-  } as AtomSkeletonProps
+const globalMountOptions = {
+  global: {
+    stubs: {
+      Skeleton: {
+        template: '<div class="mock-skeleton-primitive"><slot /></div>',
+      },
+    },
+  },
 }
 
-describe('AtomSkeleton', () => {
-  it('renders properly using Storybook args', () => {
+describe('AtomSkeleton Clean Attribute Inheritance', () => {
+  it('renders properly and presents valid accessibility role identifiers', () => {
     const wrapper = mount(AtomSkeleton, {
-      props: getProps(Default.args),
+      ...globalMountOptions,
     })
 
-    expect(wrapper.text()).toContain('atom-skeleton')
+    const skeletonContainer = wrapper.find('[data-testid="atom-skeleton"]')
+    expect(skeletonContainer.exists()).toBe(true)
+    expect(skeletonContainer.attributes('role')).toBe('img')
   })
 
-  it('receives correct props from Storybook args', () => {
+  it('inherits native class bindings correctly via attribute fall-through rules', () => {
     const wrapper = mount(AtomSkeleton, {
-      props: getProps(Default.args),
+      attrs: {
+        class: 'size-12 rounded-full',
+      },
+      ...globalMountOptions,
     })
 
+    const skeletonContainer = wrapper.find('[data-testid="atom-skeleton"]')
 
-    // Verify class (string)
-    expect(wrapper.props('class')).toEqual('')
+    expect(skeletonContainer.classes()).toContain('atom-skeleton')
+    expect(skeletonContainer.classes()).toContain('size-12')
+    expect(skeletonContainer.classes()).toContain('rounded-full')
   })
 })

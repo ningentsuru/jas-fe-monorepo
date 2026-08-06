@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, type Component } from 'vue'
-import { AtomToggle } from '../../'
+import { AtomToggle } from '#/index'
 import { Sun, Moon, Palette, LoaderPinwheel } from '@lucide/vue'
 import {
   Dialog,
@@ -62,6 +62,7 @@ const getIcon = computed(() => {
 })
 
 function handleTapToggle() {
+  emit('toggle')
   if (props.currentTheme === 'light') {
     emit('setTheme', 'dark')
     return
@@ -92,23 +93,33 @@ watch(
 </script>
 
 <template>
-  <div class="molecule-theme-toggle" data-testid="molecule-theme-toggle">
+  <div
+    class="molecule-theme-toggle inline-block"
+    data-testid="molecule-theme-toggle"
+    role="region"
+    aria-label="Application Theme Configuration Toolbar"
+  >
     <AtomToggle
       :class="[showModal && 'animate-spin [animation-duration:2s]']"
       :icon="getIcon"
       :is-toggled="isToggled"
       :size="size"
+      aria-label="Toggle light and dark color layout variations"
+      aria-haspopup="dialog"
+      :aria-expanded="showModal"
       @toggle="handleTapToggle"
       @long-toggle="modalToggle"
     />
 
     <Dialog :open="showModal" @update:open="showModal = $event">
-      <DialogContent>
+      <DialogContent aria-describedby="theme-dialog-description" data-testid="molecule-theme-modal">
         <DialogHeader>
           <DialogTitle>Choose more themes!</DialogTitle>
-          <DialogDescription class="flex flex-col gap-4 pt-2">
+          <DialogDescription id="theme-dialog-description" class="flex flex-col gap-4 pt-2">
+            <span>Select from custom tailored background contrast styles below:</span>
+
             <Select v-model="selectedTheme">
-              <SelectTrigger class="w-full cursor-pointer">
+              <SelectTrigger class="w-full cursor-pointer" aria-label="Available color canvas theme templates">
                 <SelectValue placeholder="Select a theme skin" />
               </SelectTrigger>
               <SelectContent>
