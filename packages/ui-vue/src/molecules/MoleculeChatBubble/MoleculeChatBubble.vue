@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { marked } from 'marked'
-import DOMPurify from 'isomorphic-dompurify'
-import { Check, Copy } from '@lucide/vue'
+import { Check, Copy, Trash2 } from '@lucide/vue'
 import { Card, CardContent } from '#/components/ui/card'
 import { Badge } from '#/components/ui/badge'
 import { Button } from '#/components/ui/button'
@@ -14,13 +13,24 @@ interface MessagePart {
 
 interface Props {
   message: {
+    id?: string
     role: string
     parts: MessagePart[]
   }
 }
 
 const props = defineProps<Props>()
+
+const emit = defineEmits<{
+  (e: 'delete'): void
+}>()
+
 const isCopied = ref(false)
+
+marked.setOptions({
+  breaks: true,
+  gfm: true,
+})
 
 const parsedParts = computed(() => {
   if (!props.message.parts || !Array.isArray(props.message.parts)) return []
@@ -29,15 +39,11 @@ const parsedParts = computed(() => {
     if (part.type === 'text' && part.text) {
       try {
         const rawHtml = marked.parse(part.text, { async: false }) as string
-
-        const cleanHtml = DOMPurify.sanitize(rawHtml)
-
         return {
           type: 'text',
-          html: cleanHtml,
+          html: rawHtml,
         }
       } catch (error) {
-        console.warn('Markdown string compilation fallback triggered:', error)
         return { type: 'text', html: `<p class="whitespace-pre-wrap">${part.text}</p>` }
       }
     }
@@ -57,7 +63,6 @@ const handleCopyExecution = async () => {
 
   try {
     await navigator.clipboard.writeText(rawTextToCopy)
-
     isCopied.value = true
     setTimeout(() => {
       isCopied.value = false
@@ -92,9 +97,9 @@ const handleCopyExecution = async () => {
           : 'bg-card text-card-foreground',
       ]"
     >
-      <CardContent class="min-w-[120px] p-3 pr-10 text-sm leading-relaxed">
+      <CardContent class="min-w-[120px] p-3 pr-5 text-sm leading-relaxed">
         <div
-          class="absolute top-2 right-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+          class="absolute top-2 right-2 flex items-center gap-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
         >
           <Button
             type="button"
@@ -107,18 +112,33 @@ const handleCopyExecution = async () => {
             <Check v-if="isCopied" class="h-3.5 w-3.5 text-green-500" />
             <Copy v-else class="h-3.5 w-3.5" />
           </Button>
+
+          <Button
+            v-if="message.id !== 'welcome-system-node'"
+            type="button"
+            size="icon"
+            variant="ghost"
+            class="text-muted-foreground hover:bg-destructive/20 hover:text-destructive h-6 w-6 cursor-pointer rounded-md transition-colors"
+            title="Delete this message"
+            @click="emit('delete')"
+          >
+            <Trash2 class="h-3.5 w-3.5" />
+          </Button>
         </div>
 
         <div v-for="(part, index) in parsedParts" :key="index">
           <div
             v-if="part.type === 'text' && part.html"
             :class="[
-              'prose prose-sm max-w-none text-current',
+              'prose prose-sm dark:prose-invert max-w-none text-current',
+              'prose-p:text-current prose-headings:text-current prose-strong:text-current prose-em:text-current prose-li:text-current prose-blockquote:text-current',
+              'prose-code:text-current prose-code:before:content-[\'\'] prose-code:after:content-[\'\']',
+              'prose-pre:bg-zinc-950/60 prose-pre:border prose-pre:border-zinc-800/80 prose-pre:text-zinc-100',
               message.role === 'user'
-                ? 'prose-a:text-zinc-100 hover:prose-a:opacity-80'
-                : 'prose-a:text-blue-600 hover:prose-a:opacity-80',
+                ? 'prose-a:text-current prose-a:underline prose-a:font-bold hover:prose-a:opacity-80'
+                : 'prose-a:text-primary prose-a:underline prose-a:font-bold hover:prose-a:opacity-80 dark:prose-a:text-teal-400 forest-theme:prose-a:text-teal-300 ocean-theme:prose-a:text-sky-300 sunset-theme:prose-a:text-amber-400 high-contrast-theme:prose-a:text-[oklch(0.96_0.20_95)]',
             ]"
-            v-html="part.html"
+            v-html="$sanitizeHtml ? $sanitizeHtml(part.html) : part.html"
           />
         </div>
       </CardContent>

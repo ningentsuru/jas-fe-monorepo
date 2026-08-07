@@ -5,5 +5,6 @@ export {
   techStackPayload,
   educationPayload,
   historicalTimeline,
+  compiledSystemPromptText,
   starterPromptsPayload,
 } from './data/profile'

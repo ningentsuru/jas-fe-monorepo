@@ -3,7 +3,6 @@ import { ref, watch, nextTick } from 'vue'
 import { Copy, Check, Sparkles, Send } from '@lucide/vue'
 import { MoleculeChatBubble } from '#/index'
 import { Button } from '#/components/ui/button'
-import { Skeleton } from '#/components/ui/skeleton'
 import { Textarea } from '#/components/ui/textarea'
 
 interface Props {
@@ -19,6 +18,7 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void
   (e: 'submit'): void
   (e: 'select-starter', prompt: string): void
+  (e: 'delete-message', targetIdOrIndex: string | number): void
 }>()
 
 const isAllCopied = ref(false)
@@ -36,7 +36,7 @@ watch(
   () => {
     executeScrollToBottom()
   },
-  { deep: true },
+  { deep: true, immediate: true },
 )
 
 const handleKeydownModifier = (event: KeyboardEvent) => {
@@ -59,7 +59,6 @@ const handleCopyEntireConversation = async () => {
   const formattedTranscript = props.messages
     .map((msg: any) => {
       const roleLabel = msg.role === 'user' ? 'You' : "Joshua's AI Assistant"
-
       const contentText =
         msg.parts && Array.isArray(msg.parts)
           ? msg.parts
@@ -107,23 +106,25 @@ const handleCopyEntireConversation = async () => {
       ref="scrollViewport"
       class="[&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/40 dark:[&::-webkit-scrollbar-thumb]:bg-border dark:hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/30 flex-1 space-y-4 overflow-y-auto scroll-smooth p-4 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent"
     >
+      <div v-if="messages.length > 0" class="flex flex-col gap-1">
+        <MoleculeChatBubble
+          v-for="(msg, index) in messages"
+          :key="msg.id || index"
+          :message="msg"
+          @delete="emit('delete-message', msg.id || index)"
+        />
+      </div>
+
       <div
-        v-if="messages.length === 0"
-        class="my-auto flex h-full flex-col items-center justify-center p-6 text-center"
+        v-if="messages.length <= 1 && !isLoading"
+        class="border-border bg-muted/20 animate-fadeIn mt-4 space-y-2.5 rounded-xl border p-3"
       >
-        <div
-          class="border-border bg-muted/30 mb-3 flex h-12 w-12 animate-bounce items-center justify-center rounded-full border"
+        <p
+          class="text-muted-foreground px-1 font-mono text-[10px] font-semibold tracking-wider uppercase"
         >
-          <Sparkles class="text-foreground h-5 w-5" />
-        </div>
-
-        <h3 class="text-foreground text-sm font-semibold">Chat with Joshua's AI Assistant</h3>
-        <p class="text-muted-foreground mt-1 mb-6 max-w-xs text-xs leading-relaxed">
-          Ask me anything about his professional history, technical stack expertise, or current
-          employment availability.
+          Suggested Starter Inquiries
         </p>
-
-        <div class="grid w-full max-w-md grid-cols-1 gap-2 sm:grid-cols-2">
+        <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
           <button
             v-for="(prompt, pIdx) in props.starterPrompts"
             :key="pIdx"
@@ -131,22 +132,9 @@ const handleCopyEntireConversation = async () => {
             class="border-border bg-card text-card-foreground hover:bg-accent hover:text-accent-foreground cursor-pointer rounded-lg border p-2.5 text-left text-xs font-medium shadow-sm transition-all duration-200 active:scale-95"
             @click="handleStarterClick(prompt)"
           >
-            {{ prompt }}
+            🚀 {{ prompt }}
           </button>
         </div>
-      </div>
-
-      <template v-else>
-        <MoleculeChatBubble
-          v-for="(msg, index) in messages"
-          :key="msg.id || index"
-          :message="msg"
-        />
-      </template>
-
-      <div v-if="isLoading" class="mr-auto flex max-w-[75%] flex-col gap-2">
-        <Skeleton class="h-4 w-12 rounded-sm" />
-        <Skeleton class="h-16 w-full rounded-lg" />
       </div>
     </div>
 

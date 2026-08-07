@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { ref, computed, nextTick } from 'vue'
+import { ref, computed, nextTick, onMounted, watch } from 'vue'
 import { OrganismChatWindow } from '@repo/ui-vue'
 import FloatingChatButton from '@/features/FloatingChatButton.vue'
 import type { ChatMessage } from '@/entities/chat/model/types'
 import { starterPromptsPayload } from '@/entities/profile'
+import { useApi } from '@/shared/composables/useApi'
+
+const { chatAi } = useApi()
 
 const isClientReady = ref(false)
 const isOpen = ref(false)
@@ -12,6 +15,7 @@ const messages = ref<ChatMessage[]>([])
 const status = ref<'ready' | 'streaming'>('ready')
 
 const isLoading = computed(() => status.value === 'streaming')
+const STORAGE_KEY = 'jas_portfolio_chat_timeline'
 
 function handleToggle() {
   isOpen.value = !isOpen.value
@@ -38,11 +42,7 @@ async function handleChatSubmit() {
   })
 
   try {
-    const response = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: messages.value }),
-    })
+    const response = await chatAi({ messages: messages.value })
 
     if (!response.body) throw new Error('Readable stream empty.')
 
@@ -98,18 +98,65 @@ async function handleChatSubmit() {
   }
 }
 
+function handleDeleteTargetMessage(targetIdOrIndex: string | number) {
+  const localTargetArray = [...messages.value]
+
+  if (typeof targetIdOrIndex === 'string') {
+    const targetIdx = localTargetArray.findIndex((m) => m.id === targetIdOrIndex)
+    if (targetIdx !== -1) {
+      localTargetArray.splice(targetIdx, 1)
+    }
+  } else if (typeof targetIdOrIndex === 'number') {
+    localTargetArray.splice(targetIdOrIndex, 1)
+  }
+
+  messages.value = localTargetArray
+}
+
 async function handleStarterPrompt(prompt: string) {
   if (isLoading.value) return
 
   input.value = prompt
-
   await nextTick()
-
   await handleChatSubmit()
 }
 
+watch(
+  messages,
+  (newMessages) => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(newMessages))
+    } catch (error) {
+      console.error('Failed to sync chat timeline matrix data token to storage context:', error)
+    }
+  },
+  { deep: true },
+)
+
 onMounted(() => {
   isClientReady.value = true
+  try {
+    const historicalCache = localStorage.getItem(STORAGE_KEY)
+
+    if (historicalCache) {
+      messages.value = JSON.parse(historicalCache)
+    } else {
+      messages.value = [
+        {
+          id: 'welcome-system-node',
+          role: 'assistant',
+          parts: [
+            {
+              type: 'text',
+              text: "Hello! I am Joshua's autonomous AI proxy agent. I have direct access to his verified technical stack matrix, professional history dataset, and employment credentials. Feel free to type an inquiry or select one of the quick starter actions below to audit his capabilities in real time.",
+            },
+          ],
+        },
+      ]
+    }
+  } catch (error) {
+    console.warn('Hydration tracking intercepted storage bypass:', error)
+  }
 })
 </script>
 
@@ -133,6 +180,7 @@ onMounted(() => {
         :is-loading="isLoading"
         :starter-prompts="starterPromptsPayload"
         @submit="handleChatSubmit"
+        @delete-message="handleDeleteTargetMessage"
         @select-starter="handleStarterPrompt"
       />
     </div>

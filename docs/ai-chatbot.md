@@ -1,10 +1,17 @@
-## 🏆 AI Chat Automated Infrastructure Ledger
+### 📋 COPY AND PASTE THIS EXACT PROMPT INTO YOUR NEXT AI COLLABORATOR:
 
-Technical blueprint of the resilient system:
+```text
+Act as a Senior Nuxt 4 Architecture Engineer. Your objective is to build a hyper-optimized, zero-dependency, type-safe AI streaming chatbot module from scratch in a single response using modern TypeScript/JavaScript.
 
-- ⚡ The Edge Runtime Guard (chat.ts): By prioritizing export const config = { runtime: 'edge' }, your backend bypasses the 15-second serverless cold-start execution timeout on Vercel's free tier. Responses stream globally with ultra-low latency.
-- 🛡️ The Sliding Context Token Guard: The slice(-4) optimization ceiling permanently protects your free-tier API allowances. Long recruiter deep-dives will never cause unexpected bills or hit severe Tokens-Per-Minute limits.
-- 🎯 The FSD Single Source of Truth: Your AI natively feeds off your core profile entity records (@/entities/profile/data/profile). When you update your stack or timeline metrics, the AI inherits those updates instantly without any backend modifications.
-- 🧬 The Cross-Platform Sanitizer: Implementing isomorphic-dompurify directly inside the computed markdown parser secures the application from Cross-Site Scripting (XSS) script injections while remaining fully compatible with Nuxt server pre-renders.
-- 📐 The Bulletproof Layout Framework: Your min-w-0 parent constraint combined with break-all on the auto-expanding Textarea guarantees your widget is visually unbreakable, even under continuous character entries.
-- 🔮 The Dynamic Scroll Tracker Loop: The deep-reactive { deep: true } template watcher pins the viewport exactly to the bottom floor as responses stream in token-by-token.
+Apply these 4 strict architectural mandates to prevent compilation leaks and serverless boot crashes:
+1. PURE DATA SEPARATION: Isolate the system instructions, variables, and raw prompt structures inside a standalone static data ledger file entirely decoupled from frontend components and styling utilities.
+2. BACKEND STATELESSNESS: The serverless endpoint must be a pure execution channel that acts on incoming requests, applies an aggressive sliding context lookback (.slice(-4)) to preserve free-tier token allocations, and hand-rolls a native `TransformStream` formatting chunks to the strict Vercel AI Protocol format (`0:JSON_STRING_OF_TEXT\n`). It must use standard fetch, not $fetch, to prevent buffering.
+3. CLIENT-SIDE HYDRATION PROTECTION: The main widget component must protect local storage reads within an `onMounted` lifecycle wrapper using a client-readiness confirmation flag to completely prevent Nuxt 4 Server-Side Rendering (SSR) hydration mismatches.
+4. ABSOLUTE XSS PROTECTION & COMPLIANCE: Escapes dangerous input characters before parsing any Markdown elements, stripping inline styles or dangerous element nodes without importing native compilation utilities like isomorphic-dompurify. Text wrappers must map directly to theme-agnostic variables (text-current) to preserve 4.5:1 WCAG contrast compliance.
+
+Deliver the code for these 4 interconnected files in your response:
+1. `profile.ts` (The pure system instructions payload data file)
+2. `useApi.ts` (The non-blocking streaming composable wrapper)
+3. `chat.ts` (The server API endpoint utilizing streamText from 'ai' with fallback layers)
+4. `ChatWidget.vue` (The orchestration component handling real-time stream token accumulation, localStorage updates via a deep watch loop, and a message deletion/clear filter)
+```

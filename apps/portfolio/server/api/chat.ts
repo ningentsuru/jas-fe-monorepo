@@ -1,13 +1,7 @@
-export const config = { runtime: 'edge' }
-
 import { createGroq } from '@ai-sdk/groq'
 import { createOpenAI } from '@ai-sdk/openai'
 import { streamText, type LanguageModel } from 'ai'
-import {
-  profilePayload,
-  techStackPayload,
-  historicalTimeline,
-} from '@/entities/profile/data/profile'
+import { compiledSystemPromptText } from '@/entities/profile/data/profile'
 
 interface IncomingUIPart {
   type: 'text'
@@ -29,43 +23,9 @@ export default defineEventHandler(async (event) => {
   const { messages } = await readBody<{ messages: IncomingUIMessage[] }>(event)
   const config = useRuntimeConfig()
 
-  const formattedTech = techStackPayload
-    .map((t) => `- ${t.name} [Category: ${t.category}] | Level: ${t.level}`)
-    .join('\n')
-
-  const formattedTimeline = historicalTimeline
-    .map(
-      (h) =>
-        `### ${h.role} at ${h.company} (${h.period})\n${h.metrics.map((m) => `  * ${m}`).join('\n')}`,
-    )
-    .join('\n\n')
-
-  const systemInstructionText = `You are an advanced, hyper-capable portfolio AI Assistant representation for ${profilePayload.fullName}.
-Your core directive is to answer inquiries from technical recruiters, hiring managers, and clients visiting this website.
-
-[BASIC CREDENTIALS]
-Current Location: ${profilePayload.location}
-Availability Status: ${profilePayload.statusBadge}
-Headline Summary: ${profilePayload.headline}
-Primary Contact Email: ${profilePayload.email}
-Secondary Contact Phone: ${profilePayload.phoneFormatted}
-
-[TECHNICAL EXPERTISE MATRIX]
-${formattedTech}
-
-[PROFESSIONAL WORK HISTORY DATASET]
-${formattedTimeline}
-
-[LOOP OPERATIONAL RUNTIME RULES]:
-- Maintain a highly confident, clear, professional, yet warm engineering persona.
-- Rely solely on the provided verified profile details dataset. Do not make up metrics, years, or capabilities.
-- If asked questions outside your data bounds, politely direct them to reach out to Joshua. 
-- ALWAYS prioritize directing them to email him first at ${profilePayload.email}. Mention his phone number (${profilePayload.phoneFormatted}) strictly as a secondary backup option for urgent inquiries.`
-
   const cleanMessages: OutgoingCoreMessage[] = messages.map(
     (msg: IncomingUIMessage): OutgoingCoreMessage => {
       let textContent = ''
-
       if (msg.parts && Array.isArray(msg.parts)) {
         textContent = msg.parts
           .filter((part: IncomingUIPart): boolean => part.type === 'text')
@@ -74,7 +34,6 @@ ${formattedTimeline}
       } else {
         textContent = msg.content || ''
       }
-
       return {
         role: msg.role === 'user' ? 'user' : 'assistant',
         content: textContent,
@@ -82,29 +41,36 @@ ${formattedTimeline}
     },
   )
 
-  const optimizedHistory = cleanMessages.slice(-4)
+  const optimizedHistory = cleanMessages.filter((m) => m.content.trim().length > 0).slice(-4)
 
-  const customGroqProvider = createGroq({
-    apiKey: config.groqApiKey as string,
-  })
-
-  const customOpenAIProvider = createOpenAI({
-    apiKey: config.openaiApiKey as string,
-  })
+  const groqKey = ((config.groqApiKey as string) || process.env.NUXT_GROQ_API_KEY || '').trim()
+  const openaiKey = (
+    (config.openaiApiKey as string) ||
+    process.env.NUXT_OPENAI_API_KEY ||
+    ''
+  ).trim()
 
   let targetModel: LanguageModel
 
-  try {
-    targetModel = customGroqProvider('llama-3.3-70b-versatile')
-    if (!config.groqApiKey) throw new Error('Missing Groq Key')
-  } catch (error) {
-    console.warn('Groq initialization failed, running fallback loop to OpenAI...', error)
+  if (groqKey) {
+    try {
+      const customGroqProvider = createGroq({ apiKey: groqKey })
+      targetModel = customGroqProvider('llama-3.3-70b-versatile')
+    } catch (error) {
+      if (!openaiKey) throw new Error('Groq initialization failed and no OpenAI key was supplied.')
+      const customOpenAIProvider = createOpenAI({ apiKey: openaiKey })
+      targetModel = customOpenAIProvider('gpt-4o-mini')
+    }
+  } else if (openaiKey) {
+    const customOpenAIProvider = createOpenAI({ apiKey: openaiKey })
     targetModel = customOpenAIProvider('gpt-4o-mini')
+  } else {
+    throw new Error('All authentication platforms exhausted. Environment keys missing.')
   }
 
   const result = await streamText({
     model: targetModel,
-    system: systemInstructionText,
+    system: compiledSystemPromptText,
     messages: optimizedHistory,
   })
 
