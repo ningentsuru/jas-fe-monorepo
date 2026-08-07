@@ -71,7 +71,7 @@ withDefaults(defineProps<Props>(), {
                   {{ inst.badge }}
                 </span>
               </div>
-              <span class="font-semibold shrink-0">{{ inst.period }}</span>
+              <span class="shrink-0 font-semibold">{{ inst.period }}</span>
             </div>
           </div>
         </div>

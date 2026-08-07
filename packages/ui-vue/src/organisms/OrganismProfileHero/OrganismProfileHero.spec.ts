@@ -13,16 +13,16 @@ const globalMountOptions = {
   global: {
     stubs: {
       Badge: { template: '<div class="mock-badge"><slot /></div>' },
-      AtomSkeleton: { template: '<div class="mock-skeleton" />' }
-    }
-  }
+      AtomSkeleton: { template: '<div class="mock-skeleton" />' },
+    },
+  },
 }
 
 describe('OrganismProfileHero', () => {
   it('renders structural branding data from the passed props data layer', () => {
     const wrapper = mount(OrganismProfileHero, {
       props: getProps((Default.args ?? {}) as Record<string, unknown>),
-      ...globalMountOptions
+      ...globalMountOptions,
     })
 
     expect(wrapper.find('[data-testid="organism-profile-hero"]').exists()).toBe(true)
@@ -33,7 +33,7 @@ describe('OrganismProfileHero', () => {
   it('hides strings and unmounts targets entirely while loading is processing', () => {
     const wrapper = mount(OrganismProfileHero, {
       props: getProps((Loading.args ?? {}) as Record<string, unknown>),
-      ...globalMountOptions
+      ...globalMountOptions,
     })
 
     expect(wrapper.find('.animate-pulse').exists()).toBe(true)

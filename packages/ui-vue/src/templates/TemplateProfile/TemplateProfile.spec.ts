@@ -3,7 +3,6 @@ import { mount } from '@vue/test-utils'
 import TemplateProfile from './TemplateProfile.vue'
 import { Default } from './TemplateProfile.stories'
 
-
 describe('TemplateProfile', () => {
   it('renders properly using Storybook args', () => {
     const wrapper = mount(TemplateProfile, {

@@ -14,7 +14,7 @@ defineProps<Props>()
 
 <template>
   <Card
-    class="hover:border-ring/40 transition-all duration-300 hover:shadow-sm p-3"
+    class="hover:border-ring/40 p-3 transition-all duration-300 hover:shadow-sm"
     data-testid="molecule-tech-card"
   >
     <CardContent class="flex items-center justify-between">

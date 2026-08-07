@@ -119,7 +119,10 @@ watch(
             <span>Select from custom tailored background contrast styles below:</span>
 
             <Select v-model="selectedTheme">
-              <SelectTrigger class="w-full cursor-pointer" aria-label="Available color canvas theme templates">
+              <SelectTrigger
+                class="w-full cursor-pointer"
+                aria-label="Available color canvas theme templates"
+              >
                 <SelectValue placeholder="Select a theme skin" />
               </SelectTrigger>
               <SelectContent>

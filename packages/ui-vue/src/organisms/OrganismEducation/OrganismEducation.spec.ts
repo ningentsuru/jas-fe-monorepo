@@ -12,16 +12,16 @@ const getProps = (storyArgs: Record<string, unknown>): OrganismEducationProps =>
 const globalMountOptions = {
   global: {
     stubs: {
-      AtomSkeleton: { template: '<div class="mock-skeleton" />' }
-    }
-  }
+      AtomSkeleton: { template: '<div class="mock-skeleton" />' },
+    },
+  },
 }
 
 describe('OrganismEducation', () => {
   it('renders injected array institutional details correctly from decoupled parameters', () => {
     const wrapper = mount(OrganismEducation, {
       props: getProps((Default.args ?? {}) as Record<string, unknown>),
-      ...globalMountOptions
+      ...globalMountOptions,
     })
 
     const text = wrapper.text()

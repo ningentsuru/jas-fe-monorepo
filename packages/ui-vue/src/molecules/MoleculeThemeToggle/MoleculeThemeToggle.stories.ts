@@ -22,7 +22,7 @@ const meta: Meta<typeof MoleculeThemeToggle> = {
     isToggled: {
       control: 'boolean',
       description: 'Tracks state parameters for basic binary switches',
-    }
+    },
   },
   args: {
     isToggled: false,

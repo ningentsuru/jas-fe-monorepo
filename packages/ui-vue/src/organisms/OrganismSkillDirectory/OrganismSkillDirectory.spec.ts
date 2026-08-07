@@ -13,22 +13,25 @@ const globalMountOptions = {
   global: {
     stubs: {
       Button: { template: '<button><slot /></button>' },
-      MoleculeTechCard: { props: ['name'], template: '<div class="mock-tech-card">{{ name }}</div>' },
-      AtomSkeleton: { template: '<div class="mock-skeleton" />' }
-    }
-  }
+      MoleculeTechCard: {
+        props: ['name'],
+        template: '<div class="mock-tech-card">{{ name }}</div>',
+      },
+      AtomSkeleton: { template: '<div class="mock-skeleton" />' },
+    },
+  },
 }
 
 describe('OrganismSkillDirectory', () => {
   it('reactively filters child components based on dynamic category selections passed by props', async () => {
     const wrapper = mount(OrganismSkillDirectory, {
       props: getProps((Default.args ?? {}) as Record<string, unknown>),
-      ...globalMountOptions
+      ...globalMountOptions,
     })
 
     expect(wrapper.findAll('.mock-tech-card').length).toBe(4)
 
-    const aiButton = wrapper.findAll('button').find(b => b.text().includes('AI Operations'))
+    const aiButton = wrapper.findAll('button').find((b) => b.text().includes('AI Operations'))
     await aiButton!.trigger('click')
 
     expect(wrapper.findAll('.mock-tech-card').length).toBe(1)

@@ -15,7 +15,11 @@ const meta: Meta<typeof OrganismEducation> = {
       title: 'Bachelor of Science in Information Technology',
       institutions: [
         { name: 'STI Academic Center - Las Piñas', period: '2015 - 2017' },
-        { name: 'University of Perpetual Help System DALTA - Las Piñas', period: '2012 - 2015', badge: 'Transferred' },
+        {
+          name: 'University of Perpetual Help System DALTA - Las Piñas',
+          period: '2012 - 2015',
+          badge: 'Transferred',
+        },
       ],
     },
   },

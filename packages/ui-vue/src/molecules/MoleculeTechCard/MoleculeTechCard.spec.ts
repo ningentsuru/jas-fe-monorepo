@@ -17,23 +17,23 @@ const globalMountOptions = {
   global: {
     stubs: {
       Card: {
-        template: '<div class="mock-card"><slot /></div>'
+        template: '<div class="mock-card"><slot /></div>',
       },
       CardContent: {
-        template: '<div class="mock-card-content"><slot /></div>'
+        template: '<div class="mock-card-content"><slot /></div>',
       },
       Badge: {
-        template: '<span class="mock-badge"><slot /></span>'
-      }
-    }
-  }
+        template: '<span class="mock-badge"><slot /></span>',
+      },
+    },
+  },
 }
 
 describe('MoleculeTechCard', () => {
   it('renders core molecule layout container tracking the right test identifier', () => {
     const wrapper = mount(MoleculeTechCard, {
       props: getProps((Default.args ?? {}) as Record<string, unknown>),
-      ...globalMountOptions
+      ...globalMountOptions,
     })
 
     const card = wrapper.find('[data-testid="molecule-tech-card"]')
@@ -43,7 +43,7 @@ describe('MoleculeTechCard', () => {
   it('binds and displays the core tech stack name and level badges cleanly', () => {
     const wrapper = mount(MoleculeTechCard, {
       props: getProps((Default.args ?? {}) as Record<string, unknown>),
-      ...globalMountOptions
+      ...globalMountOptions,
     })
 
     expect(wrapper.text()).toContain('Vue.js 3 / Nuxt 4')
@@ -53,7 +53,7 @@ describe('MoleculeTechCard', () => {
   it('renders alternative story configuration datasets smoothly without structural breakdown', () => {
     const wrapper = mount(MoleculeTechCard, {
       props: getProps((AdvancedTier.args ?? {}) as Record<string, unknown>),
-      ...globalMountOptions
+      ...globalMountOptions,
     })
 
     expect(wrapper.text()).toContain('TypeScript / ES2025')
@@ -65,16 +65,16 @@ describe('MoleculeTechCard', () => {
     const MockIconComponent = {
       render() {
         return h('svg', { 'data-testid': 'custom-mock-icon' })
-      }
+      },
     }
 
     const wrapper = mount(MoleculeTechCard, {
       props: {
         name: 'Custom Tech',
         level: 'Beginner',
-        icon: MockIconComponent
+        icon: MockIconComponent,
       },
-      ...globalMountOptions
+      ...globalMountOptions,
     })
 
     expect(wrapper.find('[data-testid="custom-mock-icon"]').exists()).toBe(true)

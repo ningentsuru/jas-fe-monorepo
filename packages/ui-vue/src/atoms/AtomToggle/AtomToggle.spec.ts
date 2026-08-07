@@ -13,15 +13,15 @@ const getProps = (storyArgs: Record<string, unknown>): AtomToggleProps => {
 const globalMountOptions = {
   global: {
     directives: { 'long-press-toggle': vLongPressToggle },
-    stubs: { AtomIcon: true }
-  }
+    stubs: { AtomIcon: true },
+  },
 }
 
 describe('AtomToggle Accessibility and Interaction Integration', () => {
   it('supplies descriptive title attribute info strings for visual mouse hoverings', () => {
     const wrapper = mount(AtomToggle, {
       props: getProps((Default.args ?? {}) as Record<string, unknown>),
-      ...globalMountOptions
+      ...globalMountOptions,
     })
 
     const button = wrapper.find('button')
@@ -31,7 +31,7 @@ describe('AtomToggle Accessibility and Interaction Integration', () => {
   it('triggers alternative menu selection states on native right-click/contextmenu actions', async () => {
     const wrapper = mount(AtomToggle, {
       props: getProps((Default.args ?? {}) as Record<string, unknown>),
-      ...globalMountOptions
+      ...globalMountOptions,
     })
 
     await wrapper.find('button').trigger('contextmenu')

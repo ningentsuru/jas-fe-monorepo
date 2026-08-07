@@ -14,7 +14,8 @@ const meta: Meta<typeof OrganismProfileHero> = {
     profile: {
       statusBadge: 'Available for Advanced Architecture Tasks',
       fullName: 'Joshua Alexis Natividad Sardido',
-      headline: 'Frontend Engineer specializing in building and modernizing applications with <span class="text-foreground font-semibold">Vue 3, Nuxt 4, and TypeScript</span>.',
+      headline:
+        'Frontend Engineer specializing in building and modernizing applications with <span class="text-foreground font-semibold">Vue 3, Nuxt 4, and TypeScript</span>.',
       phoneRaw: '09174028632',
       phoneFormatted: '0917-402-8632',
       location: 'General Trias City, Cavite, PH',

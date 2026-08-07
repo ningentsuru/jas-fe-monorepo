@@ -54,10 +54,7 @@ export default function DefaultLayout({
           }
         />
       }
-      footer={
-        <OrganismFooter title="Develop by: Joshua Alexis Sardido">
-        </OrganismFooter>
-      }
+      footer={<OrganismFooter title="Develop by: Joshua Alexis Sardido"></OrganismFooter>}
     >
       <Suspense
         fallback={
