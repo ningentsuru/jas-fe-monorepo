@@ -85,16 +85,16 @@ const handleCopyEntireConversation = async () => {
 
 <template>
   <div
-    class="bg-background border-border bg-opacity-95 fixed top-0 left-0 z-49 flex h-screen w-full flex-col overflow-hidden p-0 transition-all duration-300 ease-in-out md:relative md:top-auto md:left-auto md:z-0 md:h-[600px] md:max-w-2xl md:rounded-xl md:border md:shadow-md"
+    class="bg-background border-border bg-opacity-95 fixed top-0 left-0 z-49 flex h-dvh w-full flex-col overflow-hidden p-0 transition-all duration-300 ease-in-out md:relative md:top-auto md:left-auto md:z-0 md:h-[600px] md:max-w-2xl md:rounded-xl md:border md:shadow-md"
   >
     <div
       class="border-border bg-muted/10 flex items-center justify-between border-b px-4 py-3 md:hidden"
     >
       <div class="flex items-center gap-2">
         <Sparkles class="text-foreground h-4 w-4 animate-pulse" />
-        <span class="text-foreground text-xs font-semibold tracking-tight"
-          >AI Assistant Window</span
-        >
+        <span class="text-foreground text-xs font-semibold tracking-tight">
+          AI Assistant Window
+        </span>
       </div>
       <div class="flex items-center gap-1.5">
         <div class="h-2 w-2 animate-ping rounded-full bg-emerald-500" />
