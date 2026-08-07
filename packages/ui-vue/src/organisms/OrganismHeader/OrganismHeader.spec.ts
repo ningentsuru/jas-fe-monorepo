@@ -17,23 +17,23 @@ const globalMountOptions = {
   global: {
     stubs: {
       AtomIcon: {
-        template: '<div class="mock-loader-icon" role="status" />'
-      }
-    }
-  }
+        template: '<div class="mock-loader-icon" role="status" />',
+      },
+    },
+  },
 }
 
 describe('OrganismHeader', () => {
   it('renders root semantic structure layout elements correctly', () => {
     const wrapper = mount(OrganismHeader, {
       props: getProps((Default.args ?? {}) as Record<string, unknown>),
-      ...globalMountOptions
+      ...globalMountOptions,
     })
 
     const header = wrapper.find('header')
     expect(header.exists()).toBe(true)
     expect(header.classes()).toContain('sticky')
-    expect(header.classes()).toContain('bg-background/40') // Repaired typo class tracking assertion
+    expect(header.classes()).toContain('bg-background/40')
   })
 
   it('renders branding template slots content details within the header layout accurately', () => {
@@ -42,7 +42,7 @@ describe('OrganismHeader', () => {
       slots: {
         branding: () => h('span', { class: 'logo-mock' }, 'Core Brand Logo'),
       },
-      ...globalMountOptions
+      ...globalMountOptions,
     })
 
     const brandingEl = wrapper.find('.logo-mock')
@@ -56,10 +56,9 @@ describe('OrganismHeader', () => {
       slots: {
         'theme-toggle': () => h('button', { class: 'toggle-mock' }, 'Toggle Active'),
       },
-      ...globalMountOptions
+      ...globalMountOptions,
     })
 
-    // Repaired broken .border-l selector crash by asserting exact slot class presence
     const toggleMock = wrapper.find('.toggle-mock')
     expect(toggleMock.exists()).toBe(true)
     expect(toggleMock.text()).toBe('Toggle Active')
@@ -71,15 +70,13 @@ describe('OrganismHeader', () => {
       slots: {
         branding: () => h('span', { class: 'logo-mock' }, 'Hidden Brand'),
       },
-      ...globalMountOptions
+      ...globalMountOptions,
     })
 
-    // Check loading container landmark assertions
     const nav = wrapper.find('nav')
     expect(nav.attributes('aria-busy')).toBe('true')
     expect(nav.classes()).toContain('max-w-10')
 
-    // Ensure content slots are completely omitted
     expect(wrapper.find('.logo-mock').exists()).toBe(false)
     expect(wrapper.find('.mock-loader-icon').exists()).toBe(true)
   })

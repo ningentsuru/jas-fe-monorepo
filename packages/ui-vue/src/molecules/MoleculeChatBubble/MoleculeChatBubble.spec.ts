@@ -1,11 +1,11 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import MoleculeChatBubble from './MoleculeChatBubble.vue'
-import meta, { Default } from './MoleculeChatBubble.stories'
+import meta, { UserMessage, AssistantMessage } from './MoleculeChatBubble.stories'
 
 type MoleculeChatBubbleProps = InstanceType<typeof MoleculeChatBubble>['$props']
 
-const getProps = (storyArgs: typeof Default.args): MoleculeChatBubbleProps => {
+const getProps = (storyArgs: any): MoleculeChatBubbleProps => {
   return {
     ...meta.args,
     ...storyArgs,
@@ -13,25 +13,53 @@ const getProps = (storyArgs: typeof Default.args): MoleculeChatBubbleProps => {
 }
 
 describe('MoleculeChatBubble', () => {
-  it('renders properly using Storybook args', () => {
-    const wrapper = mount(MoleculeChatBubble, {
-      props: getProps(Default.args),
+  beforeEach(() => {
+    vi.stubGlobal('navigator', {
+      clipboard: {
+        writeText: vi.fn().mockResolvedValue(undefined),
+      },
     })
-
-    expect(wrapper.text()).toContain('molecule-chat-bubble')
   })
 
-  it('receives correct props from Storybook args', () => {
+  it('renders user messages properly matching storybook properties', () => {
     const wrapper = mount(MoleculeChatBubble, {
-      props: getProps(Default.args),
+      props: getProps(UserMessage.args),
     })
 
+    expect(wrapper.text()).toContain('You')
+    expect(wrapper.text()).toContain('Hello! Can you summarize')
 
-    // Verify string (string)
-    expect(wrapper.props('string')).toEqual('')
-    // Verify number (number)
-    expect(wrapper.props('number')).toEqual(0)
-    // Verify boolean (boolean)
-    expect(wrapper.props('boolean')).toEqual(false)
+    expect(wrapper.props('message')).toEqual(UserMessage.args?.message)
+  })
+
+  it('compiles markdown chunks into sanitized HTML nodes safely for assistant logs', () => {
+    const wrapper = mount(MoleculeChatBubble, {
+      props: getProps(AssistantMessage.args),
+    })
+
+    expect(wrapper.text()).toContain("Joshua's AI Assistant")
+
+    const strongTag = wrapper.find('strong')
+    expect(strongTag.exists()).toBe(true)
+    expect(strongTag.text()).toBe('Frontend Specialist')
+
+    const anchorTag = wrapper.find('a')
+    expect(anchorTag.exists()).toBe(true)
+    expect(anchorTag.attributes('href')).toBe('mailto:ja.sardido@outlook.com')
+  })
+
+  it('triggers browser clipboard execution loops natively on copy action triggers', async () => {
+    const wrapper = mount(MoleculeChatBubble, {
+      props: getProps(UserMessage.args),
+    })
+
+    const copyButton = wrapper.find('button')
+    expect(copyButton.exists()).toBe(true)
+
+    await copyButton.trigger('click')
+
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
+      "Hello! Can you summarize Joshua Sardido's expertise in Nuxt 4?",
+    )
   })
 })
