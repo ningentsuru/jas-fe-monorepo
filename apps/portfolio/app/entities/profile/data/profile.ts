@@ -15,6 +15,7 @@ export const profilePayload: ProfilePayload = {
   phoneRaw: '09174028632',
   phoneFormatted: '0917-402-8632',
   location: 'General Trias City, Cavite, PH',
+  email: 'ja.sardido@outlook.com',
 }
 
 export const skillCategoriesPayload: SkillCategory[] = [
@@ -60,7 +61,7 @@ export const historicalTimeline: TimelineItem[] = [
       'Maintained 8 production Vue.js repositories spanning Nuxt 2, Vue 2/Electron kiosks, Vue 3/Tauri rebuilds, and a Nuxt 4 monorepo; refactored shared code to cut merge conflicts by ~25% and improve long-term maintainability.',
       'Migrated Nuxt 2 applications from Node 14 to Node 16, closing critical security vulnerabilities; applied Claude Code Enterprise audits for memory-safety compliance, reducing runtime exceptions by ~20%.',
       'Improved average page load time by ~30% through targeted performance optimization; introduced Sentry error monitoring, cutting mean time to resolution for production incidents by ~35%.',
-      'Owned TeamCity CI/CD pipelines and AWS S3 configuration management for production deployments, reducing release cycle time through reliable, automated workflows.',
+      'Collaborated with DevOps to manage TeamCity CI/CD pipelines and AWS S3 environment settings; maintained fail-fast build workflows that kept broken code from reaching production.',
       'Monitored Electron kiosk and Nuxt application logs via AWS CloudWatch and ECS, lowering mean time to resolution by ~25% and informing feature prioritization in JIRA.',
       'Partnered with UK-based backend, QA, and product teams to architect scalable API integrations and ship production-ready features ahead of schedule.',
       'Authored feature demo videos and architecture documentation in Confluence, shortening cross-team feedback cycles by ~30%.',

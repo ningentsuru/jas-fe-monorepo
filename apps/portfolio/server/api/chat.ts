@@ -1,3 +1,5 @@
+export const config = { runtime: 'edge' }
+
 import { createGroq } from '@ai-sdk/groq'
 import { createOpenAI } from '@ai-sdk/openai'
 import { streamText, type LanguageModel } from 'ai'
@@ -45,7 +47,8 @@ Your core directive is to answer inquiries from technical recruiters, hiring man
 Current Location: ${profilePayload.location}
 Availability Status: ${profilePayload.statusBadge}
 Headline Summary: ${profilePayload.headline}
-Direct Contact Phone Number: ${profilePayload.phoneFormatted}
+Primary Contact Email: ${profilePayload.email}
+Secondary Contact Phone: ${profilePayload.phoneFormatted}
 
 [TECHNICAL EXPERTISE MATRIX]
 ${formattedTech}
@@ -56,7 +59,8 @@ ${formattedTimeline}
 [LOOP OPERATIONAL RUNTIME RULES]:
 - Maintain a highly confident, clear, professional, yet warm engineering persona.
 - Rely solely on the provided verified profile details dataset. Do not make up metrics, years, or capabilities.
-- If asked questions outside your data bounds, politely direct them to schedule a call or reach out via phone at ${profilePayload.phoneFormatted}.`
+- If asked questions outside your data bounds, politely direct them to reach out to Joshua. 
+- ALWAYS prioritize directing them to email him first at ${profilePayload.email}. Mention his phone number (${profilePayload.phoneFormatted}) strictly as a secondary backup option for urgent inquiries.`
 
   const cleanMessages: OutgoingCoreMessage[] = messages.map(
     (msg: IncomingUIMessage): OutgoingCoreMessage => {
@@ -77,6 +81,8 @@ ${formattedTimeline}
       }
     },
   )
+
+  const optimizedHistory = cleanMessages.slice(-4)
 
   const customGroqProvider = createGroq({
     apiKey: config.groqApiKey as string,
@@ -99,7 +105,7 @@ ${formattedTimeline}
   const result = await streamText({
     model: targetModel,
     system: systemInstructionText,
-    messages: cleanMessages,
+    messages: optimizedHistory,
   })
 
   const textEncoder = new TextEncoder()

@@ -7,6 +7,7 @@ export interface ProfilePayload {
   phoneRaw: string
   phoneFormatted: string
   location: string
+  email: string
 }
 
 export interface SkillCategory {

@@ -5,6 +5,7 @@ import FloatingChatButton from '@/features/FloatingChatButton.vue'
 import type { ChatMessage } from '@/entities/chat/model/types'
 import { starterPromptsPayload } from '@/entities/profile'
 
+const isClientReady = ref(false)
 const isOpen = ref(false)
 const input = ref('')
 const messages = ref<ChatMessage[]>([])
@@ -106,15 +107,25 @@ async function handleStarterPrompt(prompt: string) {
 
   await handleChatSubmit()
 }
+
+onMounted(() => {
+  isClientReady.value = true
+})
 </script>
 
 <template>
   <div class="chat-widget-context">
-    <FloatingChatButton :is-open="isOpen" @toggle="handleToggle" />
+    <FloatingChatButton v-if="isClientReady" :is-open="isOpen" @toggle="handleToggle" />
 
     <div
-      v-if="isOpen"
-      class="animate-in fade-in slide-in-from-bottom-5 fixed right-6 bottom-24 z-9998 w-[92vw] transform shadow-2xl transition-all duration-300 ease-out sm:w-110"
+      v-show="isOpen"
+      :class="[
+        'fixed z-48 origin-bottom-right transform transition-all duration-300 ease-out',
+        'top-0 left-0 h-screen w-full md:top-auto md:right-6 md:bottom-24 md:left-auto md:h-auto md:w-110 md:shadow-2xl',
+        isOpen
+          ? 'translate-y-0 scale-100 opacity-100'
+          : 'pointer-events-none translate-y-4 scale-95 opacity-0',
+      ]"
     >
       <OrganismChatWindow
         v-model="input"
