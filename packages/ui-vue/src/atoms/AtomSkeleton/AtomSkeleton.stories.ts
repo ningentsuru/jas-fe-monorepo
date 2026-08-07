@@ -6,10 +6,10 @@ const meta: Meta<typeof AtomSkeleton> = {
   component: AtomSkeleton,
   tags: ['autodocs'],
   argTypes: {
-    // Documenting the native class attribute for the Storybook docs panel
     class: {
       control: 'text',
-      description: 'Standard Tailwind sizing and layout classes applied directly to the root element.',
+      description:
+        'Standard Tailwind sizing and layout classes applied directly to the root element.',
     },
   },
 }

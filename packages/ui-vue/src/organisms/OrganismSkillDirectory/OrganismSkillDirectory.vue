@@ -87,7 +87,7 @@ const filteredSkills = computed(() => {
           </Button>
         </div>
 
-        <dl class="grid grid-cols-1 gap-2.5 pt-1 sm:grid-cols-2" aria-live="polite">
+        <dl class="grid grid-cols-1 gap-2.5 pt-1 md:grid-cols-2" aria-live="polite">
           <div v-for="tech in filteredSkills" :key="tech.name">
             <dt class="sr-only">Technology Framework</dt>
             <dd>

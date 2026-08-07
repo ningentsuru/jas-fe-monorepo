@@ -112,7 +112,6 @@ describe('MoleculeThemeToggle', () => {
       ...globalMountOptions,
     })
 
-    // Resolve structural lookup by extracting the real instance object reference via findComponent
     const lightToggleComponent = lightWrapper.findComponent({ name: 'AtomToggle' })
     const forestToggleComponent = forestWrapper.findComponent({ name: 'AtomToggle' })
 
@@ -122,7 +121,6 @@ describe('MoleculeThemeToggle', () => {
     const lightIconObj = lightToggleComponent.props('icon')
     const forestIconObj = forestToggleComponent.props('icon')
 
-    // Confirm that the memory references of the raw icon components are entirely different
     expect(lightIconObj).toBeDefined()
     expect(forestIconObj).toBeDefined()
     expect(lightIconObj).not.toEqual(forestIconObj)

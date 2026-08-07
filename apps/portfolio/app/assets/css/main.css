@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 @plugin "tailwind-plugin-typed";
+@plugin "@tailwindcss/typography";
+
 @import '@repo/ui-vue/style.css';
 @import './fonts.css';
 

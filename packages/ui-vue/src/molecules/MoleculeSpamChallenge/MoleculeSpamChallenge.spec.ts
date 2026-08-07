@@ -12,7 +12,6 @@ const getProps = (storyArgs: Record<string, unknown>): MoleculeSpamChallengeProp
   } as unknown as MoleculeSpamChallengeProps
 }
 
-// Global stubs to flatten portals and make text assertions discoverable
 const globalMountOptions = {
   global: {
     stubs: {
@@ -61,7 +60,6 @@ describe('MoleculeSpamChallenge', () => {
     expect(wrapper.find('.mock-dialog').exists()).toBe(true)
     expect(wrapper.text()).toContain('Anti-Spam Verification')
 
-    // Ensure the 4-digit code '7423' is padded to 6 digits: '007423'
     expect(wrapper.text()).toContain('007423')
   })
 

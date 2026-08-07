@@ -46,7 +46,6 @@ describe('OrganismFooter', () => {
 
     await wrapper.find('form').trigger('submit.prevent')
 
-    // Confirm that the data payload object is cleanly passed to the parent event listener
     const submitEvents = wrapper.emitted('submit')
     expect(submitEvents).toBeTruthy()
     expect(submitEvents?.[0][0]).toEqual({
@@ -63,7 +62,6 @@ describe('OrganismFooter', () => {
 
     await wrapper.find('input[type="email"]').setValue('clear-me@domain.com')
 
-    // Explicitly run exposed layout interaction methods
     wrapper.vm.resetForm()
     await wrapper.vm.$nextTick()
 
