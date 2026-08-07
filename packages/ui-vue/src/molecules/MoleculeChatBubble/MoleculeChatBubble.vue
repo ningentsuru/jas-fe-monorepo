@@ -98,9 +98,7 @@ const handleCopyExecution = async () => {
       ]"
     >
       <CardContent class="min-w-[120px] p-3 pr-5 text-sm leading-relaxed">
-        <div
-          class="absolute top-2 right-2 flex items-center gap-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-        >
+        <div class="absolute top-2 right-2 flex items-center gap-1">
           <Button
             type="button"
             size="icon"
