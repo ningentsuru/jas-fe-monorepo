@@ -1,12 +1,26 @@
 {
   "$schema": "https://turborepo.dev/schema.json",
   "ui": "tui",
-  "globalEnv": ["NUXT_FORMSPREE_ENDPOINT_ID"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*", "tsconfig.json", "src/**", "app/**", "pages/**"],
-      "env": ["ENABLE_EXPERIMENTAL_COREPACK", "NODE_ENV", "NUXT_FORMSPREE_ENDPOINT_ID"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*",
+        "tsconfig*.json",
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.vue",
+        "**/*.css",
+        "nuxt.config.ts"
+      ],
+      "env": [
+        "ENABLE_EXPERIMENTAL_COREPACK",
+        "NODE_ENV",
+        "NUXT_FORMSPREE_ENDPOINT_ID",
+        "NUXT_GROQ_API_KEY",
+        "NUXT_OPENAI_API_KEY"
+      ],
       "outputs": [
         ".next/**",
         "!.next/cache/**",
@@ -20,10 +34,10 @@
       "inputs": ["$TURBO_DEFAULT$"]
     },
     "check-types": {
-      "inputs": ["$TURBO_DEFAULT$", "tsconfig.json", "tsconfig.*.json", "src/**"]
+      "inputs": ["$TURBO_DEFAULT$", "tsconfig*.json", "**/*.ts", "**/*.tsx", "**/*.vue"]
     },
     "test:unit": {
-      "inputs": ["$TURBO_DEFAULT$", "vitest.config.ts", "vitest.setup.ts", "src/**"],
+      "inputs": ["$TURBO_DEFAULT$", "vitest.config.ts", "vitest.setup.ts", "**/*.ts", "**/*.vue"],
       "outputs": ["coverage/**"]
     },
     "test:e2e": {

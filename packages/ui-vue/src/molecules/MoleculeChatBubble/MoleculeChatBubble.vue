@@ -138,7 +138,11 @@ const handleCopyExecution = async () => {
                 ? 'prose-a:text-current prose-a:underline prose-a:font-bold hover:prose-a:opacity-80'
                 : 'prose-a:text-primary prose-a:underline prose-a:font-bold hover:prose-a:opacity-80 dark:prose-a:text-teal-400 forest-theme:prose-a:text-teal-300 ocean-theme:prose-a:text-sky-300 sunset-theme:prose-a:text-amber-400 high-contrast-theme:prose-a:text-[oklch(0.96_0.20_95)]',
             ]"
-            v-html="$sanitizeHtml ? $sanitizeHtml(part.html) : part.html"
+            v-html="
+              ($parent as any)?.$sanitizeHtml
+                ? ($parent as any).$sanitizeHtml(part.html)
+                : part.html
+            "
           />
         </div>
       </CardContent>

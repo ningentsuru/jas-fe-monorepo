@@ -43,12 +43,8 @@ export default defineEventHandler(async (event) => {
 
   const optimizedHistory = cleanMessages.filter((m) => m.content.trim().length > 0).slice(-4)
 
-  const groqKey = ((config.groqApiKey as string) || process.env.NUXT_GROQ_API_KEY || '').trim()
-  const openaiKey = (
-    (config.openaiApiKey as string) ||
-    process.env.NUXT_OPENAI_API_KEY ||
-    ''
-  ).trim()
+  const groqKey = ((config.groqApiKey as string) || '').trim()
+  const openaiKey = ((config.openaiApiKey as string) || '').trim()
 
   let targetModel: LanguageModel
 
