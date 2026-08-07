@@ -12,6 +12,7 @@ export { default as MoleculeQuadrantIcon } from './molecules/MoleculeQuadrantIco
 export { default as MoleculeThemeToggle } from './molecules/MoleculeThemeToggle'
 export { default as MoleculeTechCard } from './molecules/MoleculeTechCard'
 export { default as MoleculeSpamChallenge } from './molecules/MoleculeSpamChallenge'
+export { default as MoleculeChatBubble } from './molecules/MoleculeChatBubble'
 // plop:inject-molecules-component-do-not-removed
 
 // Organisms
@@ -21,6 +22,7 @@ export { default as OrganismProfileHero } from './organisms/OrganismProfileHero'
 export { default as OrganismSkillDirectory } from './organisms/OrganismSkillDirectory'
 export { default as OrganismTimeline } from './organisms/OrganismTimeline'
 export { default as OrganismEducation } from './organisms/OrganismEducation'
+export { default as OrganismChatWindow } from './organisms/OrganismChatWindow'
 // plop:inject-organisms-component-do-not-removed
 
 // Templates

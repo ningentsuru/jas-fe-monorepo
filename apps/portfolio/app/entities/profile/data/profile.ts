@@ -1,6 +1,13 @@
 import { Code2, Terminal, Layers, Cpu, Sparkles } from '@lucide/vue'
+import type {
+  ProfilePayload,
+  SkillCategory,
+  TechStackItem,
+  EducationPayload,
+  TimelineItem,
+} from '../model/types'
 
-export const profilePayload = {
+export const profilePayload: ProfilePayload = {
   statusBadge: 'Available for Advanced Architecture Tasks',
   fullName: 'Joshua Alexis Natividad Sardido',
   headline:
@@ -10,7 +17,7 @@ export const profilePayload = {
   location: 'General Trias City, Cavite, PH',
 }
 
-export const skillCategoriesPayload = [
+export const skillCategoriesPayload: SkillCategory[] = [
   { id: 'all', label: 'All Tech' },
   { id: 'frontend', label: 'Frontend Core' },
   { id: 'backend', label: 'Backend & Data' },
@@ -18,7 +25,7 @@ export const skillCategoriesPayload = [
   { id: 'ai', label: 'AI Operations' },
 ]
 
-export const techStackPayload = [
+export const techStackPayload: TechStackItem[] = [
   { name: 'Vue.js 3 / Nuxt 4', category: 'frontend', level: 'Expert', icon: Code2 },
   { name: 'TypeScript / ES2025', category: 'frontend', level: 'Expert', icon: Terminal },
   { name: 'React 19 / Next.js 16', category: 'frontend', level: 'Advanced', icon: Layers },
@@ -32,7 +39,7 @@ export const techStackPayload = [
   { name: 'Claude Code / Copilot', category: 'ai', level: 'Expert', icon: Sparkles },
 ]
 
-export const educationPayload = {
+export const educationPayload: EducationPayload = {
   title: 'Bachelor of Science in Information Technology',
   institutions: [
     { name: 'STI Academic Center - Las Piñas', period: '2015 - 2017' },
@@ -44,7 +51,7 @@ export const educationPayload = {
   ],
 }
 
-export const historicalTimeline = [
+export const historicalTimeline: TimelineItem[] = [
   {
     role: 'Mid-Level Frontend Developer',
     company: 'Filta Global',
@@ -98,4 +105,11 @@ export const historicalTimeline = [
       'Built a monthly Q&A Knowledge Assessment Platform and a full HRIS suite (attendance, leave, overtime, scheduling, reporting), raising agent competency scores to 92%.',
     ],
   },
+]
+
+export const starterPromptsPayload = [
+  "What is Joshua's primary tech stack?",
+  'Tell me about his experience with Nuxt 4.',
+  'Is he available for new opportunities?',
+  'Where was his most recent engineering role?',
 ]

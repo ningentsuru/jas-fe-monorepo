@@ -5,6 +5,7 @@
     <slot name="header" />
     <slot name="default" />
     <slot name="footer" />
+    <slot name="overlay" />
     <span class="sr-only">template-profile</span>
   </div>
 </template>

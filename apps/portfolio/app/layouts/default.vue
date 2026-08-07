@@ -8,10 +8,12 @@ import {
   OrganismFooter,
   TemplateProfile,
 } from '@repo/ui-vue'
-import { useAppTheme } from '@/composables/useAppTheme'
+import { useAppTheme } from '@/shared/composables/useAppTheme'
+import { useApi } from '@/shared/composables/useApi'
 import type { Themes } from '@/types'
 
 const { isDark, theme, toggleTheme, setTheme } = useAppTheme()
+const { sendMessage } = useApi()
 
 const isLoadingClient = ref(true)
 const footerRef = ref<InstanceType<typeof OrganismFooter> | null>(null)
@@ -51,10 +53,7 @@ async function executeSubmit(payload: { email: string; message: string }) {
   formError.value = false
 
   try {
-    await $fetch('/api/contact', {
-      method: 'POST',
-      body: payload,
-    })
+    await sendMessage(payload)
 
     formSuccess.value = true
     localStorage.setItem(LOCAL_STORAGE_KEY, 'true')
@@ -149,17 +148,19 @@ onMounted(() => {
         @submit="handleFormIntercept"
       />
     </template>
+    <template #overlay>
+      <MoleculeSpamChallenge
+        :model-value="userInputValue"
+        :open="showPuzzleModal"
+        :code="generatedCode"
+        :has-error="puzzleError"
+        :is-submitting="formSubmitting"
+        @update:model-value="handleOtpInput"
+        @update:open="showPuzzleModal = $event"
+        @verify="handlePuzzleVerify"
+        @cancel="closePuzzle"
+      />
+      <ChatWidget />
+    </template>
   </TemplateProfile>
-
-  <MoleculeSpamChallenge
-    :model-value="userInputValue"
-    :open="showPuzzleModal"
-    :code="generatedCode"
-    :has-error="puzzleError"
-    :is-submitting="formSubmitting"
-    @update:model-value="handleOtpInput"
-    @update:open="showPuzzleModal = $event"
-    @verify="handlePuzzleVerify"
-    @cancel="closePuzzle"
-  />
 </template>

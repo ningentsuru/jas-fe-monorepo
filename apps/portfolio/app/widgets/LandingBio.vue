@@ -13,7 +13,7 @@ import {
   techStackPayload,
   educationPayload,
   historicalTimeline,
-} from '@/assets/data/profile'
+} from '@/entities/profile'
 
 const isClientReady = ref(false)
 
