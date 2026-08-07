@@ -27,15 +27,12 @@ describe('OrganismTimeline', () => {
       props: getProps(Default.args || {}),
     })
 
-    // Validate structured typography data outputs
     expect(wrapper.text()).toContain('Senior Frontend Engineer')
     expect(wrapper.text()).toContain('at TechCorp Solutions')
     expect(wrapper.text()).toContain('2024 — Present')
 
-    // Check metric listings are accurately parsed
     expect(wrapper.text()).toContain('Led migration of monolithic dashboard to Vue 3 and Vite')
 
-    // Ensure skeleton markup is hidden when items exist
     expect(wrapper.find('.animate-pulse').exists()).toBe(false)
   })
 
@@ -44,11 +41,9 @@ describe('OrganismTimeline', () => {
       props: getProps(Loading.args || {}),
     })
 
-    // Check skeleton presentation configurations
     expect(wrapper.find('.animate-pulse').exists()).toBe(true)
     expect(wrapper.find('[aria-hidden="true"]').exists()).toBe(true)
 
-    // Ensure active metrics details are kept out of sight
     expect(wrapper.text()).not.toContain('Senior Frontend Engineer')
     expect(wrapper.text()).not.toContain('Production Impacts')
   })

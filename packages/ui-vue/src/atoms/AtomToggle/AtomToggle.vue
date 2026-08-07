@@ -21,8 +21,8 @@ const emit = defineEmits<{
 }>()
 
 function handleContextMenu(event: Event) {
-  event.preventDefault() // Block default browser right-click layout popups
-  emit('longToggle') // Backfills long press actions for screen-readers instantly
+  event.preventDefault()
+  emit('longToggle')
 }
 </script>
 

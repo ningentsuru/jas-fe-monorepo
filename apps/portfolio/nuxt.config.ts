@@ -52,5 +52,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     formspreeEndpointId: '',
+    groqApiKey: '',
+    openaiApiKey: '',
   },
 })

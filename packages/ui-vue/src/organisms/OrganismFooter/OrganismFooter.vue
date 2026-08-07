@@ -26,7 +26,6 @@ const emit = defineEmits<{
 
 const currentYear = computed(() => new Date().getFullYear())
 
-// Local state isolated inside the UI package
 const formEmail = ref('')
 const formMessage = ref('')
 
@@ -39,7 +38,6 @@ function handleLocalSubmit() {
   })
 }
 
-// Expose reset method so parent can invoke it after successful API transmission
 defineExpose({
   resetForm: () => {
     formEmail.value = ''

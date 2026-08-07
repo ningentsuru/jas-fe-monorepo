@@ -50,7 +50,7 @@ onUnmounted(() => {
 
 <template>
   <header
-    class="bg-background/40 sticky top-0 z-50 flex h-15 p-2 backdrop-blur-xl transition-colors duration-200"
+    class="bg-background/40 sticky top-0 z-40 flex h-15 p-2 backdrop-blur-xl transition-colors duration-200"
     data-testid="organism-header"
   >
     <nav
