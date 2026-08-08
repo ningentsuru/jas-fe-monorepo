@@ -85,7 +85,7 @@ const handleCopyEntireConversation = async () => {
 
 <template>
   <div
-    class="bg-background border-border bg-opacity-95 fixed top-0 left-0 z-49 flex h-dvh w-full flex-col overflow-hidden p-0 transition-all duration-300 ease-in-out md:relative md:top-auto md:left-auto md:z-0 md:h-[600px] md:max-w-2xl md:rounded-xl md:border md:shadow-md"
+    class="organism-chat-window bg-background/95 border-border flex h-full w-full flex-col overflow-hidden p-0 md:rounded-xl md:border md:shadow-md"
   >
     <div
       class="border-border bg-muted/10 flex items-center justify-between border-b px-4 py-3 md:hidden"
@@ -148,7 +148,7 @@ const handleCopyEntireConversation = async () => {
             :model-value="modelValue"
             @update:model-value="emit('update:modelValue', $event as string)"
             @keydown="handleKeydownModifier"
-            placeholder="Say something... (Enter to send, Shift+Enter for new line)"
+            placeholder="(Enter to send, Shift+Enter for new line)"
             :disabled="isLoading"
             rows="1"
             maxlength="150"

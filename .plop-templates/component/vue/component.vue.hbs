@@ -1,25 +1,60 @@
 <script setup lang="ts">
-{{#if props.length}}
+/**
+ * IMPORTS
+ **/
+
+/**
+ * COMPILER MACROS
+ **/
+{{#if normalProps.length}}
 interface Props {
-  {{#each props}}
+  {{#each normalProps}}
   {{this.propName}}: {{#if (eq this.propType 'function')}}() => void{{else}}{{this.propType}}{{/if}}
   {{/each}}
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  {{#each props}}
-  {{this.propName}}: {{#if (eq this.propType 'string')}}''{{else if (eq this.propType 'number')}}0{{else if (eq this.propType 'boolean')}}false{{else if (eq this.propType 'object')}}() => ({}){{else if (eq this.propType 'string[]')}}() => ['']{{else if (eq this.propType 'number[]')}}() => [0]{{else if (eq this.propType 'boolean[]')}}() => [false]{{else if (eq this.propType 'object[]')}}() => [{}]{{else if (eq this.propType 'function')}}() => {}{{/if}},
+  {{#each normalProps}}
+  {{this.propName}}: {{#if (eq this.propType 'string')}}''{{else if (eq this.propType 'number')}}0{{else if (eq this.propType 'boolean')}}false{{else if (eq this.propType 'object')}}() => ({}){{else if (eq this.propType 'string[]')}}() => []{{else if (eq this.propType 'number[]')}}() => []{{else if (eq this.propType 'boolean[]')}}() => []{{else if (eq this.propType 'object[]')}}() => []{{else if (eq this.propType 'function')}}() => {}{{/if}}{{#unless @last}},{{/unless}}
   {{/each}}
 })
-{{#if (hasModelValue props)}}
+{{/if}}
+{{#if modelProps.length}}
 
-const emit = defineEmits(['update:modelValue'])
+{{#each modelProps}}
+const {{this.varName}} = defineModel<{{this.propType}}>('{{this.bindingName}}')
+{{/each}}
 {{/if}}
-{{/if}}
+
+/**
+ * NUXT / VUE COMPOSABLES
+ **/
+
+/**
+ * LOCAL STATE & COMPUTED PROPERTIES
+ **/
+
+/**
+ * WATCHERS
+ **/
+
+/**
+ * LIFECYCLE HOOKS
+ **/
+
+/**
+ * METHODS / FUNCTIONS
+ **/
+
+/**
+ * EXPOSE
+ **/
+
+
 </script>
 
 <template>
   <div class="{{ kebabCase name }}" data-testid="{{ kebabCase name }}">
-    <span class="sr-only">{{ kebabCase name }}</span>
+    <slot />
   </div>
 </template>

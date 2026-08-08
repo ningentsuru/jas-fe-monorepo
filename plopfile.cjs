@@ -41,10 +41,6 @@ const getPrefix = (category) => CATEGORIES.find((c) => category.includes(c.categ
 
 module.exports = function (plop) {
   plop.setHelper('eq', (a, b) => a === b)
-  plop.setHelper(
-    'hasModelValue',
-    (props) => Array.isArray(props) && props.some((p) => p.propName === 'modelValue'),
-  )
 
   plop.setGenerator('component', {
     description: 'Create a framework-aware component with spec and story',
@@ -156,7 +152,9 @@ module.exports = function (plop) {
         },
       ])
 
-      const props = []
+      const normalProps = []
+      const modelProps = []
+
       if (basic.hasProp) {
         let addAnother = true
         while (addAnother) {
@@ -189,10 +187,24 @@ module.exports = function (plop) {
             },
           ])
 
-          props.push({
-            propName: prop.propName,
-            propType: prop.propType === 'array' ? `${prop.arrayType}[]` : prop.propType,
-          })
+          const rawName = prop.propName
+          const typeParsed = prop.propType === 'array' ? `${prop.arrayType}[]` : prop.propType
+          const isModelMatched = /^model[A-Z]/.test(rawName)
+
+          if (isModelMatched) {
+            const baseSuffix = rawName.substring(5)
+            const cleanVarName = baseSuffix.charAt(0).toLowerCase() + baseSuffix.slice(1)
+            modelProps.push({
+              varName: cleanVarName,
+              bindingName: cleanVarName,
+              propType: typeParsed,
+            })
+          } else {
+            normalProps.push({
+              propName: rawName,
+              propType: typeParsed,
+            })
+          }
 
           const { addMore } = await inquirer.prompt({
             type: 'confirm',
@@ -204,14 +216,15 @@ module.exports = function (plop) {
         }
       }
 
-      return { ...basic, props }
+      const hasAnyProps = normalProps.length > 0 || modelProps.length > 0
+
+      return { ...basic, normalProps, modelProps, hasAnyProps }
     },
 
     actions: (data) => {
       if (data.category !== 'custom') data.path = `${data.category}${data.componentName}`
       data.name = data.path.split('/').pop()
 
-      // Framework auto-detection step
       const targetName = data.folder === 'apps' ? data.apps : data.packages
       const isVueFramework =
         targetName.includes('vue') ||

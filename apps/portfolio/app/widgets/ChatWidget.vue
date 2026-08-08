@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, nextTick, onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { OrganismChatWindow } from '@repo/ui-vue'
 import FloatingChatButton from '@/features/FloatingChatButton.vue'
 import type { ChatMessage } from '@/entities/chat/model/types'
@@ -7,6 +8,7 @@ import { starterPromptsPayload } from '@/entities/profile'
 import { useApi } from '@/shared/composables/useApi'
 
 const { chatAi } = useApi()
+const route = useRoute()
 
 const isClientReady = ref(false)
 const isOpen = ref(false)
@@ -19,6 +21,22 @@ const STORAGE_KEY = 'jas_portfolio_chat_timeline'
 
 function handleToggle() {
   isOpen.value = !isOpen.value
+}
+
+function unlockBody() {
+  if (import.meta.client) {
+    document.body.classList.remove('overflow-hidden')
+  }
+}
+
+function updateScrollLock(shouldLock: boolean) {
+  if (!import.meta.client) return
+
+  if (shouldLock && window.innerWidth < 768) {
+    document.body.classList.add('overflow-hidden')
+  } else {
+    document.body.classList.remove('overflow-hidden')
+  }
 }
 
 async function handleChatSubmit() {
@@ -121,6 +139,22 @@ async function handleStarterPrompt(prompt: string) {
   await handleChatSubmit()
 }
 
+watch(isOpen, (newVal) => {
+  updateScrollLock(newVal)
+})
+
+watch(
+  () => route.path,
+  () => {
+    isOpen.value = false
+    unlockBody()
+  },
+)
+
+function handleResize() {
+  updateScrollLock(isOpen.value)
+}
+
 watch(
   messages,
   (newMessages) => {
@@ -135,6 +169,9 @@ watch(
 
 onMounted(() => {
   isClientReady.value = true
+
+  window.addEventListener('resize', handleResize)
+
   try {
     const historicalCache = localStorage.getItem(STORAGE_KEY)
 
@@ -158,6 +195,13 @@ onMounted(() => {
     console.warn('Hydration tracking intercepted storage bypass:', error)
   }
 })
+
+onBeforeUnmount(() => {
+  if (import.meta.client) {
+    window.removeEventListener('resize', handleResize)
+    unlockBody()
+  }
+})
 </script>
 
 <template>
@@ -165,12 +209,11 @@ onMounted(() => {
     <FloatingChatButton v-if="isClientReady" :is-open="isOpen" @toggle="handleToggle" />
 
     <div
-      v-show="isOpen"
       :class="[
-        'fixed z-48 origin-bottom-right transform transition-all duration-300 ease-out',
-        'top-0 left-0 h-screen w-full md:top-auto md:right-6 md:bottom-24 md:left-auto md:h-auto md:w-110 md:shadow-2xl',
+        'fixed z-48 flex origin-bottom-right flex-col transition-all duration-300 ease-out',
+        'top-0 left-0 h-dvh w-screen md:top-auto md:right-6 md:bottom-24 md:left-auto md:h-150 md:max-w-lg',
         isOpen
-          ? 'translate-y-0 scale-100 opacity-100'
+          ? 'pointer-events-auto translate-y-0 scale-100 opacity-100'
           : 'pointer-events-none translate-y-4 scale-95 opacity-0',
       ]"
     >

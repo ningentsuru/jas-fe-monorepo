@@ -1,51 +1,82 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import {{pascalCase name}} from './{{pascalCase name}}.vue'
-import {{#if props.length}}meta, {{/if}}{ Default } from './{{pascalCase name}}.stories'
+import { Default } from './{{pascalCase name}}.stories'
 
-{{#if props.length}}
+{{#if hasAnyProps}}
 type {{pascalCase name}}Props = InstanceType<typeof {{pascalCase name}}>['$props']
 
+/**
+ * UTILITY: MAP STORYBOOK ARGS TO VUE COMPONENT PROPS
+ * -----------------------------------------------------------------------------
+ * Storybook v10 matches standard properties and two-way models flatly inside Default.args.
+ * For testing assertions, we parse model prefixes back to their native binding signatures.
+ */
 const getProps = (storyArgs: typeof Default.args): {{pascalCase name}}Props => {
-  return {
-    ...meta.args,
-    ...storyArgs,
-  } as {{pascalCase name}}Props
+  const parsedProps: Record<string, any> = {}
+
+  // 1. Map Standard Layout Properties
+  {{#each normalProps}}
+  if ('{{this.propName}}' in storyArgs) {
+    parsedProps['{{this.propName}}'] = storyArgs['{{this.propName}}']
+  }
+  {{/each}}
+
+  // 2. Map Modern defineModel Named Properties back to their underlying Vue target keys
+  {{#each modelProps}}
+  if ('{{this.varName}}' in storyArgs) {
+    parsedProps['{{this.bindingName}}'] = storyArgs['{{this.varName}}']
+  }
+  {{/each}}
+
+  return parsedProps as {{pascalCase name}}Props
 }
 {{/if}}
 
 describe('{{pascalCase name}}', () => {
+  /**
+   * TEST 1: CORE RENDER SMOKE TEST
+   * ---------------------------------------------------------------------------
+   * Assures the module mounts cleanly inside Vitest without memory leakage or parsing failures.
+   */
   it('renders properly using Storybook args', () => {
     const wrapper = mount({{pascalCase name}}, {
-      {{#if props.length}}
+      {{#if hasAnyProps}}
       props: getProps(Default.args),
       {{else}}
-      props: Default.args,
+      props: {},
       {{/if}}
     })
 
-    expect(wrapper.text()).toContain('{{kebabCase name}}')
+    // Confirms root wrapper component tracking setup exists
+    expect(wrapper.find('[data-testid="{{kebabCase name}}"]').exists()).toBe(true)
   })
-  {{#if props.length}}
 
+  {{#if hasAnyProps}}
+  /**
+   * TEST 2: DATA HYDRATION VALIDATION
+   * ---------------------------------------------------------------------------
+   * Confirms incoming state parameters cleanly propagate into active system variables.
+   */
   it('receives correct props from Storybook args', () => {
     const wrapper = mount({{pascalCase name}}, {
       props: getProps(Default.args),
     })
 
-    {{#each props}}
+    // A. Verify Standard Layout Properties Functionality
+    {{#each normalProps}}
+    // Verify {{this.propName}} ({{this.propType}})
     {{#if (eq this.propType 'function')}}
-    const {{this.propName}}Fn = wrapper.props('{{this.propName}}') as () => void
+    expect(wrapper.props('{{this.propName}}')).toBeTypeOf('function')
+    {{else}}
+    expect(wrapper.props('{{this.propName}}')).toEqual({{#if (eq this.propType 'string')}}''{{else if (eq this.propType 'number')}}0{{else if (eq this.propType 'boolean')}}false{{else if (eq this.propType 'object')}}{}{{else}}[]{{/if}})
     {{/if}}
     {{/each}}
 
-    {{#each props}}
-    // Verify {{this.propName}} ({{this.propType}})
-    {{#if (eq this.propType 'function')}}
-    expect({{this.propName}}Fn).toBeTypeOf('function')
-    {{else}}
-    expect(wrapper.props('{{this.propName}}')).toEqual({{#if (eq this.propType 'string')}}''{{else if (eq this.propType 'number')}}0{{else if (eq this.propType 'boolean')}}false{{else if (eq this.propType 'object')}}{}{{else if (eq this.propType 'string[]')}}['']{{else if (eq this.propType 'number[]')}}[0]{{else if (eq this.propType 'boolean[]')}}[false]{{else if (eq this.propType 'object[]')}}[{}]{{/if}})
-    {{/if}}
+    // B. Verify Modern Named Two-Way defineModel Bindings
+    {{#each modelProps}}
+    // Verify defineModel binding alias: {{this.bindingName}} ({{this.propType}})
+    expect(wrapper.props('{{this.bindingName}}')).toEqual({{#if (eq this.propType 'string')}}''{{else if (eq this.propType 'number')}}0{{else if (eq this.propType 'boolean')}}false{{else if (eq this.propType 'object')}}{}{{else}}[]{{/if}})
     {{/each}}
   })
   {{/if}}
