@@ -1,7 +1,9 @@
 import { fileURLToPath } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
 
-const uiVueSrc = fileURLToPath(new URL('../../packages/ui-vue/src', import.meta.url))
+function localFile(location: string) {
+  return fileURLToPath(new URL(location, import.meta.url))
+}
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -15,9 +17,9 @@ export default defineNuxtConfig({
   modules: ['@nuxtjs/color-mode'],
 
   colorMode: {
-    preference: 'system',
-    fallback: 'light',
     classSuffix: '-theme',
+    fallback: 'light',
+    preference: 'system',
     storage: 'localStorage',
     storageKey: 'nuxt-color-mode',
   },
@@ -25,8 +27,11 @@ export default defineNuxtConfig({
   css: ['@/assets/css/main.css'],
 
   alias: {
-    '@repo/ui-vue': uiVueSrc,
-    '#': uiVueSrc,
+    '#entities': localFile('./app/entities'),
+    '#features': localFile('./app/features'),
+    '#shared': localFile('./shared'),
+    '#ui': localFile('../../packages/ui-vue/src'),
+    '#widgets': localFile('./app/widgets'),
   },
 
   vite: {
@@ -40,14 +45,12 @@ export default defineNuxtConfig({
     },
   },
 
-  components: [
-    { path: '~/widgets', pathPrefix: false, extensions: ['vue'] },
-    { path: '~/features', pathPrefix: false, extensions: ['vue'] },
-    { path: '~/entities', pathPrefix: false, extensions: ['vue'] },
-  ],
-
   build: {
-    transpile: ['@repo/ui-vue'],
+    // ❌ Try removing this line first.
+    // Your alias points to source code, which Vite transpiles automatically.
+    // transpile: ['@repo/ui-vue'],
+    // ✅ ONLY add specific dependencies if you encounter ESM errors:
+    // transpile: ['reka-ui', 'vee-validate'],
   },
 
   runtimeConfig: {

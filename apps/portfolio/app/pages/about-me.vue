@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import AboutMe from '@/widgets/AboutMe.vue'
+import { AboutMeWidget } from '#widgets/about-me'
 </script>
 
 <template>
-  <AboutMe />
+  <AboutMeWidget />
 </template>

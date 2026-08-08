@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import LandingBio from '@/widgets/LandingBio.vue'
+import { LandingBioWidget } from '#widgets/landing-bio'
 
 useSeoMeta({
   title: 'Joshua Alexis Sardido | Frontend Engineer',
@@ -70,5 +70,5 @@ useHead({
 </script>
 
 <template>
-  <LandingBio />
+  <LandingBioWidget />
 </template>

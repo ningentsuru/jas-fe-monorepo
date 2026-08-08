@@ -5,7 +5,7 @@ import {
   OrganismProfileHero,
   OrganismSkillDirectory,
   OrganismTimeline,
-} from '@repo/ui-vue'
+} from '#ui'
 
 import {
   profilePayload,
@@ -13,7 +13,7 @@ import {
   techStackPayload,
   educationPayload,
   historicalTimeline,
-} from '@/entities/profile'
+} from '#entities/profile'
 
 const isClientReady = ref(false)
 

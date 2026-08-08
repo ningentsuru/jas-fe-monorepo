@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { MessageSquare, X } from '@lucide/vue'
-import { Button } from '@repo/ui-vue/components/ui/button'
+import { Button } from '#ui/components/ui/button'
 
 interface Props {
   isOpen: boolean

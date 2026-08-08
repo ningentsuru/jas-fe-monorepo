@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { MoleculeForm } from '@repo/ui-vue'
+import { MoleculeForm } from '#ui'
 
 // Instantiate reactive state matching your inputs
 const name = ref<string>('John Doe')
