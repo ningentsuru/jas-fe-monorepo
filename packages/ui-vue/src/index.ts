@@ -13,6 +13,7 @@ export { default as MoleculeThemeToggle } from './molecules/MoleculeThemeToggle'
 export { default as MoleculeTechCard } from './molecules/MoleculeTechCard'
 export { default as MoleculeSpamChallenge } from './molecules/MoleculeSpamChallenge'
 export { default as MoleculeChatBubble } from './molecules/MoleculeChatBubble'
+export { default as MoleculeForm } from './molecules/MoleculeForm'
 // plop:inject-molecules-component-do-not-removed
 
 // Organisms
