@@ -11,7 +11,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  title: ''
+  title: '',
 })
 
 const name = defineModel<string>('name')
@@ -40,8 +40,6 @@ const age = defineModel<number>('age')
 /**
  * EXPOSE
  **/
-
-
 </script>
 
 <template>

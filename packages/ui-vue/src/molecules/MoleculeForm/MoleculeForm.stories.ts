@@ -19,7 +19,7 @@ type Story = StoryObj<typeof MoleculeForm>
 /**
  * 2. STRUCTURAL STORIES (COMPONENT VARIATIONS)
  * -----------------------------------------------------------------------------
- * Organized configuration arguments. Storybook maps these keys directly to 
+ * Organized configuration arguments. Storybook maps these keys directly to
  * the corresponding standard props and two-way named v-models.
  */
 export const Default: Story = {

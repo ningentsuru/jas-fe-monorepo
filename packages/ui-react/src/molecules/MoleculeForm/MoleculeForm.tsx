@@ -25,12 +25,17 @@ export default function MoleculeForm({
 }: MoleculeFormProps) {
   return (
     <div className="molecule-form" data-testid="molecule-form">
-      <fieldset className="text-foreground" style={{ border: '1px solid #ccc', padding: '16px', borderRadius: '8px' }}>
+      <fieldset
+        className="text-foreground"
+        style={{ border: '1px solid #ccc', padding: '16px', borderRadius: '8px' }}
+      >
         {title && <legend style={{ fontWeight: 'bold', padding: '0 8px' }}>{title}</legend>}
 
         {/* Name Input Field */}
         <div style={{ marginBottom: '12px', display: 'flex', flexDirection: 'column' }}>
-          <label htmlFor="form-name-input" style={{ marginBottom: '4px', fontSize: '14px' }}>Name:</label>
+          <label htmlFor="form-name-input" style={{ marginBottom: '4px', fontSize: '14px' }}>
+            Name:
+          </label>
           <input
             id="form-name-input"
             type="text"
@@ -42,7 +47,9 @@ export default function MoleculeForm({
 
         {/* Age Input Field */}
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <label htmlFor="form-age-input" style={{ marginBottom: '4px', fontSize: '14px' }}>Age:</label>
+          <label htmlFor="form-age-input" style={{ marginBottom: '4px', fontSize: '14px' }}>
+            Age:
+          </label>
           <input
             id="form-age-input"
             type="number"
