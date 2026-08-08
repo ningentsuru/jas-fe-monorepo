@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, computed, nextTick, onMounted, watch } from 'vue'
+import { useApi } from '@/composables/useApi'
 import { useRoute } from 'vue-router'
-import { OrganismChatWindow } from '@repo/ui-vue'
-import FloatingChatButton from '@/features/FloatingChatButton.vue'
-import type { ChatMessage } from '@/entities/chat/model/types'
-import { starterPromptsPayload } from '@/entities/profile'
-import { useApi } from '@/shared/composables/useApi'
+import { FloatingChatButton } from '#features/floating-chat'
+import { OrganismChatWindow } from '#ui'
+import { starterPromptsPayload } from '#entities/profile'
+import type { ChatMessage } from '#entities/chat'
 
 const { chatAi } = useApi()
 const route = useRoute()

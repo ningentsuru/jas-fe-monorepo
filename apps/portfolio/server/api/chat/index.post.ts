@@ -1,23 +1,8 @@
 import { createGroq } from '@ai-sdk/groq'
 import { createOpenAI } from '@ai-sdk/openai'
 import { streamText, type LanguageModel } from 'ai'
-import { compiledSystemPromptText } from '@/entities/profile/data/profile'
-
-interface IncomingUIPart {
-  type: 'text'
-  text: string
-}
-
-interface IncomingUIMessage {
-  role: 'user' | 'assistant' | 'system'
-  parts?: IncomingUIPart[]
-  content?: string
-}
-
-interface OutgoingCoreMessage {
-  role: 'user' | 'assistant'
-  content: string
-}
+import { compiledSystemPromptText } from '#entities/profile'
+import type { IncomingUIPart, IncomingUIMessage, OutgoingCoreMessage } from '#entities/chat'
 
 export default defineEventHandler(async (event) => {
   const { messages } = await readBody<{ messages: IncomingUIMessage[] }>(event)

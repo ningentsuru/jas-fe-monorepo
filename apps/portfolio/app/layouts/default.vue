@@ -7,10 +7,11 @@ import {
   OrganismHeader,
   OrganismFooter,
   TemplateProfile,
-} from '@repo/ui-vue'
-import { useAppTheme } from '@/shared/composables/useAppTheme'
-import { useApi } from '@/shared/composables/useApi'
-import type { Themes } from '@/types'
+} from '#ui'
+import { ChatWidget } from '#widgets/chat-box'
+import { useAppTheme } from '@/composables/useAppTheme'
+import { useApi } from '@/composables/useApi'
+import type { Themes } from '#entities/theme'
 
 const { isDark, theme, toggleTheme, setTheme } = useAppTheme()
 const { sendMessage } = useApi()

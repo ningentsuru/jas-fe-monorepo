@@ -1,4 +1,4 @@
-import type { ChatMessage } from '@/entities/chat/model/types'
+import type { ChatMessage } from '#entities/chat'
 
 export function useApi() {
   async function sendMessage(payload: { email: string; message: string }) {

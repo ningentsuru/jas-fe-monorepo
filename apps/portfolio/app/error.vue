@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { AlertTriangle, Home } from '@lucide/vue'
-import { Button } from '#/components/ui/button'
+import { Button } from '#ui/components/ui/button'
 
 interface NuxtError {
   statusCode: number

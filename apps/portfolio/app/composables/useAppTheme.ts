@@ -1,5 +1,5 @@
 import { computed, ref, onMounted } from 'vue'
-import type { Themes } from '@/types'
+import type { Themes } from '#entities/theme/types'
 
 export function useAppTheme() {
   const colorMode = useColorMode()

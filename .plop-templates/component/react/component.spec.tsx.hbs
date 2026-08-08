@@ -14,21 +14,23 @@ type {{pascalCase name}}Props = React.ComponentProps<typeof {{pascalCase name}}>
  */
 const getProps = (storyArgs: typeof Default.args): {{pascalCase name}}Props => {
   const parsedProps: Record<string, any> = {}
+  
+  const args = storyArgs || {}
 
   // 1. Map Standard Layout Properties
   {{#each normalProps}}
-  if ('{{this.propName}}' in storyArgs) {
-    parsedProps['{{this.propName}}'] = storyArgs['{{this.propName}}']
+  if ('{{this.propName}}' in args) {
+    parsedProps['{{this.propName}}'] = args['{{this.propName}}']
   }
   {{/each}}
 
   // 2. Map Controlled Model Inputs & Events for React
   {{#each modelProps}}
-  if ('{{this.varName}}' in storyArgs) {
-    parsedProps['{{this.varName}}'] = storyArgs['{{this.varName}}']
+  if ('{{this.varName}}' in args) {
+    parsedProps['{{this.varName}}'] = args['{{this.varName}}']
   }
-  if ('onUpdate{{pascalCase this.varName}}' in storyArgs) {
-    parsedProps['onUpdate{{pascalCase this.varName}}'] = storyArgs['onUpdate{{pascalCase this.varName}}']
+  if ('onUpdate{{pascalCase this.varName}}' in args) {
+    parsedProps['onUpdate{{pascalCase this.varName}}'] = args['onUpdate{{pascalCase this.varName}}']
   }
   {{/each}}
 

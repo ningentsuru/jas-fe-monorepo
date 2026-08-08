@@ -14,23 +14,25 @@ type MoleculeFormProps = React.ComponentProps<typeof MoleculeForm>
 const getProps = (storyArgs: typeof Default.args): MoleculeFormProps => {
   const parsedProps: Record<string, any> = {}
 
+  const args = storyArgs || {}
+
   // 1. Map Standard Layout Properties
-  if ('title' in storyArgs) {
-    parsedProps['title'] = storyArgs['title']
+  if ('title' in args) {
+    parsedProps['title'] = args['title']
   }
 
   // 2. Map Controlled Model Inputs & Events for React
-  if ('name' in storyArgs) {
-    parsedProps['name'] = storyArgs['name']
+  if ('name' in args) {
+    parsedProps['name'] = args['name']
   }
-  if ('onUpdateName' in storyArgs) {
-    parsedProps['onUpdateName'] = storyArgs['onUpdateName']
+  if ('onUpdateName' in args) {
+    parsedProps['onUpdateName'] = args['onUpdateName']
   }
-  if ('age' in storyArgs) {
-    parsedProps['age'] = storyArgs['age']
+  if ('age' in args) {
+    parsedProps['age'] = args['age']
   }
-  if ('onUpdateAge' in storyArgs) {
-    parsedProps['onUpdateAge'] = storyArgs['onUpdateAge']
+  if ('onUpdateAge' in args) {
+    parsedProps['onUpdateAge'] = args['onUpdateAge']
   }
 
   return parsedProps as MoleculeFormProps

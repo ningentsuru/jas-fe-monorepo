@@ -14,18 +14,20 @@ type {{pascalCase name}}Props = InstanceType<typeof {{pascalCase name}}>['$props
  */
 const getProps = (storyArgs: typeof Default.args): {{pascalCase name}}Props => {
   const parsedProps: Record<string, any> = {}
+  
+  const args = storyArgs || {}
 
   // 1. Map Standard Layout Properties
   {{#each normalProps}}
-  if ('{{this.propName}}' in storyArgs) {
-    parsedProps['{{this.propName}}'] = storyArgs['{{this.propName}}']
+  if ('{{this.propName}}' in args) {
+    parsedProps['{{this.propName}}'] = args['{{this.propName}}']
   }
   {{/each}}
 
   // 2. Map Modern defineModel Named Properties back to their underlying Vue target keys
   {{#each modelProps}}
-  if ('{{this.varName}}' in storyArgs) {
-    parsedProps['{{this.bindingName}}'] = storyArgs['{{this.varName}}']
+  if ('{{this.varName}}' in args) {
+    parsedProps['{{this.bindingName}}'] = args['{{this.varName}}']
   }
   {{/each}}
 

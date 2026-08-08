@@ -13,7 +13,7 @@ const meta: Meta<typeof MoleculeForm> = {
   argTypes: {
     onUpdateName: { action: 'onUpdateName captured' },
     onUpdateAge: { action: 'onUpdateAge captured' },
-  }
+  },
 }
 
 export default meta

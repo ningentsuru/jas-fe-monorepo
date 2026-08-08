@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Hammer, Sparkles, HardHat, Terminal } from '@lucide/vue'
-import { Badge } from '#/components/ui/badge'
+import { Badge } from '#ui/components/ui/badge'
 </script>
 
 <template>
