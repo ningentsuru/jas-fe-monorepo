@@ -1,10 +1,18 @@
 import { test, expect } from '@playwright/test'
-import { ROUTES } from '../src/constants/index.js'
 
-test('visits the {{kebabCase name}} url', async ({ page }) => {
-  await page.goto(ROUTES.{{constantCase name}}.path)
+/**
+ * NUXT 4 E2E BROWSER VALIDATION RUNNER
+ * -----------------------------------------------------------------------------
+ * Automated end-to-end user-interaction smoke tests for file-system views.
+ */
+test('visits the {{kebabCase (removeViewText name)}} page and verifies core layout integrity', async ({ page }) => {
+  // 1. Navigate directly to the absolute Nuxt 4 file-system path
+  await page.goto('/{{kebabCase (removeViewText name)}}')
 
+  // 2. Query the primary atomic locator block on the rendered view
   const container = page.getByTestId('{{kebabCase name}}')
 
+  // 3. Confirm target structural layout elements settle and view correctly on screen
   await expect(container).toBeAttached()
+  await expect(container).toBeVisible()
 })

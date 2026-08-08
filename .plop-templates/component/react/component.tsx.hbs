@@ -1,20 +1,44 @@
 import React from 'react'
 
-{{#if props.length}}
+{{#if hasAnyProps}}
+/**
+ * TYPE DEFINITIONS
+ * -----------------------------------------------------------------------------
+ */
 interface {{pascalCase name}}Props {
-  {{#each props}}
+  {{! Loop through normal layout properties }}
+  {{#each normalProps}}
   {{this.propName}}?: {{#if (eq this.propType 'function')}}() => void{{else}}{{this.propType}}{{/if}}
+  {{/each}}
+  {{! Loop through model properties and treat them as normal controlled props in React }}
+  {{#each modelProps}}
+  {{this.varName}}?: {{this.propType}}
+  onUpdate{{pascalCase this.varName}}?: (value: {{this.propType}}) => void
   {{/each}}
 }
 {{/if}}
 
+/**
+ * {{pascalCase name}} COMPONENT
+ * -----------------------------------------------------------------------------
+ */
 export default function {{pascalCase name}}({
-  {{#each props}}
-  {{this.propName}} = {{#if (eq this.propType 'string')}}''{{else if (eq this.propType 'number')}}0{{else if (eq this.propType 'boolean')}}false{{else if (eq this.propType 'object')}}{}{{else if (eq this.propType 'string[]')}}['']{{else if (eq this.propType 'number[]')}}[0]{{else if (eq this.propType 'boolean[]')}}[false]{{else if (eq this.propType 'object[]')}}[{}]{{else if (eq this.propType 'function')}}() => {} {{/if}},
+  {{! Destructure Normal Layout Properties }}
+  {{#each normalProps}}
+  {{this.propName}} = {{#if (eq this.propType 'string')}}''{{else if (eq this.propType 'number')}}0{{else if (eq this.propType 'boolean')}}false{{else if (eq this.propType 'function')}}() => {}{{else}}undefined{{/if}},
   {{/each}}
-}: {{#if props.length}}{{pascalCase name}}Props{{else}}{}{{/if}}) {
+  {{! Destructure Model Properties mapped to controlled bindings }}
+  {{#each modelProps}}
+  {{this.varName}} = {{#if (eq this.propType 'string')}}''{{else if (eq this.propType 'number')}}0{{else if (eq this.propType 'boolean')}}false{{else}}undefined{{/if}},
+  onUpdate{{pascalCase this.varName}} = () => {},
+  {{/each}}
+}: {{#if hasAnyProps}}{{pascalCase name}}Props{{else}}{}{{/if}}) {
   return (
     <div className="{{ kebabCase name }}" data-testid="{{ kebabCase name }}">
+      {/* 
+        COMPONENT CONTENT ARCHITECTURE 
+        Render standard mapped values or children nodes here 
+      */}
       <span className="sr-only">{{ kebabCase name }}</span>
     </div>
   )

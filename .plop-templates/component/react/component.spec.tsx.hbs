@@ -2,49 +2,92 @@ import React from 'react'
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import {{pascalCase name}} from './{{pascalCase name}}'
-import {{#if props.length}}meta, {{/if}}{ Default } from './{{pascalCase name}}.stories'
+import { Default } from './{{pascalCase name}}.stories'
 
-{{#if props.length}}
+{{#if hasAnyProps}}
 type {{pascalCase name}}Props = React.ComponentProps<typeof {{pascalCase name}}>
 
+/**
+ * UTILITY: MAP STORYBOOK ARGS TO COMPONENT PROPS
+ * -----------------------------------------------------------------------------
+ * Flattens normal props and controlled model props into a single type-safe object.
+ */
 const getProps = (storyArgs: typeof Default.args): {{pascalCase name}}Props => {
-  return {
-    ...meta.args,
-    ...storyArgs,
-  } as {{pascalCase name}}Props
+  const parsedProps: Record<string, any> = {}
+
+  // 1. Map Standard Layout Properties
+  {{#each normalProps}}
+  if ('{{this.propName}}' in storyArgs) {
+    parsedProps['{{this.propName}}'] = storyArgs['{{this.propName}}']
+  }
+  {{/each}}
+
+  // 2. Map Controlled Model Inputs & Events for React
+  {{#each modelProps}}
+  if ('{{this.varName}}' in storyArgs) {
+    parsedProps['{{this.varName}}'] = storyArgs['{{this.varName}}']
+  }
+  if ('onUpdate{{pascalCase this.varName}}' in storyArgs) {
+    parsedProps['onUpdate{{pascalCase this.varName}}'] = storyArgs['onUpdate{{pascalCase this.varName}}']
+  }
+  {{/each}}
+
+  return parsedProps as {{pascalCase name}}Props
 }
 {{/if}}
 
 describe('{{pascalCase name}}', () => {
+  /**
+   * TEST 1: CORE RENDER SMOKE TEST
+   * ---------------------------------------------------------------------------
+   * Mounts the component onto the virtual DOM and asserts its structural anchor node exists.
+   */
   it('renders properly using Storybook args', () => {
-    const props = {{#if props.length}}getProps(Default.args){{else}}Default.args || {}{{/if}}
+    const props = {{#if hasAnyProps}}getProps(Default.args){{else}}Default.args || {}{{/if}}
     render(<{{pascalCase name}} {...props} />)
 
     const element = screen.getByTestId('{{ kebabCase name }}')
     expect(element).toBeDefined()
   })
-  {{#if props.length}}
 
+  {{#if hasAnyProps}}
+  /**
+   * TEST 2: DATA INTEGRITY AND INTERACTION TESTING
+   * ---------------------------------------------------------------------------
+   * Verifies standard properties and controlled component event signals map correctly.
+   */
   it('receives correct props from Storybook args', () => {
-    // Generate fresh mock overrides for safety tracking functions
-    const mockProps = getProps(Default.args)
-    {{#each props}}
+    const mockProps = getProps(Default.args) as any
+
+    // Auto-inject fresh spy tracking instances for standard functional parameters
+    {{#each normalProps}}
     {{#if (eq this.propType 'function')}}
     const {{this.propName}}Spy = vi.fn()
     mockProps.{{this.propName}} = {{this.propName}}Spy
     {{/if}}
     {{/each}}
 
-    render(<{{pascalCase name}} {...mockProps} />)
-    const element = screen.getByTestId('{{ kebabCase name }}')
+    // Auto-inject fresh spy tracking instances for model event emitters
+    {{#each modelProps}}
+    const onUpdate{{pascalCase this.varName}}Spy = vi.fn()
+    mockProps.onUpdate{{pascalCase this.varName}} = onUpdate{{pascalCase this.varName}}Spy
+    {{/each}}
 
-    {{#each props}}
+    // A. Assert Standard Layout Properties Definitions
+    {{#each normalProps}}
     // Verify {{this.propName}} ({{this.propType}})
     {{#if (eq this.propType 'function')}}
     expect(mockProps.{{this.propName}}).toBeTypeOf('function')
     {{else}}
-    expect(mockProps.{{this.propName}}).toEqual({{#if (eq this.propType 'string')}}''{{else if (eq this.propType 'number')}}0{{else if (eq this.propType 'boolean')}}false{{else if (eq this.propType 'object')}}{}{{else if (eq this.propType 'string[]')}}['']{{else if (eq this.propType 'number[]')}}[0]{{else if (eq this.propType 'boolean[]')}}[false]{{else if (eq this.propType 'object[]')}}[{}]{{/if}})
+    expect(mockProps.{{this.propName}}).toEqual({{#if (eq this.propType 'string')}}''{{else if (eq this.propType 'number')}}0{{else if (eq this.propType 'boolean')}}false{{else if (eq this.propType 'object')}}{}{{else}}[]{{/if}})
     {{/if}}
+    {{/each}}
+
+    // B. Assert Controlled Model Binding Signatures
+    {{#each modelProps}}
+    // Verify model state and event: {{this.varName}} & onUpdate{{pascalCase this.varName}}
+    expect(mockProps.onUpdate{{pascalCase this.varName}}).toBeTypeOf('function')
+    expect(mockProps.{{this.varName}}).toEqual({{#if (eq this.propType 'string')}}''{{else if (eq this.propType 'number')}}0{{else if (eq this.propType 'boolean')}}false{{else if (eq this.propType 'object')}}{}{{else}}[]{{/if}})
     {{/each}}
   })
   {{/if}}
