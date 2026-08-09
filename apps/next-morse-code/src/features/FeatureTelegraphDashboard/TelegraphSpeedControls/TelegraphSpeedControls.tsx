@@ -2,8 +2,8 @@
 
 import * as React from 'react'
 import { MoleculeModal, AtomButton } from '@repo/ui-react'
-import { DIFFICULTY_PRESETS } from '@/types/telegraph'
-import type { TelegraphTimings, DifficultyPreset } from '@/types/telegraph'
+import { DIFFICULTY_PRESETS } from '@/shared/types/telegraph'
+import type { TelegraphTimings, DifficultyPreset } from '@/shared/types/telegraph'
 
 interface SpeedControlsProps {
   timings: TelegraphTimings

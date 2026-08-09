@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo, useCallback, useSyncExternalStore } from 'react'
-import type { Themes } from '@/types'
+import type { Themes } from '@/shared/types'
 
 const subscribe = (callback: () => void) => {
   if (typeof window === 'undefined') return () => {}

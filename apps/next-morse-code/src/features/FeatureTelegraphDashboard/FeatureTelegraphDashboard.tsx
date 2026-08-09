@@ -2,11 +2,11 @@
 
 import * as React from 'react'
 import { AtomMorseKey, AtomButton } from '@repo/ui-react'
-import { translateMorseSequence, MORSE_DICTIONARY } from '../../utils/morseTranslator'
+import { translateMorseSequence, MORSE_DICTIONARY } from '../../shared/utils/morseTranslator'
 import { TelegraphSpeedControls } from './TelegraphSpeedControls'
 import { TelegraphCheatSheet } from './TelegraphCheatSheet'
-import { DIFFICULTY_PRESETS } from '../../types/telegraph'
-import type { TelegraphTimings } from '../../types/telegraph'
+import { DIFFICULTY_PRESETS } from '../../shared/types/telegraph'
+import type { TelegraphTimings } from '../../shared/types/telegraph'
 
 export const FeatureTelegraphDashboard = () => {
   const [, setIsSystemOn] = React.useState<boolean>(false)

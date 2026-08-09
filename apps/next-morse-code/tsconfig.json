@@ -12,7 +12,12 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "#entities/*": ["./src/entities/*"],
+      "#features/*": ["./src/features/*"],
+      "#shared/*": ["./src/shared/*"],
+      "#ui/*": ["../../packages/ui-react/src/*"],
+      "#widgets/*": ["./src/widgets/*"]
     }
   },
   "include": [

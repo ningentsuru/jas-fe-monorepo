@@ -1,7 +1,7 @@
 'use client'
 
 import { Suspense } from 'react'
-import { useAppTheme } from '@/hooks/useAppTheme'
+import { useAppTheme } from '@/shared/hooks/useAppTheme'
 import {
   TemplateDefaultPortfolio,
   OrganismHeader,
@@ -10,8 +10,8 @@ import {
   AtomButton,
   AtomWordSwap,
 } from '@repo/ui-react'
-import { NAVIGATIONS } from '@/constants'
-import type { NavItem, Themes } from '@/types'
+import { NAVIGATIONS } from '@/shared/constants'
+import type { NavItem, Themes } from '@/shared/types'
 import Link from 'next/link'
 
 const navItems = NAVIGATIONS as unknown as NavItem[]
