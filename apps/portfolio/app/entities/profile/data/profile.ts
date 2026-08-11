@@ -55,10 +55,10 @@ export const educationPayload: EducationPayload = {
 export const historicalTimeline: TimelineItem[] = [
   {
     role: 'Mid-Level Frontend Developer',
-    company: 'Filta Global',
-    period: 'Feb 2022 - Jul 2026',
+    company: 'YourParkingSpace (via Filta Global)',
+    period: 'Feb 2022 - Jul 2026 | Remote (UK Client)',
     metrics: [
-      'Maintained 8 production Vue.js repositories spanning Nuxt 2, Vue 2/Electron kiosks, Vue 3/Tauri rebuilds, and a Nuxt 4 monorepo; refactored shared code to cut merge conflicts by ~25% and improve long-term maintainability.',
+      "Engineered core web features for the UK's leading parking marketplace, YourParkingSpace (acquired by Flowbird/Arrive); maintained 8 production repositories spanning Vue.js, Nuxt.js, Electron, Tauri, and a Nuxt 4 monorepo.",
       'Migrated Nuxt 2 applications from Node 14 to Node 16, closing critical security vulnerabilities; applied Claude Code Enterprise audits for memory-safety compliance, reducing runtime exceptions by ~20%.',
       'Improved average page load time by ~30% through targeted performance optimization; introduced Sentry error monitoring, cutting mean time to resolution for production incidents by ~35%.',
       'Collaborated with DevOps to manage TeamCity CI/CD pipelines and AWS S3 environment settings; maintained fail-fast build workflows that kept broken code from reaching production.',
