@@ -125,8 +125,9 @@ const handleCopyExecution = async () => {
         </div>
 
         <div v-for="(part, index) in parsedParts" :key="index">
+          <div v-if="!part.html" class="typed-[Thinking...] typed-caret typed-infinite" />
           <div
-            v-if="part.type === 'text' && part.html"
+            v-else-if="part.type === 'text' && part.html"
             :class="[
               'prose prose-sm dark:prose-invert max-w-none text-current',
               'prose-p:text-current prose-headings:text-current prose-strong:text-current prose-em:text-current prose-li:text-current prose-blockquote:text-current',
