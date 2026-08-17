@@ -2,68 +2,78 @@ import { createGroq } from '@ai-sdk/groq'
 import { createOpenAI } from '@ai-sdk/openai'
 import { streamText, type LanguageModel } from 'ai'
 import { compiledSystemPromptText } from '#entities/profile'
-import type { IncomingUIPart, IncomingUIMessage, OutgoingCoreMessage } from '#entities/chat'
+import type { IncomingUIMessage, OutgoingCoreMessage } from '#entities/chat'
 
 export default defineEventHandler(async (event) => {
   const { messages } = await readBody<{ messages: IncomingUIMessage[] }>(event)
   const config = useRuntimeConfig()
 
-  const cleanMessages: OutgoingCoreMessage[] = messages.map(
-    (msg: IncomingUIMessage): OutgoingCoreMessage => {
-      let textContent = ''
-      if (msg.parts && Array.isArray(msg.parts)) {
-        textContent = msg.parts
-          .filter((part: IncomingUIPart): boolean => part.type === 'text')
-          .map((part: IncomingUIPart): string => part.text)
+  const cleanMessages: OutgoingCoreMessage[] = messages.map((msg) => ({
+    role: msg.role === 'user' ? 'user' : 'assistant',
+    content: Array.isArray(msg.parts)
+      ? msg.parts
+          .filter((p) => p.type === 'text')
+          .map((p) => p.text)
           .join('\n')
-      } else {
-        textContent = msg.content || ''
-      }
-      return {
-        role: msg.role === 'user' ? 'user' : 'assistant',
-        content: textContent,
-      }
-    },
-  )
+      : msg.content || '',
+  }))
 
-  const optimizedHistory = cleanMessages.filter((m) => m.content.trim().length > 0).slice(-4)
-
+  const validHistory = cleanMessages.filter((m) => m.content.trim().length > 0)
   const groqKey = ((config.groqApiKey as string) || '').trim()
   const openaiKey = ((config.openaiApiKey as string) || '').trim()
 
-  let targetModel: LanguageModel
+  let targetModel: LanguageModel | null = null
+  let finalHistory = validHistory.slice(-4)
 
-  if (groqKey) {
+  if (import.meta.dev) {
     try {
-      const customGroqProvider = createGroq({ apiKey: groqKey })
-      targetModel = customGroqProvider('llama-3.3-70b-versatile')
-    } catch (error) {
-      if (!openaiKey) throw new Error('Groq initialization failed and no OpenAI key was supplied.')
-      const customOpenAIProvider = createOpenAI({ apiKey: openaiKey })
-      targetModel = customOpenAIProvider('gpt-4o-mini')
+      const targetModelTag = 'llama3.2:latest'
+
+      const res = await fetch('http://localhost:11434/api/tags', {
+        signal: AbortSignal.timeout(1000),
+      })
+      const data = res.ok
+        ? ((await res.json()) as { models: Array<{ name: string }> })
+        : { models: [] }
+
+      if (!data.models.some((m) => m.name === targetModelTag)) throw new Error()
+
+      targetModel = createOpenAI({ baseURL: 'http://localhost:11434/v1', apiKey: 'ollama' })(
+        targetModelTag,
+      )
+      finalHistory = validHistory
+    } catch (e) {
+      console.log('Ollama engine verification failed:', e instanceof Error ? e.message : e)
+      setupCloudLLM()
     }
-  } else if (openaiKey) {
-    const customOpenAIProvider = createOpenAI({ apiKey: openaiKey })
-    targetModel = customOpenAIProvider('gpt-4o-mini')
   } else {
-    throw new Error('All authentication platforms exhausted. Environment keys missing.')
+    setupCloudLLM()
+  }
+
+  function setupCloudLLM() {
+    if (groqKey) {
+      targetModel = createGroq({ apiKey: groqKey })('llama-3.3-70b-versatile')
+    } else if (openaiKey) {
+      targetModel = createOpenAI({ apiKey: openaiKey })('gpt-4o-mini')
+    } else {
+      throw new Error('All model authentication platforms exhausted.')
+    }
   }
 
   const result = await streamText({
-    model: targetModel,
+    model: targetModel as LanguageModel,
     system: compiledSystemPromptText,
-    messages: optimizedHistory,
+    messages: finalHistory,
   })
 
   const textEncoder = new TextEncoder()
-  const transformer = new TransformStream({
-    transform(chunk, controller) {
-      const formattedChunk = `0:${JSON.stringify(chunk)}\n`
-      controller.enqueue(textEncoder.encode(formattedChunk))
-    },
-  })
-
-  const protocolStream = result.textStream.pipeThrough(transformer)
+  const protocolStream = result.textStream.pipeThrough(
+    new TransformStream({
+      transform(chunk, controller) {
+        controller.enqueue(textEncoder.encode(`0:${JSON.stringify(chunk)}\n`))
+      },
+    }),
+  )
 
   return new Response(protocolStream, {
     status: 200,
