@@ -151,19 +151,19 @@ const handleCopyEntireConversation = async () => {
             placeholder="(Enter to send, Shift+Enter for new line)"
             :disabled="isLoading"
             rows="1"
-            maxlength="150"
+            maxlength="15000"
             class="bg-background border-input text-foreground placeholder:text-muted-foreground focus-visible:ring-ring max-h-[140px] min-h-[44px] w-full resize-none rounded-md border px-3 py-2.5 pb-6 text-sm break-all focus-visible:ring-1 focus-visible:ring-offset-0 disabled:opacity-50"
           />
 
           <span
             :class="[
               'absolute right-2 bottom-1 text-[10px] tracking-wide transition-colors duration-150 select-none',
-              modelValue.length >= 150
+              modelValue.length >= 15000
                 ? 'text-destructive animate-pulse font-mono font-semibold'
                 : 'text-muted-foreground/60 font-mono',
             ]"
           >
-            {{ modelValue.length }}/150
+            {{ modelValue.length }}/15000
           </span>
         </div>
 
@@ -183,7 +183,7 @@ const handleCopyEntireConversation = async () => {
 
           <Button
             type="submit"
-            :disabled="isLoading || !modelValue.trim() || modelValue.length > 150"
+            :disabled="isLoading || !modelValue.trim() || modelValue.length > 15000"
             size="sm"
             class="h-10 px-4 transition-all duration-200 active:scale-95"
           >

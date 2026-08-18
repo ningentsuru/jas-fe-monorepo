@@ -116,6 +116,7 @@ onMounted(() => {
         </template>
 
         <template #navigation>
+          <NuxtLink to="ai-playground" class="text-muted-foreground text-sm"> AI Playground </NuxtLink>
           <NuxtLink to="about-me" class="text-muted-foreground text-sm"> About Me </NuxtLink>
         </template>
         <template #theme-toggle>
