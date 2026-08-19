@@ -1,12 +1,6 @@
 import { createGroq } from '@ai-sdk/groq'
 import { createOpenAI } from '@ai-sdk/openai'
-import {
-  streamText,
-  generateText,
-  toTextStream,
-  createTextStreamResponse,
-  type LanguageModel,
-} from 'ai'
+import { streamText, generateText, toTextStream, type LanguageModel } from 'ai'
 import {
   classifierSystemPrompt,
   compiledSystemPrompt,
@@ -158,11 +152,23 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  return createTextStreamResponse({
-    stream: toTextStream(result),
-    headers: {
-      'X-Content-Type-Options': 'nosniff',
-      'x-vercel-ai-data-stream': 'v1',
-    },
+  const nodeResponse = event.node.res
+
+  nodeResponse.writeHead(200, {
+    'Content-Type': 'text/plain; charset=utf-8',
+    'X-Content-Type-Options': 'nosniff',
+    'Transfer-Encoding': 'chunked',
+    'x-vercel-ai-data-stream': 'v1',
   })
+
+  const dataStream = toTextStream(result)
+  const reader = dataStream.getReader()
+
+  while (true) {
+    const { done, value } = await reader.read()
+    if (done) break
+    nodeResponse.write(value)
+  }
+
+  nodeResponse.end()
 })
