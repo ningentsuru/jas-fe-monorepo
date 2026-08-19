@@ -122,13 +122,22 @@ export default defineEventHandler(async (event) => {
         streamError,
       )
 
-      setupCloudLLM('openai')
+      try {
+        setupCloudLLM('openai')
 
-      result = await streamText({
-        model: targetModel as LanguageModel,
-        system: dynamicSystemPrompt,
-        messages: finalHistory,
-      })
+        result = await streamText({
+          model: targetModel as LanguageModel,
+          system: dynamicSystemPrompt,
+          messages: finalHistory,
+        })
+      } catch (openaiError) {
+        console.error('Both Groq and OpenAI streaming instances crashed completely.', openaiError)
+        throw createError({
+          statusCode: 500,
+          statusMessage:
+            'AI Generation Service Unavailable. Please contact Joshua directly at ja.sardido@outlook.com.',
+        })
+      }
     } else {
       throw streamError
     }
