@@ -1,6 +1,6 @@
 import { createGroq } from '@ai-sdk/groq'
 import { createOpenAI } from '@ai-sdk/openai'
-import { streamText, generateText, type LanguageModel } from 'ai'
+import { streamText, generateText, toTextStream, type LanguageModel } from 'ai'
 import {
   classifierSystemPrompt,
   compiledSystemPrompt,
@@ -29,22 +29,21 @@ export default defineEventHandler(async (event) => {
   const openaiKey = ((config.openaiApiKey as string) || '').trim()
 
   let targetModel: LanguageModel | null = null
+  let classifierModel: LanguageModel | null = null
   let finalHistory = validHistory.slice(-4)
 
-  function setupCloudLLM(platform: 'groq' | 'openai') {
+  function getModelInstance(platform: 'groq' | 'openai') {
     if (platform === 'groq' && groqKey) {
-      targetModel = createGroq({ apiKey: groqKey })('llama-3.3-70b-versatile')
+      return createGroq({ apiKey: groqKey })('llama-3.3-70b-versatile')
     } else if (platform === 'openai' && openaiKey) {
-      targetModel = createOpenAI({ apiKey: openaiKey })('gpt-4o-mini')
-    } else {
-      throw new Error(`Authentication platform [${platform}] is unavailable or keys are missing.`)
+      return createOpenAI({ apiKey: openaiKey })('gpt-4o-mini')
     }
+    throw new Error(`Authentication platform [${platform}] keys are missing.`)
   }
 
   if (import.meta.dev) {
     try {
       const targetModelTag = 'llama3.2:latest'
-
       const res = await fetch('http://localhost:11434/api/tags', {
         signal: AbortSignal.timeout(1000),
       })
@@ -54,16 +53,21 @@ export default defineEventHandler(async (event) => {
 
       if (!data.models.some((m) => m.name === targetModelTag)) throw new Error()
 
-      targetModel = createOpenAI({ baseURL: 'http://localhost:11434/v1', apiKey: 'ollama' })(
-        targetModelTag,
-      )
+      const ollamaProvider = createOpenAI({
+        baseURL: 'http://localhost:11434/v1',
+        apiKey: 'ollama',
+      })
+      targetModel = ollamaProvider(targetModelTag)
+      classifierModel = ollamaProvider(targetModelTag)
       finalHistory = validHistory
-    } catch {
-      console.log('Ollama engine verification failed, defaulting to Groq cloud...')
-      setupCloudLLM('groq')
+    } catch (e) {
+      console.log('Ollama verification failed, using Groq dev fallback...')
+      targetModel = getModelInstance('groq')
+      classifierModel = getModelInstance('groq')
     }
   } else {
-    setupCloudLLM('groq')
+    targetModel = getModelInstance('groq')
+    classifierModel = getModelInstance('groq')
   }
 
   const latestUserQuery = finalHistory[finalHistory.length - 1]?.content || ''
@@ -73,10 +77,10 @@ export default defineEventHandler(async (event) => {
   if (latestUserQuery) {
     try {
       const classificationResult = await generateText({
-        model: targetModel as LanguageModel,
+        model: classifierModel as LanguageModel,
         system: classifierSystemPrompt,
         prompt: `User Query: "${latestUserQuery}"`,
-        abortSignal: AbortSignal.timeout(2500),
+        abortSignal: AbortSignal.timeout(2000),
       })
 
       const categoryOutput = classificationResult.text.trim().toUpperCase()
@@ -93,10 +97,7 @@ export default defineEventHandler(async (event) => {
         if (categoryOutput.includes('EDUCATION')) relevantContextData += `\n\n${contextEducation}`
       }
     } catch (error) {
-      console.warn(
-        'Classifier step failed or timed out, flagging for fallback data injection:',
-        error,
-      )
+      console.warn('Classifier step failed, shifting to full fallback:', error)
       classificationFailed = true
     }
   }
@@ -117,12 +118,8 @@ export default defineEventHandler(async (event) => {
     })
   } catch (streamError) {
     if (!import.meta.dev && openaiKey) {
-      console.warn(
-        'Primary streaming provider failed. Migrating execution pipeline to OpenAI...',
-        streamError,
-      )
-
-      setupCloudLLM('openai')
+      console.warn('Primary streaming provider failed. Switching live to OpenAI...', streamError)
+      targetModel = getModelInstance('openai')
 
       result = await streamText({
         model: targetModel as LanguageModel,
@@ -134,19 +131,35 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  const textEncoder = new TextEncoder()
-  const protocolStream = result.textStream.pipeThrough(
-    new TransformStream({
-      transform(chunk, controller) {
-        controller.enqueue(textEncoder.encode(`0:${JSON.stringify(chunk)}\n`))
-      },
-    }),
-  )
+  if (import.meta.dev) {
+    const textEncoder = new TextEncoder()
+    const protocolStream = result.textStream.pipeThrough(
+      new TransformStream({
+        transform(chunk, controller) {
+          controller.enqueue(textEncoder.encode(`0:${JSON.stringify(chunk)}\n`))
+        },
+      }),
+    )
 
-  return new Response(protocolStream, {
+    return new Response(protocolStream, {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'X-Content-Type-Options': 'nosniff',
+        'Transfer-Encoding': 'chunked',
+        'x-vercel-ai-data-stream': 'v1',
+      },
+    })
+  }
+
+  const standardTextStream = toTextStream(result)
+
+  return new Response(standardTextStream, {
     status: 200,
     headers: {
+      'Content-Type': 'text/plain; charset=utf-8',
       'X-Content-Type-Options': 'nosniff',
+      'Transfer-Encoding': 'chunked',
       'x-vercel-ai-data-stream': 'v1',
     },
   })
