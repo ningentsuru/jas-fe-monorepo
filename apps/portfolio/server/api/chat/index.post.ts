@@ -122,34 +122,75 @@ export default defineEventHandler(async (event) => {
         streamError,
       )
 
-      setupCloudLLM('openai')
+      try {
+        setupCloudLLM('openai')
 
-      result = await streamText({
-        model: targetModel as LanguageModel,
-        system: dynamicSystemPrompt,
-        messages: finalHistory,
-      })
+        result = await streamText({
+          model: targetModel as LanguageModel,
+          system: dynamicSystemPrompt,
+          messages: finalHistory,
+        })
+      } catch (openaiError) {
+        console.error('Both Groq and OpenAI streaming instances crashed completely.', openaiError)
+        throw createError({
+          statusCode: 500,
+          statusMessage: 'AI Chatbot streaming core fully exhausted.',
+        })
+      }
     } else {
       throw streamError
     }
   }
 
-  const textEncoder = new TextEncoder()
-  const protocolStream = result.textStream.pipeThrough(
-    new TransformStream({
-      transform(chunk, controller) {
-        controller.enqueue(textEncoder.encode(`0:${JSON.stringify(chunk)}\n`))
-      },
-    }),
-  )
+  try {
+    const rawTextStream = result.textStream
+    const streamReader = rawTextStream.getReader()
 
-  return new Response(protocolStream, {
-    status: 200,
-    headers: {
-      'Content-Type': 'text/plain; charset=utf-8',
-      'X-Content-Type-Options': 'nosniff',
-      'Transfer-Encoding': 'chunked',
-      'x-vercel-ai-data-stream': 'v1',
-    },
-  })
+    const { done, value: firstChunk } = await streamReader.read()
+
+    if (done || !firstChunk) {
+      streamReader.releaseLock()
+      throw new Error('Streaming connection returned an empty token chunk payload.')
+    }
+
+    const verifiedStream = new ReadableStream({
+      async start(controller) {
+        const textEncoder = new TextEncoder()
+
+        controller.enqueue(textEncoder.encode(`0:${JSON.stringify(firstChunk)}\n`))
+        streamReader.releaseLock()
+
+        const remainingReader = rawTextStream.getReader()
+        try {
+          while (true) {
+            const { done: streamDone, value: chunk } = await remainingReader.read()
+            if (streamDone) break
+            controller.enqueue(textEncoder.encode(`0:${JSON.stringify(chunk)}\n`))
+          }
+        } catch (readError) {
+          console.error('Stream transmission dropped mid-flight:', readError)
+        } finally {
+          remainingReader.releaseLock()
+          controller.close()
+        }
+      },
+    })
+
+    return new Response(verifiedStream, {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'X-Content-Type-Options': 'nosniff',
+        'Transfer-Encoding': 'chunked',
+        'x-vercel-ai-data-stream': 'v1',
+      },
+    })
+  } catch (serializationError) {
+    console.error('Interceptor blocked blank 200 response header:', serializationError)
+
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'AI Streaming Pipe Empty. Check model quotas or deployment variables.',
+    })
+  }
 })
