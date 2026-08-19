@@ -101,13 +101,19 @@ async function handleChatSubmit() {
   } catch (error) {
     console.error('Widget Loop Error Intercepted:', error)
 
+    let explicitServerErrorMessage = 'Network disruption detected. Please retry.'
+
+    if (error instanceof Error && error.message) {
+      explicitServerErrorMessage = `${error.message}. Please retry.`
+    }
+
     if (assistantMessageId) {
       const idx = messages.value.findIndex((m) => m.id === assistantMessageId)
       if (idx !== -1) {
         const targetErrorMessage = messages.value[idx]
 
         if (targetErrorMessage && targetErrorMessage.parts && targetErrorMessage.parts[0]) {
-          targetErrorMessage.parts[0].text = 'Network disruption detected. Please retry.'
+          targetErrorMessage.parts[0].text = explicitServerErrorMessage
         }
       }
     }
