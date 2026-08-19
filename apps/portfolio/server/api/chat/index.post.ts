@@ -146,9 +146,7 @@ export default defineEventHandler(async (event) => {
   return new Response(protocolStream, {
     status: 200,
     headers: {
-      'Content-Type': 'text/plain; charset=utf-8',
       'X-Content-Type-Options': 'nosniff',
-      'Transfer-Encoding': 'chunked',
       'x-vercel-ai-data-stream': 'v1',
     },
   })
