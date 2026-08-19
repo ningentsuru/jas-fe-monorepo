@@ -14,6 +14,8 @@ export default defineEventHandler(async (event) => {
   const { messages } = await readBody<{ messages: IncomingUIMessage[] }>(event)
   const config = useRuntimeConfig()
 
+  const clientAbortSignal = event.node.req.signal
+
   const cleanMessages: OutgoingCoreMessage[] = messages.map((msg) => ({
     role: msg.role === 'user' ? 'user' : 'assistant',
     content: Array.isArray(msg.parts)
@@ -76,7 +78,7 @@ export default defineEventHandler(async (event) => {
         model: targetModel as LanguageModel,
         system: classifierSystemPrompt,
         prompt: `User Query: "${latestUserQuery}"`,
-        abortSignal: AbortSignal.timeout(2500),
+        abortSignal: clientAbortSignal,
       })
 
       const categoryOutput = classificationResult.text.trim().toUpperCase()
@@ -93,10 +95,7 @@ export default defineEventHandler(async (event) => {
         if (categoryOutput.includes('EDUCATION')) relevantContextData += `\n\n${contextEducation}`
       }
     } catch (error) {
-      console.warn(
-        'Classifier step failed or timed out, flagging for fallback data injection:',
-        error,
-      )
+      console.warn('Classifier step failed, timed out, or client disconnected:', error)
       classificationFailed = true
     }
   }
@@ -114,6 +113,7 @@ export default defineEventHandler(async (event) => {
       model: targetModel as LanguageModel,
       system: dynamicSystemPrompt,
       messages: finalHistory,
+      abortSignal: clientAbortSignal,
     })
   } catch (streamError) {
     if (!import.meta.dev && openaiKey) {
@@ -129,13 +129,13 @@ export default defineEventHandler(async (event) => {
           model: targetModel as LanguageModel,
           system: dynamicSystemPrompt,
           messages: finalHistory,
+          abortSignal: clientAbortSignal,
         })
       } catch (openaiError) {
         console.error('Both Groq and OpenAI streaming instances crashed completely.', openaiError)
         throw createError({
           statusCode: 500,
-          statusMessage:
-            'AI Generation Service Unavailable. Please contact Joshua directly at ja.sardido@outlook.com.',
+          statusMessage: 'AI Generation Service Unavailable.',
         })
       }
     } else {
