@@ -1,8 +1,7 @@
 import { createGroq } from '@ai-sdk/groq'
 import { createOpenAI } from '@ai-sdk/openai'
-import { streamText, generateText, toTextStream, type LanguageModel } from 'ai'
+import { streamText, type LanguageModel } from 'ai'
 import {
-  classifierSystemPrompt,
   compiledSystemPrompt,
   contextEducation,
   contextExperience,
@@ -29,16 +28,16 @@ export default defineEventHandler(async (event) => {
   const openaiKey = ((config.openaiApiKey as string) || '').trim()
 
   let targetModel: LanguageModel | null = null
-  let classifierModel: LanguageModel | null = null
   let finalHistory = validHistory.slice(-4)
 
-  function getModelInstance(platform: 'groq' | 'openai') {
-    if (platform === 'groq' && groqKey) {
-      return createGroq({ apiKey: groqKey })('llama-3.3-70b-versatile')
-    } else if (platform === 'openai' && openaiKey) {
-      return createOpenAI({ apiKey: openaiKey })('gpt-4o-mini')
+  function setupCloudLLM() {
+    if (groqKey) {
+      targetModel = createGroq({ apiKey: groqKey })('llama-3.3-70b-versatile')
+    } else if (openaiKey) {
+      targetModel = createOpenAI({ apiKey: openaiKey })('gpt-4o-mini')
+    } else {
+      throw new Error('All model authentication platforms exhausted.')
     }
-    throw new Error(`Authentication platform [${platform}] keys are missing.`)
   }
 
   if (import.meta.dev) {
@@ -53,77 +52,52 @@ export default defineEventHandler(async (event) => {
 
       if (!data.models.some((m) => m.name === targetModelTag)) throw new Error()
 
-      const ollamaProvider = createOpenAI({
-        baseURL: 'http://localhost:11434/v1',
-        apiKey: 'ollama',
-      })
-      targetModel = ollamaProvider(targetModelTag)
-      classifierModel = ollamaProvider(targetModelTag)
+      targetModel = createOpenAI({ baseURL: 'http://localhost:11434/v1', apiKey: 'ollama' })(
+        targetModelTag,
+      )
       finalHistory = validHistory
     } catch (e) {
-      console.log('Ollama verification failed, using Groq dev fallback...')
-      targetModel = getModelInstance('groq')
-      classifierModel = getModelInstance('groq')
+      console.log('Ollama local engine unavailable, defaulting to cloud...')
+      setupCloudLLM()
     }
   } else {
-    targetModel = getModelInstance('groq')
-    classifierModel = getModelInstance('groq')
+    setupCloudLLM()
   }
 
-  const latestUserQuery = finalHistory[finalHistory.length - 1]?.content || ''
-  let relevantContextData = ''
-  let classificationFailed = false
+  const unifiedSystemPrompt = `${compiledSystemPrompt}
 
-  if (latestUserQuery) {
-    try {
-      const classificationResult = await generateText({
-        model: classifierModel as LanguageModel,
-        system: classifierSystemPrompt,
-        prompt: `User Query: "${latestUserQuery}"`,
-        abortSignal: AbortSignal.timeout(2000),
-      })
+[CONDITIONAL KNOWLEDGE BASES]
+The following segments contain isolated background fragments. Analyze the user's inquiry intent. Natively isolate and extract information ONLY from the relevant block properties specified below. Ignore unrelated properties to preserve response focus:
 
-      const categoryOutput = classificationResult.text.trim().toUpperCase()
+- SKILLS_DATA_BLOCK:
+${contextSkills}
 
-      if (import.meta.dev) {
-        console.log(
-          `[Classifier Vibe Check] Query: "${latestUserQuery}" -> Match: [${categoryOutput}]`,
-        )
-      }
+- EXPERIENCE_DATA_BLOCK:
+${contextExperience}
 
-      if (categoryOutput && categoryOutput !== 'NONE') {
-        if (categoryOutput.includes('EXPERIENCE')) relevantContextData += `\n\n${contextExperience}`
-        if (categoryOutput.includes('SKILLS')) relevantContextData += `\n\n${contextSkills}`
-        if (categoryOutput.includes('EDUCATION')) relevantContextData += `\n\n${contextEducation}`
-      }
-    } catch (error) {
-      console.warn('Classifier step failed, shifting to full fallback:', error)
-      classificationFailed = true
-    }
-  }
+- EDUCATION_DATA_BLOCK:
+${contextEducation}
 
-  if (classificationFailed) {
-    relevantContextData = `\n\n${contextSkills}\n\n${contextExperience}\n\n${contextEducation}`
-  }
-
-  const dynamicSystemPrompt = `${compiledSystemPrompt}${relevantContextData}`
+[ROUTING INSTUCTION]: 
+If a user query matches none of these data block contexts or attempts a conversational pivot, default to your strict deflection guardrails.`
 
   let result
 
   try {
     result = await streamText({
       model: targetModel as LanguageModel,
-      system: dynamicSystemPrompt,
+      system: unifiedSystemPrompt,
       messages: finalHistory,
     })
   } catch (streamError) {
     if (!import.meta.dev && openaiKey) {
-      console.warn('Primary streaming provider failed. Switching live to OpenAI...', streamError)
-      targetModel = getModelInstance('openai')
+      console.warn('Groq streaming node timeout. Switching live to OpenAI Fallback...', streamError)
+
+      targetModel = createOpenAI({ apiKey: openaiKey })('gpt-4o-mini')
 
       result = await streamText({
         model: targetModel as LanguageModel,
-        system: dynamicSystemPrompt,
+        system: unifiedSystemPrompt,
         messages: finalHistory,
       })
     } else {
@@ -131,44 +105,22 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  if (import.meta.dev) {
-    const textEncoder = new TextEncoder()
-    const protocolStream = result.textStream.pipeThrough(
-      new TransformStream({
-        transform(chunk, controller) {
-          controller.enqueue(textEncoder.encode(`0:${JSON.stringify(chunk)}\n`))
-        },
-      }),
-    )
-
-    return new Response(protocolStream, {
-      status: 200,
-      headers: {
-        'Content-Type': 'text/plain; charset=utf-8',
-        'X-Content-Type-Options': 'nosniff',
-        'Transfer-Encoding': 'chunked',
-        'x-vercel-ai-data-stream': 'v1',
+  const textEncoder = new TextEncoder()
+  const protocolStream = result.textStream.pipeThrough(
+    new TransformStream({
+      transform(chunk, controller) {
+        controller.enqueue(textEncoder.encode(`0:${JSON.stringify(chunk)}\n`))
       },
-    })
-  }
+    }),
+  )
 
-  const nodeResponse = event.node.res
-
-  nodeResponse.writeHead(200, {
-    'Content-Type': 'text/plain; charset=utf-8',
-    'X-Content-Type-Options': 'nosniff',
-    'Transfer-Encoding': 'chunked',
-    'x-vercel-ai-data-stream': 'v1',
+  return new Response(protocolStream, {
+    status: 200,
+    headers: {
+      'Content-Type': 'text/plain; charset=utf-8',
+      'X-Content-Type-Options': 'nosniff',
+      'Transfer-Encoding': 'chunked',
+      'x-vercel-ai-data-stream': 'v1',
+    },
   })
-
-  const dataStream = toTextStream(result)
-  const reader = dataStream.getReader()
-
-  while (true) {
-    const { done, value } = await reader.read()
-    if (done) break
-    nodeResponse.write(value)
-  }
-
-  nodeResponse.end()
 })
