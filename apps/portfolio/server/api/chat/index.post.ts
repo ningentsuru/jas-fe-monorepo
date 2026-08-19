@@ -1,7 +1,13 @@
 import { createGroq } from '@ai-sdk/groq'
 import { createOpenAI } from '@ai-sdk/openai'
-import { streamText, type LanguageModel } from 'ai'
-import { compiledSystemPromptText } from '#entities/profile'
+import { streamText, generateText, type LanguageModel } from 'ai'
+import {
+  classifierSystemPrompt,
+  compiledSystemPrompt,
+  contextEducation,
+  contextExperience,
+  contextSkills,
+} from '#entities/profile'
 import type { IncomingUIMessage, OutgoingCoreMessage } from '#entities/chat'
 
 export default defineEventHandler(async (event) => {
@@ -25,6 +31,16 @@ export default defineEventHandler(async (event) => {
   let targetModel: LanguageModel | null = null
   let finalHistory = validHistory.slice(-4)
 
+  function setupCloudLLM(platform: 'groq' | 'openai') {
+    if (platform === 'groq' && groqKey) {
+      targetModel = createGroq({ apiKey: groqKey })('llama-3.3-70b-versatile')
+    } else if (platform === 'openai' && openaiKey) {
+      targetModel = createOpenAI({ apiKey: openaiKey })('gpt-4o-mini')
+    } else {
+      throw new Error(`Authentication platform [${platform}] is unavailable or keys are missing.`)
+    }
+  }
+
   if (import.meta.dev) {
     try {
       const targetModelTag = 'llama3.2:latest'
@@ -42,29 +58,81 @@ export default defineEventHandler(async (event) => {
         targetModelTag,
       )
       finalHistory = validHistory
-    } catch (e) {
-      console.log('Ollama engine verification failed:', e instanceof Error ? e.message : e)
-      setupCloudLLM()
+    } catch {
+      console.log('Ollama engine verification failed, defaulting to Groq cloud...')
+      setupCloudLLM('groq')
     }
   } else {
-    setupCloudLLM()
+    setupCloudLLM('groq')
   }
 
-  function setupCloudLLM() {
-    if (groqKey) {
-      targetModel = createGroq({ apiKey: groqKey })('llama-3.3-70b-versatile')
-    } else if (openaiKey) {
-      targetModel = createOpenAI({ apiKey: openaiKey })('gpt-4o-mini')
-    } else {
-      throw new Error('All model authentication platforms exhausted.')
+  const latestUserQuery = finalHistory[finalHistory.length - 1]?.content || ''
+  let relevantContextData = ''
+  let classificationFailed = false
+
+  if (latestUserQuery) {
+    try {
+      const classificationResult = await generateText({
+        model: targetModel as LanguageModel,
+        system: classifierSystemPrompt,
+        prompt: `User Query: "${latestUserQuery}"`,
+        abortSignal: AbortSignal.timeout(2500),
+      })
+
+      const categoryOutput = classificationResult.text.trim().toUpperCase()
+
+      if (import.meta.dev) {
+        console.log(
+          `[Classifier Vibe Check] Query: "${latestUserQuery}" -> Match: [${categoryOutput}]`,
+        )
+      }
+
+      if (categoryOutput && categoryOutput !== 'NONE') {
+        if (categoryOutput.includes('EXPERIENCE')) relevantContextData += `\n\n${contextExperience}`
+        if (categoryOutput.includes('SKILLS')) relevantContextData += `\n\n${contextSkills}`
+        if (categoryOutput.includes('EDUCATION')) relevantContextData += `\n\n${contextEducation}`
+      }
+    } catch (error) {
+      console.warn(
+        'Classifier step failed or timed out, flagging for fallback data injection:',
+        error,
+      )
+      classificationFailed = true
     }
   }
 
-  const result = await streamText({
-    model: targetModel as LanguageModel,
-    system: compiledSystemPromptText,
-    messages: finalHistory,
-  })
+  if (classificationFailed) {
+    relevantContextData = `\n\n${contextSkills}\n\n${contextExperience}\n\n${contextEducation}`
+  }
+
+  const dynamicSystemPrompt = `${compiledSystemPrompt}${relevantContextData}`
+
+  let result
+
+  try {
+    result = await streamText({
+      model: targetModel as LanguageModel,
+      system: dynamicSystemPrompt,
+      messages: finalHistory,
+    })
+  } catch (streamError) {
+    if (!import.meta.dev && openaiKey) {
+      console.warn(
+        'Primary streaming provider failed. Migrating execution pipeline to OpenAI...',
+        streamError,
+      )
+
+      setupCloudLLM('openai')
+
+      result = await streamText({
+        model: targetModel as LanguageModel,
+        system: dynamicSystemPrompt,
+        messages: finalHistory,
+      })
+    } else {
+      throw streamError
+    }
+  }
 
   const textEncoder = new TextEncoder()
   const protocolStream = result.textStream.pipeThrough(
