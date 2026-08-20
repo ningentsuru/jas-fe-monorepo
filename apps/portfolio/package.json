@@ -17,8 +17,10 @@
     "@ai-sdk/vue": "^4.0.52",
     "@lucide/vue": "^1.27.0",
     "@repo/ui-vue": "workspace:*",
+    "@vue-flow/core": "^1.48.2",
     "ai": "^7.0.52",
     "dompurify": "^3.4.13",
+    "marked": "^18.0.9",
     "nuxt": "^4.5.1",
     "vue": "^3.5.40",
     "vue-router": "^5.2.0"

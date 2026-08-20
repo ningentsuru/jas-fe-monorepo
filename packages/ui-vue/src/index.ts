@@ -14,6 +14,8 @@ export { default as MoleculeTechCard } from './molecules/MoleculeTechCard'
 export { default as MoleculeSpamChallenge } from './molecules/MoleculeSpamChallenge'
 export { default as MoleculeChatBubble } from './molecules/MoleculeChatBubble'
 export { default as MoleculeForm } from './molecules/MoleculeForm'
+export { default as MoleculePlaygroundUserNode } from './molecules/MoleculePlaygroundUserNode'
+export { default as MoleculePlaygroundAiNode } from './molecules/MoleculePlaygroundAiNode'
 // plop:inject-molecules-component-do-not-removed
 
 // Organisms
@@ -24,6 +26,8 @@ export { default as OrganismSkillDirectory } from './organisms/OrganismSkillDire
 export { default as OrganismTimeline } from './organisms/OrganismTimeline'
 export { default as OrganismEducation } from './organisms/OrganismEducation'
 export { default as OrganismChatWindow } from './organisms/OrganismChatWindow'
+export { default as OrganismPlaygroundCanvas } from './organisms/OrganismPlaygroundCanvas'
+export { default as OrganismPlaygroundConfigPanel } from './organisms/OrganismPlaygroundConfigPanel'
 // plop:inject-organisms-component-do-not-removed
 
 // Templates
