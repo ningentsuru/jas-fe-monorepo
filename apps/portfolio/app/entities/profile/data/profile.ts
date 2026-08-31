@@ -37,7 +37,7 @@ export const techStackPayload: TechStackItem[] = [
   { name: 'AWS (S3, ECS, CloudWatch)', category: 'devops', level: 'Advanced', icon: Cpu },
   { name: 'Docker', category: 'devops', level: 'Intermediate', icon: Cpu },
   { name: 'TeamCity CI/CD', category: 'devops', level: 'Advanced', icon: Terminal },
-  { name: 'Claude Code / Copilot', category: 'ai', level: 'Expert', icon: Sparkles },
+  { name: 'Claude Code / Copilot / ChatGPT / Ollama', category: 'ai', level: 'Expert', icon: Sparkles },
   { name: 'n8n', category: 'ai', level: 'Intermediate', icon: Sparkles },
   { name: 'ComfyUI', category: 'ai', level: 'Intermediate', icon: Sparkles },
 ]
