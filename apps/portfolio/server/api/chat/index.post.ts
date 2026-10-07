@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
 
   function setupCloudLLM(platform: 'groq' | 'openai') {
     if (platform === 'groq' && groqKey) {
-      targetModel = createGroq({ apiKey: groqKey })('groq/compound-mini')
+      targetModel = createGroq({ apiKey: groqKey })('meta-llama/llama-prompt-guard-2-22m')
     } else if (platform === 'openai' && openaiKey) {
       targetModel = createOpenAI({ apiKey: openaiKey })('gpt-4o-mini')
     } else {
